@@ -2052,11 +2052,68 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RightBody",
   data: function data() {
     return {
-      todayTask: [],
+      upcomingInputEnabled: false,
+      todayTasks: [],
       upcoming: [],
       newTask: ""
     };
@@ -2066,6 +2123,10 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchUpcoming();
   },
   methods: {
+    toogleUpcomingInput: function toogleUpcomingInput() {
+      console.log("test");
+      this.upcomingInputEnabled = !this.upcomingInputEnabled;
+    },
     //** Upcoming Task **//
     fetchUpcoming: function fetchUpcoming() {
       var _this = this;
@@ -2080,10 +2141,21 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     //** Today Task **//
-    fetchTodayTasks: function fetchTodayTasks() {},
+    fetchTodayTasks: function fetchTodayTasks() {
+      var _this2 = this;
+
+      fetch("/api/dailytask").then(function (res) {
+        return res.json();
+      }).then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.todayTasks = data;
+      })["catch"](function (e) {
+        return console.error(e);
+      });
+    },
     //** Add Upcoming Task **//
     addUpcomingTask: function addUpcomingTask(e) {
-      var _this2 = this;
+      var _this3 = this;
 
       e.preventDefault();
 
@@ -2103,7 +2175,7 @@ __webpack_require__.r(__webpack_exports__);
           },
           body: JSON.stringify(newTask)
         }).then(function () {
-          return _this2.upcoming.push(newTask);
+          return _this3.upcoming.push(newTask);
         })["catch"](function (e) {
           return console.log(e);
         }); //Clear or Reset newTask
@@ -2113,15 +2185,95 @@ __webpack_require__.r(__webpack_exports__);
     },
     //** Delete Upcoming Task **//
     deleteUpcoming: function deleteUpcoming(taskId) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (confirm("Are you sure?")) {
         //delete request
         fetch("/api/upcoming/".concat(taskId), {
           method: "delete"
         }).then(function () {
-          _this3.upcoming.filter(function (ele) {
-            console.log(ele);
+          _this4.upcoming = _this4.upcoming.filter(function (_ref3) {
+            var id = _ref3.taskId;
+            return id != taskId;
+          });
+        })["catch"](function (e) {
+          return console.error(e);
+        });
+      }
+    },
+    // Check upcoming task
+    checkUpcoming: function checkUpcoming(taskId) {
+      var _this5 = this;
+
+      if (this.todayTasks.length > 4) {
+        alert("Please complete existing tasks!");
+      } else {
+        this.addDailyTask(taskId); //Delete this task from db
+
+        fetch("/api/upcoming/".concat(taskId), {
+          method: "delete"
+        }).then(function () {
+          _this5.upcoming = _this5.upcoming.filter(function (_ref4) {
+            var id = _ref4.taskId;
+            return id != taskId;
+          });
+        });
+      }
+    },
+    //** Add daily task and remove upcoming from database **//
+    addDailyTask: function addDailyTask(taskId) {
+      var _this6 = this;
+
+      var task = this.upcoming.filter(function (_ref5) {
+        var id = _ref5.taskId;
+        return taskId == id;
+      })[0]; //POST REQUEST
+
+      fetch("/api/dailytask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(task)
+      }).then(function (res) {
+        return res.json();
+      }).then(function (_ref6) {
+        var data = _ref6.data;
+
+        _this6.todayTasks.unshift(data);
+      })["catch"](function (e) {
+        return console.error(e);
+      });
+    },
+    //Update today task
+    updateTodayTask: function updateTodayTask(taskId) {
+      var _this7 = this;
+
+      if (confirm("Task Completed?")) {
+        fetch("/api/dailytask/".concat(taskId), {
+          method: "delete"
+        }).then(function () {
+          _this7.todayTasks = _this7.todayTasks.filter(function (_ref7) {
+            var id = _ref7.taskId;
+            return id != taskId;
+          });
+        })["catch"](function (e) {
+          return console.error(e);
+        });
+      }
+    },
+    // Delte today task
+    deleteTodayTask: function deleteTodayTask(taskId) {
+      var _this8 = this;
+
+      if (confirm("Are you sure")) {
+        //Delete this task from db
+        fetch("/api/dailytask/".concat(taskId), {
+          method: "delete"
+        }).then(function () {
+          _this8.todayTasks = _this8.todayTasks.filter(function (_ref8) {
+            var id = _ref8.taskId;
+            return id != taskId;
           });
         });
       }
@@ -6715,6 +6867,16 @@ module.exports = "/images/plus.png?c046340c1e218a064d17c1ad149483ec";
 /***/ ((module) => {
 
 module.exports = "/images/search.png?0a54c500144c90d8371209115d7021cd";
+
+/***/ }),
+
+/***/ "./resources/js/images/users.png":
+/*!***************************************!*\
+  !*** ./resources/js/images/users.png ***!
+  \***************************************/
+/***/ ((module) => {
+
+module.exports = "/images/users.png?7f1eadfdb258c7d3daf90ba4f1d7555a";
 
 /***/ }),
 
@@ -38156,99 +38318,191 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { attrs: { id: "right" } }, [
-    _c("h1", [_vm._v("Development CRM")]),
+    _c("h1", [_vm._v("Development Crm")]),
     _vm._v(" "),
     _vm._m(0),
     _vm._v(" "),
     _c("p", [
       _vm._v(
-        "\n    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis modi\n    voluptatibus cupiditate! Veritatis nemo, reiciendis adipisci saepe officia\n    eum optio, quis error earum tenetur consequuntur perspiciatis possimus\n    aliquid voluptates dolore?\n  "
+        "\n    Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n    Lorem Ipsum has been the industry's standard dummy text ever since the\n    1500s\n  "
       )
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "task" }, [
-      _vm._m(1),
+    _vm._m(1),
+    _vm._v(" "),
+    _c("div", { staticClass: "tasks" }, [
+      _vm._m(2),
       _vm._v(" "),
-      _c("div", { staticClass: "upcoming" }, [
-        _vm._m(2),
-        _vm._v(" "),
-        _c(
-          "form",
-          { attrs: { action: "" }, on: { submit: _vm.addUpcomingTask } },
-          [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newTask,
-                  expression: "newTask"
-                }
-              ],
-              attrs: { type: "text" },
-              domProps: { value: _vm.newTask },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.newTask = $event.target.value
-                }
-              }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "ul",
-          { staticClass: "tasks-list" },
-          _vm._l(this.upcoming, function(upcomingTask) {
-            return _c("li", { key: upcomingTask.id }, [
-              _c("div", { staticClass: "info" }, [
-                _c("div", { staticClass: "left" }, [
-                  _c("label", { staticClass: "myCheckbox" }, [
-                    _c("input", {
-                      attrs: { type: "checkbox", name: "test" },
-                      domProps: { checked: upcomingTask.completed },
-                      on: {
-                        change: function($event) {
-                          return _vm.checkUpcoming(upcomingTask.taskId)
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("span")
-                  ]),
-                  _vm._v(" "),
-                  _c("h4", [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(upcomingTask.title) +
-                        "\n              "
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "right" }, [
-                  _c("img", {
-                    attrs: { src: __webpack_require__(/*! ../images/edit.png */ "./resources/js/images/edit.png"), alt: "edit" }
-                  }),
-                  _vm._v(" "),
-                  _c("img", {
-                    attrs: { src: __webpack_require__(/*! ../images/del.png */ "./resources/js/images/del.png"), alt: "delete" },
+      _c(
+        "ul",
+        { staticClass: "tasks-list" },
+        _vm._l(_vm.todayTasks, function(task) {
+          return _c("li", { key: task.id }, [
+            _c("div", { staticClass: "info" }, [
+              _c("div", { staticClass: "left" }, [
+                _c("label", { staticClass: "myCheckbox" }, [
+                  _c("input", {
+                    attrs: { type: "checkbox", name: "test" },
+                    domProps: { checked: task.completed },
                     on: {
-                      click: function($event) {
-                        return _vm.deleteUpcoming(upcomingTask.taskId)
+                      change: function($event) {
+                        return _vm.updateTodayTask(task.taskId)
                       }
                     }
-                  })
-                ])
+                  }),
+                  _vm._v(" "),
+                  _c("span")
+                ]),
+                _vm._v(" "),
+                _c("h4", [_vm._v(_vm._s(task.title))])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "right" }, [
+                _c("img", { attrs: { src: __webpack_require__(/*! ../images/edit.png */ "./resources/js/images/edit.png") } }),
+                _vm._v(" "),
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../images/del.png */ "./resources/js/images/del.png") },
+                  on: {
+                    click: function($event) {
+                      return _vm.deleteTodayTask(task.taskId)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    class: {
+                      inprogress: !task.approved,
+                      approved: task.approved
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n              " +
+                        _vm._s(task.approved ? "Approved" : "In progress") +
+                        "\n            "
+                    )
+                  ]
+                )
               ])
             ])
-          }),
-          0
-        )
-      ])
+          ])
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "upcoming" }, [
+      _c("div", { staticClass: "add-tasks" }, [
+        _c("h2", [_vm._v("Upcoming")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "add-action" }, [
+          _c("img", {
+            attrs: { src: __webpack_require__(/*! ../images/add.png */ "./resources/js/images/add.png"), alt: "add-action" },
+            on: { click: _vm.toogleUpcomingInput }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "form",
+        { attrs: { action: "" }, on: { submit: _vm.addUpcomingTask } },
+        [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.newTask,
+                expression: "newTask"
+              }
+            ],
+            class: _vm.upcomingInputEnabled
+              ? "enabled-input"
+              : "disabled-input",
+            attrs: {
+              type: "text",
+              disabled: _vm.upcomingInputEnabled ? "" : "disabled"
+            },
+            domProps: { value: _vm.newTask },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.newTask = $event.target.value
+              }
+            }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "tasks-list" },
+        _vm._l(this.upcoming, function(upcomingTask) {
+          return _c("li", { key: upcomingTask.id }, [
+            _c("div", { staticClass: "info" }, [
+              _c("div", { staticClass: "left" }, [
+                _c("label", { staticClass: "myCheckbox" }, [
+                  _c("input", {
+                    attrs: { type: "checkbox", name: "test" },
+                    domProps: { checked: upcomingTask.completed },
+                    on: {
+                      change: function($event) {
+                        return _vm.checkUpcoming(upcomingTask.taskId)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("span")
+                ]),
+                _vm._v(" "),
+                _c("h4", [
+                  _vm._v(
+                    "\n              " +
+                      _vm._s(upcomingTask.title) +
+                      "\n            "
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "right" }, [
+                _c("img", { attrs: { src: __webpack_require__(/*! ../images/edit.png */ "./resources/js/images/edit.png") } }),
+                _vm._v(" "),
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../images/del.png */ "./resources/js/images/del.png") },
+                  on: {
+                    click: function($event) {
+                      return _vm.deleteUpcoming(upcomingTask.taskId)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    class: {
+                      inprogress: !upcomingTask.approved,
+                      approved: upcomingTask.approved,
+                      waiting: _vm.upcoming.waiting
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n              " +
+                        _vm._s(upcomingTask.waiting ? "Waiting" : "Approved") +
+                        "\n            "
+                    )
+                  ]
+                )
+              ])
+            ])
+          ])
+        }),
+        0
+      )
     ])
   ])
 }
@@ -38258,9 +38512,15 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "horizontal" }, [
-      _c("img", {
-        attrs: { src: __webpack_require__(/*! ../images/horizontal.png */ "./resources/js/images/horizontal.png"), alt: "" }
-      })
+      _c("img", { attrs: { src: __webpack_require__(/*! ../images/horizontal.png */ "./resources/js/images/horizontal.png") } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "users-icon" }, [
+      _c("img", { attrs: { src: __webpack_require__(/*! ../images/users.png */ "./resources/js/images/users.png") } })
     ])
   },
   function() {
@@ -38269,22 +38529,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "add-tasks" }, [
       _c("h2", [_vm._v("Today's Task")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "add-action" }, [
-        _c("img", {
-          attrs: { src: __webpack_require__(/*! ../images/add.png */ "./resources/js/images/add.png"), alt: "add-action" }
-        })
-      ]),
-      _vm._v(" "),
-      _c("ul", { staticClass: "tasks-list" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "add-tasks" }, [
-      _c("h2", [_vm._v("Upcoming")]),
       _vm._v(" "),
       _c("div", { staticClass: "add-action" }, [
         _c("img", {

@@ -28,13 +28,14 @@ class TodayTaskController extends Controller
      */
     public function store(CreateTodayTaskRequest $request)
     {
-        return Today::create(
+        $task = Today::create(
             [
                 'id' => $request->id,
                 'title' => $request->title,
                 'taskId' => $request->taskId,
             ]
         );
+        return TodayTaskResource::make($task);
     }
 
     /**

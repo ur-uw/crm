@@ -428,3 +428,17 @@ input[type="text"] {
     background-color: #ff0e4620;
     color: #ff0e46;
 }
+
+.enabled-input {
+    background-color: #fafafa;
+    height: 2rem;
+    border-radius: 5px;
+    border: none;
+}
+
+.disabled-input {
+    height: 2rem;
+    outline: none;
+    border-radius: 5px;
+    border: none;
+}

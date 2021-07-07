@@ -54,8 +54,8 @@
 
         <div class="a-project">
           <div class="box-color">
-            <img src="../images/plus.png" height="50" width="50" alt="add" />
-            <span>PT</span>
+            <img src="../images/plus.svg" id="plus-icon" />
+
             <h6>Add Project</h6>
           </div>
         </div>

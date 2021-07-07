@@ -2102,17 +2102,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "RightBody",
   data: function data() {
     return {
-      upcomingInputEnabled: false,
       todayTasks: [],
       upcoming: [],
       newTask: ""
@@ -2123,10 +2116,6 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchUpcoming();
   },
   methods: {
-    toogleUpcomingInput: function toogleUpcomingInput() {
-      console.log("test");
-      this.upcomingInputEnabled = !this.upcomingInputEnabled;
-    },
     //** Upcoming Task **//
     fetchUpcoming: function fetchUpcoming() {
       var _this = this;
@@ -6850,13 +6839,13 @@ module.exports = "/images/overlay.png?5ec684d7c53b50e8d0b494e645d7d068";
 
 /***/ }),
 
-/***/ "./resources/js/images/plus.png":
+/***/ "./resources/js/images/plus.svg":
 /*!**************************************!*\
-  !*** ./resources/js/images/plus.png ***!
+  !*** ./resources/js/images/plus.svg ***!
   \**************************************/
 /***/ ((module) => {
 
-module.exports = "/images/plus.png?c046340c1e218a064d17c1ad149483ec";
+module.exports = "/images/plus.svg?53c71ad204ad185f1fe4e5db09340e58";
 
 /***/ }),
 
@@ -38277,15 +38266,8 @@ var staticRenderFns = [
           _c("div", { staticClass: "a-project" }, [
             _c("div", { staticClass: "box-color" }, [
               _c("img", {
-                attrs: {
-                  src: __webpack_require__(/*! ../images/plus.png */ "./resources/js/images/plus.png"),
-                  height: "50",
-                  width: "50",
-                  alt: "add"
-                }
+                attrs: { src: __webpack_require__(/*! ../images/plus.svg */ "./resources/js/images/plus.svg"), id: "plus-icon" }
               }),
-              _vm._v(" "),
-              _c("span", [_vm._v("PT")]),
               _vm._v(" "),
               _c("h6", [_vm._v("Add Project")])
             ])
@@ -38394,16 +38376,7 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "upcoming" }, [
-      _c("div", { staticClass: "add-tasks" }, [
-        _c("h2", [_vm._v("Upcoming")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "add-action" }, [
-          _c("img", {
-            attrs: { src: __webpack_require__(/*! ../images/add.png */ "./resources/js/images/add.png"), alt: "add-action" },
-            on: { click: _vm.toogleUpcomingInput }
-          })
-        ])
-      ]),
+      _vm._m(3),
       _vm._v(" "),
       _c(
         "form",
@@ -38418,13 +38391,7 @@ var render = function() {
                 expression: "newTask"
               }
             ],
-            class: _vm.upcomingInputEnabled
-              ? "enabled-input"
-              : "disabled-input",
-            attrs: {
-              type: "text",
-              disabled: _vm.upcomingInputEnabled ? "" : "disabled"
-            },
+            attrs: { type: "text" },
             domProps: { value: _vm.newTask },
             on: {
               input: function($event) {
@@ -38529,6 +38496,20 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "add-tasks" }, [
       _c("h2", [_vm._v("Today's Task")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "add-action" }, [
+        _c("img", {
+          attrs: { src: __webpack_require__(/*! ../images/add.png */ "./resources/js/images/add.png"), alt: "add-action" }
+        })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "add-tasks" }, [
+      _c("h2", [_vm._v("Upcoming")]),
       _vm._v(" "),
       _c("div", { staticClass: "add-action" }, [
         _c("img", {

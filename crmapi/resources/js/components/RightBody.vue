@@ -65,7 +65,6 @@
           <img
             src="../images/add.png"
             alt="add-action"
-            @click="toogleUpcomingInput"
           />
         </div>
       </div>

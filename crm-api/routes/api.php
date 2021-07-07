@@ -1,8 +1,21 @@
 <?php
 
 use App\Http\Controllers\TodayTaskController;
+use App\Http\Controllers\UpComingTaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+//** Upcoming Task*//
+
+// Get all upcoming tasks
+Route::get('upcoming', [UpComingTaskController::class, 'index']);
+
+// Create new upcoming
+Route::post('upcoming', [UpComingTaskController::class, 'store']);
+
+// Delete an upcoming
+Route::delete('upcoming/{taskId}', [UpComingTaskController::class, 'destroy']);
+
 
 //** Today Task*//
 // Get all daily tasks

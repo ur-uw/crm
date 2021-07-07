@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateTodayTaskRequest;
-use App\Http\Resources\TodayTaskResource;
-use App\Models\TodayTask;
+use App\Http\Requests\CreateUpcomingTaskRequest;
+use App\Http\Resources\UpComingTaskResource;
+use App\Models\UpComingTask;
+use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class TodayTaskController extends Controller
+class UpComingTaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class TodayTaskController extends Controller
      */
     public function index()
     {
-        return TodayTaskResource::collection(TodayTask::all());
+        return UpComingTaskResource::collection(UpComingTask::all());
     }
 
     /**
@@ -26,16 +26,15 @@ class TodayTaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateTodayTaskRequest $request)
+    public function store(CreateUpcomingTaskRequest $request)
     {
-        $task = TodayTask::create(
+        return UpComingTask::create(
             [
-                'id' => $request->id,
                 'title' => $request->title,
                 'taskId' => $request->taskId,
+                'waiting' => $request->waiting,
             ]
         );
-        return TodayTaskResource::make($task);
     }
 
     /**
@@ -69,8 +68,12 @@ class TodayTaskController extends Controller
      */
     public function destroy($taskId)
     {
-        DB::table('today_tasks')->where('taskId', $taskId)->delete();
-
-        return response()->json(['message' => 'Daily Task Deleted', 204]);
+        DB::table('up_coming_tasks')->where('taskId', $taskId)->delete();
+        return response()->json(
+            [
+                'message' => 'Upcoming Deleted!',
+            ],
+            204
+        );
     }
 }

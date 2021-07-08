@@ -3,34 +3,28 @@
 </template>
 
 <style lang="scss">
-* {
-  list-style: none;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  outline: none;
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
+:root {
+  --primary1: #15172b;
+  --primary2: #262a41;
+  --customblue: #0026ff;
+  --custompink: #ff3250;
+  --customeyellow: #ffbb00;
+  --customgreen: #07e642;
+  --custompurple: #894fc6;
+  --customdarkblue: #121432;
+  --white: #ffffff;
+  --customgrey: #707070;
+  --customgreen1: #15d4a1;
 }
+
 body {
-  background-color: #fafafa;
-}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  position: relative;
+  font-family: "MyriadProRegular";
+  background-color: var(--primary1);
+  &::-webkit-scrollbar {
+    display: none;
+    scrollbar-width: none;
   }
 }
 </style>

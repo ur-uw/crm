@@ -1,14 +1,389 @@
 <template>
-  <h1>Hello world</h1>
+  <Body></Body>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
+import Body from "@/components/Body.vue";
 export default defineComponent({
   name: "Home",
-  components: {},
+  components: {
+    Body,
+  },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+.middle {
+  transition: 0.5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 1;
+}
+
+.mcontainer {
+  #body {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-areas: "Left Right";
+    padding: 16px;
+    #left {
+      grid-area: Left;
+      padding: 15%;
+      position: relative;
+      .hamburger {
+        position: absolute;
+        top: 0%;
+        left: 2%;
+        cursor: pointer;
+      }
+      .profile {
+        margin-top: 5px;
+        h1 {
+          font-family: "Open Sans", sans-serif;
+          font-size: 34px;
+          color: var(--white);
+          font-weight: 500;
+          text-transform: capitalize;
+        }
+        h2 {
+          font-family: "Open Sans", sans-serif;
+          font-size: 16px;
+          color: var(--customgrey);
+          font-weight: 300;
+        }
+      }
+      .search {
+        border: unset;
+        border-radius: 14px;
+        padding: 17px 25px;
+        padding-left: 55px;
+        margin-top: 39px;
+        position: relative;
+        background-color: #70707050;
+        height: 53px;
+        margin-bottom: 35px;
+        width: 90%;
+        img {
+          @extend .middle;
+          opacity: 1;
+          left: 25px;
+          cursor: pointer;
+        }
+        input {
+          border: unset;
+          padding: 0.2em;
+          background-color: transparent;
+          width: 100%;
+          height: 100%;
+          caret-color: var(--white);
+          &::placeholder {
+            background-color: unset;
+            color: var(--customgrey);
+            font-family: "Open Sans", sans-serif;
+            font-size: 14px;
+          }
+        }
+      }
+      .project {
+        margin-bottom: 70px;
+        h3 {
+          font-family: "Open Sans", sans-serif;
+          font-size: 19px;
+          color: var(--white) !important;
+          span {
+            font-size: 14px;
+            color: var(--customgrey);
+          }
+        }
+        .projects {
+          margin-top: 27px;
+          display: grid;
+          grid-template-columns: repeat(3, 112px);
+          grid-auto-flow: dense;
+          .a-project {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            border-radius: 1em;
+            background-color: transparent;
+            margin-bottom: 1em;
+            padding: 0.5em;
+            span {
+              font-family: "MyriadProRegular";
+              font-size: 17px;
+              color: var(--white);
+              font-size: 900;
+            }
+            h6 {
+              margin-top: 16px;
+              font-family: "Open Sans", sans-serif;
+              font-size: 14px;
+              color: var(--white);
+            }
+            div.box-color {
+              border-radius: 1em;
+              margin-bottom: 1px;
+              overflow: hidden;
+              position: relative;
+              span {
+                @extend .middle;
+                opacity: 1;
+              }
+              img {
+                width: 100%;
+                height: 100%;
+              }
+              &:hover {
+                border: 4px solid var(--custompink);
+                transition: border 400ms eas;
+              }
+            }
+            .customwidth {
+              width: 100px;
+              height: 94px !important;
+            }
+            &:nth-child(1) {
+              div.box-color {
+                background-color: var(--customblue);
+                @extend .customwidth;
+              }
+            }
+            &:nth-child(2) {
+              div.box-color {
+                background-color: var(--custompink);
+                @extend .customwidth;
+              }
+            }
+            &:nth-child(3) {
+              div.box-color {
+                background-color: var(--customeyellow);
+                @extend .customwidth;
+              }
+            }
+            &:nth-child(4) {
+              div.box-color {
+                background-color: var(--customgreen);
+                @extend .customwidth;
+              }
+            }
+            &:nth-child(5) {
+              div.box-color {
+                background-color: var(--custompurple);
+                @extend .customwidth;
+              }
+            }
+            &:nth-child(6) {
+              div.box-color {
+                background-color: var(--customblue);
+                @extend .customwidth;
+              }
+            }
+          }
+        }
+      }
+      .grid {
+        bottom: 0%;
+        left: 0px;
+        position: absolute;
+      }
+      .grid-right {
+        top: 0%;
+        right: -10%;
+        position: absolute;
+      }
+    }
+    #right {
+      position: relative;
+      grid-area: Right;
+      background-color: #fff;
+      border-radius: 15px;
+      padding-top: 65px;
+      padding-bottom: 85px;
+      padding-left: 70px;
+      padding-right: 20px;
+      h1 {
+        font-family: "MyriadProBold";
+        font-size: 24px;
+        font-weight: 400;
+        margin-bottom: 10px;
+      }
+      .horizontal {
+        img {
+          width: 122px;
+        }
+        margin-bottom: 10px;
+      }
+      p {
+        font-family: "Open Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 300;
+        width: 500px;
+      }
+      .users-icon {
+        position: absolute;
+        right: 42px;
+        top: 65px;
+        cursor: pointer;
+        img {
+          height: 30px;
+        }
+      }
+      .tasks,
+      .upcoming {
+        margin-bottom: 1.3em;
+        .add-tasks {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          h2 {
+            font-family: "MyriadProBold";
+            font-size: 15px;
+            font-weight: 400;
+          }
+          img {
+            cursor: pointer;
+          }
+        }
+        input[type="text"] {
+          border: unset;
+          border-bottom: 1px solid var(--customgrey);
+          width: 100%;
+          caret-color: var(--primary1);
+        }
+        ul.tasks-list {
+          margin-top: 15px;
+          li {
+            display: flex;
+            flex-direction: column;
+            .info {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              cursor: pointer;
+              padding: 0.3em;
+              border-radius: 0.3em 3em;
+              &:hover {
+                background-color: #70707010;
+                transition: all 400ms ease-in-out;
+              }
+              .left {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                label {
+                  cursor: pointer;
+                  margin-top: 0.3em;
+                  padding-top: 0.4em;
+                  input {
+                    display: none;
+                  }
+                  span {
+                    height: 20px;
+                    width: 20px;
+                    display: inline-block;
+                    position: relative;
+                    border-radius: 50px;
+                    border: 2px solid var(--customgreen1);
+                  }
+                  [type="checkbox"]:checked + span:before {
+                    content: "\2714";
+                    @extend .middle;
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 50px;
+                    border: 2px solid var(--customgreen1);
+                    background-color: var(--customgreen1);
+                    opacity: 1;
+                    font-size: 12px;
+                    top: 45%;
+                    color: #fff;
+                  }
+                }
+                h4 {
+                  margin-left: 15px;
+                  font-family: "Open Sans", sans-serif;
+                  font-size: 13px;
+                  color: var(--primary2);
+                  font-weight: 600;
+                }
+              }
+              .right {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                img {
+                  margin-right: 1em;
+                  cursor: pointer;
+                }
+                button {
+                  padding: 5px 31px;
+                  border-radius: 50px;
+                  border: unset;
+                  box-shadow: unset !important;
+                  width: 120px;
+                  font-family: "Open Sans", sans-serif;
+                  font-size: 12px;
+                  white-space: nowrap;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+input[type="text"] {
+  outline: none;
+}
+
+.approved {
+  background-color: #15d4a150;
+  color: #15d4a1;
+}
+
+.inprogress {
+  background-color: #0060ff20;
+  color: #0060ff;
+}
+
+.rejected {
+  background-color: #ff0e4620;
+  color: #ff0e46;
+}
+
+.enabled-input {
+  background-color: #fafafa;
+  height: 2rem;
+  border-radius: 5px;
+  border: none;
+}
+
+.disabled-input {
+  height: 2rem;
+  outline: none;
+  border-radius: 5px;
+  border: none;
+}
+
+#plus-icon {
+  height: 5px;
+  width: 5px;
+}
+
+#plus-icon * {
+  width: 100%;
+  height: 100%;
+  fill: white;
+}
 </style>

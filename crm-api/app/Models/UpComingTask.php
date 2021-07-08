@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class UpComingTask extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'title',
+        'completed',
+        'approved',
+        'taskId',
+        'waiting',
+    ];
 }

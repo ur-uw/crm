@@ -6,12 +6,10 @@
 import { defineComponent } from "vue";
 import Body from "@/components/dashboard/Body.vue";
 export default defineComponent({
-  name: "Home",
+  name: "Dashboard",
   components: {
     Body,
   },
 });
 </script>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

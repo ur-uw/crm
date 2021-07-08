@@ -1,11 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
+import Dashboard from "../views/Dashboard.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "dashboard",
+    component: Dashboard,
+    meta: {
+      title: "Dashboard",
+    },
   },
 ];
 
@@ -14,4 +17,8 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  document.title = `${to.meta.title}`;
+  next();
+});
 export default router;

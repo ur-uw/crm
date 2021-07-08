@@ -2,7 +2,7 @@
   <div id="right">
     <h1>Development Crm</h1>
     <div class="horizontal">
-      <img src="../../assets/images/horizontal.png" alt="horizontal" />
+      <img src="../../assets/images/horizontal.png" alt="horizontal"/>
     </div>
 
     <p>
@@ -12,14 +12,14 @@
     </p>
 
     <div class="users-icon">
-      <img src="../../assets/images/users.png" alt="users" />
+      <img src="../../assets/images/users.png" alt="users"/>
     </div>
 
     <div class="tasks">
       <div class="add-tasks">
         <h2>Today's Task</h2>
         <div class="add-action">
-          <img src="../../assets/images/add.png" alt="add-action" />
+          <img src="../../assets/images/add.png" alt="add-action"/>
         </div>
       </div>
 
@@ -29,10 +29,10 @@
             <div class="left">
               <label class="myCheckbox">
                 <input
-                  type="checkbox"
-                  name="test"
-                  :checked="task.completed"
-                  @change="updateTodayTask(task.taskId)"
+                    type="checkbox"
+                    name="test"
+                    :checked="task.completed"
+                    @change="checkTodayTask(task.taskId)"
                 />
                 <span></span>
               </label>
@@ -40,14 +40,14 @@
               <h4>{{ task.title }}</h4>
             </div>
             <div class="right">
-              <img src="../../assets/images/edit.png" />
+              <img src="../../assets/images/edit.png"/>
               <img
-                src="../../assets/images/del.png"
-                @click="deleteTodayTask(task.taskId)"
+                  src="../../assets/images/del.png"
+                  @click="deleteTodayTask(task.taskId)"
               />
 
               <button
-                v-bind:class="{
+                  v-bind:class="{
                   inprogress: !task.approved,
                   approved: task.approved,
                 }"
@@ -64,11 +64,11 @@
       <div class="add-tasks">
         <h2>Upcoming</h2>
         <div class="add-action">
-          <img src="../../assets/images/add.png" alt="add-action" />
+          <img src="../../assets/images/add.png" alt="add-action"/>
         </div>
       </div>
       <form action="" @submit="addUpcomingTask">
-        <input type="text" v-model="newTaskTitle" />
+        <input type="text" v-model="newTaskTitle"/>
       </form>
       <ul class="tasks-list">
         <li v-for="upcomingTask in upcoming" :key="upcomingTask.id">
@@ -76,10 +76,10 @@
             <div class="left">
               <label class="myCheckbox">
                 <input
-                  type="checkbox"
-                  name="test"
-                  :checked="upcomingTask.completed"
-                  @change="checkUpcoming(upcomingTask.taskId)"
+                    type="checkbox"
+                    name="test"
+                    :checked="upcomingTask.completed"
+                    @change="checkUpcoming(upcomingTask.taskId)"
                 />
                 <span></span>
               </label>
@@ -88,15 +88,15 @@
               </h4>
             </div>
             <div class="right">
-              <img src="../../assets/images/edit.png" alt="edit" />
+              <img src="../../assets/images/edit.png" alt="edit"/>
               <img
-                src="../../assets/images/del.png"
-                @click="deleteUpcoming(upcomingTask.taskId)"
-                alt="del"
+                  src="../../assets/images/del.png"
+                  @click="deleteUpcoming(upcomingTask.taskId)"
+                  alt="del"
               />
 
               <button
-                v-bind:class="{
+                  v-bind:class="{
                   inprogress: !upcomingTask.approved,
                   approved: upcomingTask.approved,
                   waiting: upcomingTask.waiting,
@@ -114,8 +114,8 @@
 
 <script lang="ts">
 import axios from "axios";
-import { ref } from "vue";
-import { DailyTask, UpComingTask } from "@/interfaces/Task";
+import {ref} from "vue";
+import {DailyTask, UpComingTask} from "@/interfaces/Task";
 
 export default {
   name: "RightBody",
@@ -127,7 +127,7 @@ export default {
 
     //** Upcoming Task **//
     function fetchUpcoming(): void {
-      axios.get("/api/upcoming").then(({ data }) => {
+      axios.get("/api/upcoming").then(({data}) => {
         upcoming.value = data["data"];
       });
     }
@@ -135,8 +135,8 @@ export default {
     //** Today Task **//
     function fetchTodayTasks(): void {
       axios
-        .get("/api/dailytask")
-        .then(({ data }) => (todayTasks.value = data["data"]));
+          .get("/api/dailytask")
+          .then(({data}) => (todayTasks.value = data["data"]));
     }
 
     //** Add Upcoming Task **//
@@ -153,85 +153,84 @@ export default {
 
         //post request
         axios
-          .post("/api/upcoming", newTask)
-          .then(() => upcoming.value.push(newTask))
-          .catch((e) => console.log(e));
+            .post("/api/upcoming", newTask)
+            .then(() => upcoming.value.push(newTask))
+            .catch((e) => console.log(e));
 
         //Clear or Reset newTask
         newTaskTitle.value = "";
       }
     }
 
-    // //** Delete Upcoming Task **//
-    // function deleteUpcoming(taskId: string): void {
-    //   if (confirm("Are you sure?")) {
-    //     //delete request
-    //     axios
-    //       .delete(`/api/upcoming/${taskId}`, {})
-    //       .then(() => {
-    //         upcoming.value = upcoming.value.filter(
-    //           (task: UpComingTask) => task.taskId != taskId
-    //         );
-    //       })
-    //       .catch((e) => console.error(e));
-    //   }
-    // }
-    //
-    // // Check upcoming task
-    // function checkUpcoming(taskId: string): void {
-    //   if (todayTasks.value.length > 4) {
-    //     alert("Please complete existing tasks!");
-    //   } else {
-    //     addDailyTask(taskId);
-    //     //Delete this task from db
-    //     axios.delete(`/api/upcoming/${taskId}`).then(() => {
-    //       upcoming.value = upcoming.value.filter(
-    //         (task: UpComingTask) => task.taskId != taskId
-    //       );
-    //     });
-    //   }
-    // }
-    //
-    // //** Add daily task and remove upcoming from database **//
-    // function addDailyTask(taskId: string): void {
-    //   const task = upcoming.value.filter(
-    //     (task: UpComingTask) => task.taskId == taskId
-    //   )[false];
-    //
-    //   //POST REQUEST
-    //   axios
-    //     .post("/api/dailytask", JSON.stringify(task))
-    //     .then(({ data }) => {
-    //       todayTasks.value.unshift(data);
-    //     })
-    //     .catch((e) => console.error(e));
-    // }
-    //
-    // //Update today task
-    // function updateTodayTask(taskId: string): void {
-    //   if (confirm("Task Completed?")) {
-    //     axios
-    //       .delete(`/api/dailytask/${taskId}`)
-    //       .then(() => {
-    //         todayTasks.value = todayTasks.value.filter(
-    //           (task: DailyTask) => task.taskId != taskId
-    //         );
-    //       })
-    //       .catch((e) => console.error(e));
-    //   }
-    // }
-    //
-    // // Delte today task
-    // function deleteTodayTask(taskId: string): void {
-    //   if (confirm("Are you sure")) {
-    //     //Delete this task from db
-    //     axios.delete(`/api/dailytask/${taskId}`).then(() => {
-    //       todayTasks.value = todayTasks.value.filter(
-    //         (task: DailyTask) => task.taskId != taskId
-    //       );
-    //     });
-    //   }
-    //}
+    //** Delete Upcoming Task **//
+    function deleteUpcoming(taskId: string): void {
+      if (confirm("Are you sure?")) {
+        //delete request
+        axios
+            .delete(`/api/upcoming/${taskId}`, {})
+            .then(() => {
+              upcoming.value = upcoming.value.filter(
+                  (task: UpComingTask) => task.taskId != taskId
+              );
+            })
+            .catch((e) => console.error(e));
+      }
+    }
+
+    // Check upcoming task
+    function checkUpcoming(taskId: string): void {
+      if (todayTasks.value.length > 4) {
+        alert("Please complete existing tasks!");
+      } else {
+        addDailyTask(taskId);
+        //Delete this task from db
+        axios.delete(`/api/upcoming/${taskId}`).then(() => {
+          upcoming.value = upcoming.value.filter(
+              (task: UpComingTask) => task.taskId != taskId
+          );
+        }).catch(e => console.warn(e.message));
+      }
+    }
+
+    //** Add daily task and remove upcoming from database **//
+    function addDailyTask(taskId: string): void {
+      const task = upcoming.value.filter(
+          (task: UpComingTask) => task.taskId == taskId
+      )[0] as DailyTask;
+      //POST REQUEST
+      axios
+          .post("/api/dailytask", task)
+          .then(() => {
+            todayTasks.value.unshift(task);
+          })
+          .catch((e) => console.error(e));
+    }
+
+    //Update today task
+    function checkTodayTask(taskId: string): void {
+      if (confirm("Task Completed?")) {
+        axios
+          .delete(`/api/dailytask/${taskId}`)
+          .then(() => {
+            todayTasks.value = todayTasks.value.filter(
+              (task: DailyTask) => task.taskId != taskId
+            );
+          })
+          .catch((e) => console.error(e));
+      }
+    }
+
+    // Delte today task
+    function deleteTodayTask(taskId: string): void {
+      if (confirm("Are you sure")) {
+        //Delete this task from db
+        axios.delete(`/api/dailytask/${taskId}`).then(() => {
+          todayTasks.value = todayTasks.value.filter(
+            (task: DailyTask) => task.taskId != taskId
+          );
+        });
+      }
+    }
 
     //Calling functions
     fetchUpcoming();
@@ -241,6 +240,10 @@ export default {
       todayTasks,
       newTaskTitle,
       addUpcomingTask,
+      deleteUpcoming,
+      checkUpcoming,
+      checkTodayTask,
+      deleteTodayTask,
     };
   },
 };

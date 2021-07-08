@@ -1,30 +1,15 @@
 interface Task {
-  id: number | string;
-  title: string;
-  completed: boolean;
-  approved: boolean;
-  taskId: string;
-  created_at: string | null;
-  updated_at: string | null;
+  id?: number | string;
+  title?: string;
+  completed?: boolean | number;
+  approved?: boolean | number;
+  taskId?: string;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
-export interface DailyTask extends Task {
-  id: number | string;
-  title: string;
-  completed: boolean;
-  approved: boolean;
-  taskId: string;
-  created_at: string | null;
-  updated_at: string | null;
-}
+export type DailyTask = Task;
 
 export interface UpComingTask extends Task {
-  id: number | string;
-  title: string;
-  completed: boolean;
-  approved: boolean;
-  waiting: boolean;
-  taskId: string;
-  created_at: string  | null;
-  updated_at: string | null;
+  waiting?: boolean | number;
 }

@@ -8,7 +8,7 @@
 import Body from "./Body";
 
 export default {
-  name: "App",
+  name: "Dashboard",
   components: {
     Body,
   },

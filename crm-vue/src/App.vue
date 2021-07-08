@@ -1,9 +1,20 @@
 <template>
-  <router-view />
+  <router-view/>
 </template>
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
+@font-face {
+  font-family: "MyriadProLight";
+  font-weight: normal;
+  src: url("/src/assets/font/MyriadPro-Light.otf");
+}
+@font-face {
+  font-family: "MyriadProSemiBold";
+  font-weight: normal;
+  src: url("/src/assets/font/MYRIADPRO-SEMIBOLD.OTF");
+}
+
 :root {
   --primary1: #15172b;
   --primary2: #262a41;
@@ -20,8 +31,9 @@
 
 body {
   position: relative;
-  font-family: "MyriadProRegular";
+  font-family: "MyriadProRegular", sans-serif;
   background-color: var(--primary1);
+
   &::-webkit-scrollbar {
     display: none;
     scrollbar-width: none;

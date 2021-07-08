@@ -2,7 +2,7 @@
   <div id="right">
     <h1>Development Crm</h1>
     <div class="horizontal">
-      <img src="../assets/images/horizontal.png" alt="horizontal" />
+      <img src="../../assets/images/horizontal.png" alt="horizontal" />
     </div>
 
     <p>
@@ -12,14 +12,14 @@
     </p>
 
     <div class="users-icon">
-      <img src="../assets/images/users.png" alt="users" />
+      <img src="../../assets/images/users.png" alt="users" />
     </div>
 
     <div class="tasks">
       <div class="add-tasks">
         <h2>Today's Task</h2>
         <div class="add-action">
-          <img src="../assets/images/add.png" alt="add-action" />
+          <img src="../../assets/images/add.png" alt="add-action" />
         </div>
       </div>
 
@@ -40,9 +40,9 @@
               <h4>{{ task.title }}</h4>
             </div>
             <div class="right">
-              <img src="../assets/images/edit.png" />
+              <img src="../../assets/images/edit.png" />
               <img
-                src="../assets/images/del.png"
+                src="../../assets/images/del.png"
                 @click="deleteTodayTask(task.taskId)"
               />
 
@@ -64,10 +64,10 @@
       <div class="add-tasks">
         <h2>Upcoming</h2>
         <div class="add-action">
-          <img src="../assets/images/add.png" alt="add-action" />
+          <img src="../../assets/images/add.png" alt="add-action" />
         </div>
       </div>
-      <form action="">
+      <form action="" @submit="addUpcomingTask">
         <input type="text" v-model="newTaskTitle" />
       </form>
       <ul class="tasks-list">
@@ -88,9 +88,9 @@
               </h4>
             </div>
             <div class="right">
-              <img src="../assets/images/edit.png" alt="edit" />
+              <img src="../../assets/images/edit.png" alt="edit" />
               <img
-                src="../assets/images/del.png"
+                src="../../assets/images/del.png"
                 @click="deleteUpcoming(upcomingTask.taskId)"
                 alt="del"
               />
@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-// import axios from "axios";
+import axios from "axios";
 import { ref } from "vue";
 import { DailyTask, UpComingTask } from "@/interfaces/Task";
 
@@ -121,88 +121,47 @@ export default {
   name: "RightBody",
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
-    const todayTasks = ref<DailyTask[]>([
-      {
-        id: 1,
-        completed: false,
-        approved: false,
-        title: "Daily Task 1",
-        taskId: "sdfsdf",
-        created_at: "sdfdsdf",
-        updated_at: "sdfsdf",
-      },
-      {
-        id: 2,
-        completed: false,
-        approved: false,
-        title: "Daily Task 2",
-        taskId: "sdfsdfs3r",
-        created_at: "sdfdsdf",
-        updated_at: "sdfsdf",
-      },
-    ]);
-    const upcoming = ref<UpComingTask[]>([
-      {
-        id: 1,
-        title: "Upcoming Task 1",
-        completed: false,
-        approved: false,
-        taskId: "sdfsdf",
-        created_at: "sdfdsdf",
-        waiting: true,
-        updated_at: "sdfsdf",
-      },
-      {
-        id: 2,
-        title: "Upcoming Task 2",
-        completed: false,
-        approved: false,
-        waiting: true,
-        taskId: "sdfsdfs3r",
-        created_at: "sdfdsdf",
-        updated_at: "sdfsdf",
-      },
-    ]);
+    const todayTasks = ref<DailyTask[]>([]);
+    const upcoming = ref<UpComingTask[]>([]);
     const newTaskTitle = ref<string>("");
-    return {
-      upcoming,
-      todayTasks,
-      newTaskTitle,
-    };
+
     //** Upcoming Task **//
-    // function fetchUpcoming(): void {
-    //   axios.get("/api/upcoming").then(({ data }) => {
-    //     upcoming = data;
-    //   });
-    // }
-    //
-    // //** Today Task **//
-    // function fetchTodayTasks(): void {
-    //   axios.get("/api/dailytask").then(({ data }) => (todayTasks = data));
-    // }
-    //
-    // //** Add Upcoming Task **//
-    // function addUpcomingTask(e: Event): void {
-    //   e.preventDefault();
-    //   if (upcoming.value.length > 4) {
-    //     alert("Please complete the upcoming tasks");
-    //   } else {
-    //     const newTask = {
-    //       title: newTaskTitle,
-    //       waiting: true,
-    //       taskId: Math.random().toString(36).substring(7),
-    //     } ;
-    //     //post request
-    //     axios
-    //       .post("/api/upcoming", JSON.stringify(newTask))
-    //       .then(() => upcoming.value.push(newTask))
-    //       .catch((e) => console.log(e));
-    //
-    //     //Clear or Reset newTask
-    //     newTaskTitle = "";
-    //   }
-    // }
-    //
+    function fetchUpcoming(): void {
+      axios.get("/api/upcoming").then(({ data }) => {
+        upcoming.value = data["data"];
+      });
+    }
+
+    //** Today Task **//
+    function fetchTodayTasks(): void {
+      axios
+        .get("/api/dailytask")
+        .then(({ data }) => (todayTasks.value = data["data"]));
+    }
+
+    //** Add Upcoming Task **//
+    function addUpcomingTask(e: Event): void {
+      e.preventDefault();
+      if (upcoming.value.length > 4) {
+        alert("Please complete the upcoming tasks");
+      } else {
+        const newTask = {
+          title: newTaskTitle.value,
+          waiting: true,
+          taskId: Math.random().toString(36).substring(7),
+        } as UpComingTask;
+
+        //post request
+        axios
+          .post("/api/upcoming", newTask)
+          .then(() => upcoming.value.push(newTask))
+          .catch((e) => console.log(e));
+
+        //Clear or Reset newTask
+        newTaskTitle.value = "";
+      }
+    }
+
     // //** Delete Upcoming Task **//
     // function deleteUpcoming(taskId: string): void {
     //   if (confirm("Are you sure?")) {
@@ -273,6 +232,16 @@ export default {
     //     });
     //   }
     //}
+
+    //Calling functions
+    fetchUpcoming();
+    fetchTodayTasks();
+    return {
+      upcoming,
+      todayTasks,
+      newTaskTitle,
+      addUpcomingTask,
+    };
   },
 };
 </script>

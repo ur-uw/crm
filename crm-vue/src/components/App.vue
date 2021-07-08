@@ -1,19 +1,19 @@
 <template>
-    <div class="mcontainer">
-        <Body></Body>
-    </div>
+  <div class="mcontainer">
+    <Body></Body>
+  </div>
 </template>
 
 <script>
-import Body from './Body';
+import Body from "./Body";
+
 export default {
-    name:"App",
-    components:{
-        Body,
-    }
-}
+  name: "App",
+  components: {
+    Body,
+  },
+};
 </script>
 
-<style>
-
+<style lang="scss">
 </style>

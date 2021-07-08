@@ -1,5 +1,5 @@
 interface Task {
-  id: number;
+  id: number | string;
   title: string;
   completed: boolean;
   approved: boolean;
@@ -9,7 +9,7 @@ interface Task {
 }
 
 export interface DailyTask extends Task {
-  id: number;
+  id: number | string;
   title: string;
   completed: boolean;
   approved: boolean;
@@ -19,12 +19,12 @@ export interface DailyTask extends Task {
 }
 
 export interface UpComingTask extends Task {
-  id: number;
+  id: number | string;
   title: string;
   completed: boolean;
   approved: boolean;
   waiting: boolean;
   taskId: string;
-  created_at: string | null;
+  created_at: string  | null;
   updated_at: string | null;
 }

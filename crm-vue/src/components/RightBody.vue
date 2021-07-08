@@ -2,7 +2,7 @@
   <div id="right">
     <h1>Development Crm</h1>
     <div class="horizontal">
-      <img src="../assets/images/horizontal.png" />
+      <img src="../assets/images/horizontal.png" alt="horizontal" />
     </div>
 
     <p>
@@ -11,7 +11,9 @@
       1500s
     </p>
 
-    <div class="users-icon"><img src="../assets/images/users.png" /></div>
+    <div class="users-icon">
+      <img src="../assets/images/users.png" alt="users" />
+    </div>
 
     <div class="tasks">
       <div class="add-tasks">
@@ -65,11 +67,11 @@
           <img src="../assets/images/add.png" alt="add-action" />
         </div>
       </div>
-      <form action="" @submit="addUpcomingTask">
+      <form action="">
         <input type="text" v-model="newTaskTitle" />
       </form>
       <ul class="tasks-list">
-        <li v-for="upcomingTask in this.upcoming" :key="upcomingTask.id">
+        <li v-for="upcomingTask in upcoming" :key="upcomingTask.id">
           <div class="info">
             <div class="left">
               <label class="myCheckbox">
@@ -86,17 +88,18 @@
               </h4>
             </div>
             <div class="right">
-              <img src="../assets/images/edit.png" />
+              <img src="../assets/images/edit.png" alt="edit" />
               <img
                 src="../assets/images/del.png"
                 @click="deleteUpcoming(upcomingTask.taskId)"
+                alt="del"
               />
 
               <button
                 v-bind:class="{
                   inprogress: !upcomingTask.approved,
                   approved: upcomingTask.approved,
-                  waiting: upcoming.waiting,
+                  waiting: upcomingTask.waiting,
                 }"
               >
                 {{ upcomingTask.waiting ? "Waiting" : "Approved" }}
@@ -110,131 +113,330 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
+// import axios from "axios";
+import { ref } from "vue";
 import { DailyTask, UpComingTask } from "@/interfaces/Task";
+
 export default {
   name: "RightBody",
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
-    let todayTasks = [] as DailyTask[];
-    let upcoming = [] as UpComingTask[];
-    let newTaskTitle = "";
-    //** Upcoming Task **//
-    function fetchUpcoming(): void {
-      axios.get("/api/upcoming").then(({ data }) => {
-        upcoming = data;
-      });
-    }
-    //** Today Task **//
-    function fetchTodayTasks(): void {
-      axios.get("/api/dailytask").then(({ data }) => (todayTasks = data));
-    }
-    //** Add Upcoming Task **//
-    function addUpcomingTask(e: Event): void {
-      e.preventDefault();
-      if (upcoming.length > 4) {
-        alert("Please complete the upcoming tasks");
-      } else {
-        const newTask = {
-          title: newTaskTitle,
-          waiting: true,
-          taskId: Math.random().toString(36).substring(7),
-        } as UpComingTask;
-        //post request
-        axios
-          .post("/api/upcoming", JSON.stringify(newTask))
-          .then(() => upcoming.push(newTask))
-          .catch((e) => console.log(e));
-
-        //Clear or Reset newTask
-        newTaskTitle = "";
-      }
-    }
-
-    //** Delete Upcoming Task **//
-    function deleteUpcoming(taskId: string): void {
-      if (confirm("Are you sure?")) {
-        //delete request
-        axios
-          .delete(`/api/upcoming/${taskId}`, {})
-          .then(() => {
-            upcoming = upcoming.filter(
-              (task: UpComingTask) => task.taskId != taskId
-            );
-          })
-          .catch((e) => console.error(e));
-      }
-    }
-    // Check upcoming task
-    function checkUpcoming(taskId: string): void {
-      if (todayTasks.length > 4) {
-        alert("Please complete existing tasks!");
-      } else {
-        addDailyTask(taskId);
-        //Delete this task from db
-        axios.delete(`/api/upcoming/${taskId}`).then(() => {
-          upcoming = upcoming.filter(
-            (task: UpComingTask) => task.taskId != taskId
-          );
-        });
-      }
-    }
-    //** Add daily task and remove upcoming from database **//
-    function addDailyTask(taskId: string): void {
-      const task = upcoming.filter(
-        (task: UpComingTask) => task.taskId == taskId
-      )[0];
-
-      //POST REQUEST
-      axios
-        .post("/api/dailytask", JSON.stringify(task))
-        .then(({ data }) => {
-          todayTasks.unshift(data);
-        })
-        .catch((e) => console.error(e));
-    }
-
-    //Update today task
-    function updateTodayTask(taskId: string): void {
-      if (confirm("Task Completed?")) {
-        axios
-          .delete(`/api/dailytask/${taskId}`)
-          .then(() => {
-            todayTasks = todayTasks.filter(
-              (task: DailyTask) => task.taskId != taskId
-            );
-          })
-          .catch((e) => console.error(e));
-      }
-    }
-    // Delte today task
-    function deleteTodayTask(taskId: string): void {
-      if (confirm("Are you sure")) {
-        //Delete this task from db
-        axios.delete(`/api/dailytask/${taskId}`).then(() => {
-          todayTasks = todayTasks.filter(
-            (task: DailyTask) => task.taskId != taskId
-          );
-        });
-      }
-    }
+    const todayTasks = ref<DailyTask[]>([
+      {
+        id: 1,
+        completed: false,
+        approved: false,
+        title: "Daily Task 1",
+        taskId: "sdfsdf",
+        created_at: "sdfdsdf",
+        updated_at: "sdfsdf",
+      },
+      {
+        id: 2,
+        completed: false,
+        approved: false,
+        title: "Daily Task 2",
+        taskId: "sdfsdfs3r",
+        created_at: "sdfdsdf",
+        updated_at: "sdfsdf",
+      },
+    ]);
+    const upcoming = ref<UpComingTask[]>([
+      {
+        id: 1,
+        title: "Upcoming Task 1",
+        completed: false,
+        approved: false,
+        taskId: "sdfsdf",
+        created_at: "sdfdsdf",
+        waiting: true,
+        updated_at: "sdfsdf",
+      },
+      {
+        id: 2,
+        title: "Upcoming Task 2",
+        completed: false,
+        approved: false,
+        waiting: true,
+        taskId: "sdfsdfs3r",
+        created_at: "sdfdsdf",
+        updated_at: "sdfsdf",
+      },
+    ]);
+    const newTaskTitle = ref<string>("");
     return {
-      todayTasks,
       upcoming,
+      todayTasks,
       newTaskTitle,
-      fetchTodayTasks,
-      fetchUpcoming,
-      addUpcomingTask,
-      deleteUpcoming,
-      checkUpcoming,
-      updateTodayTask,
-      deleteTodayTask,
     };
-  },
-  created(): void {
-    this.fetchTodayTasks();
-    this.fetchUpcoming();
+    //** Upcoming Task **//
+    // function fetchUpcoming(): void {
+    //   axios.get("/api/upcoming").then(({ data }) => {
+    //     upcoming = data;
+    //   });
+    // }
+    //
+    // //** Today Task **//
+    // function fetchTodayTasks(): void {
+    //   axios.get("/api/dailytask").then(({ data }) => (todayTasks = data));
+    // }
+    //
+    // //** Add Upcoming Task **//
+    // function addUpcomingTask(e: Event): void {
+    //   e.preventDefault();
+    //   if (upcoming.value.length > 4) {
+    //     alert("Please complete the upcoming tasks");
+    //   } else {
+    //     const newTask = {
+    //       title: newTaskTitle,
+    //       waiting: true,
+    //       taskId: Math.random().toString(36).substring(7),
+    //     } ;
+    //     //post request
+    //     axios
+    //       .post("/api/upcoming", JSON.stringify(newTask))
+    //       .then(() => upcoming.value.push(newTask))
+    //       .catch((e) => console.log(e));
+    //
+    //     //Clear or Reset newTask
+    //     newTaskTitle = "";
+    //   }
+    // }
+    //
+    // //** Delete Upcoming Task **//
+    // function deleteUpcoming(taskId: string): void {
+    //   if (confirm("Are you sure?")) {
+    //     //delete request
+    //     axios
+    //       .delete(`/api/upcoming/${taskId}`, {})
+    //       .then(() => {
+    //         upcoming.value = upcoming.value.filter(
+    //           (task: UpComingTask) => task.taskId != taskId
+    //         );
+    //       })
+    //       .catch((e) => console.error(e));
+    //   }
+    // }
+    //
+    // // Check upcoming task
+    // function checkUpcoming(taskId: string): void {
+    //   if (todayTasks.value.length > 4) {
+    //     alert("Please complete existing tasks!");
+    //   } else {
+    //     addDailyTask(taskId);
+    //     //Delete this task from db
+    //     axios.delete(`/api/upcoming/${taskId}`).then(() => {
+    //       upcoming.value = upcoming.value.filter(
+    //         (task: UpComingTask) => task.taskId != taskId
+    //       );
+    //     });
+    //   }
+    // }
+    //
+    // //** Add daily task and remove upcoming from database **//
+    // function addDailyTask(taskId: string): void {
+    //   const task = upcoming.value.filter(
+    //     (task: UpComingTask) => task.taskId == taskId
+    //   )[false];
+    //
+    //   //POST REQUEST
+    //   axios
+    //     .post("/api/dailytask", JSON.stringify(task))
+    //     .then(({ data }) => {
+    //       todayTasks.value.unshift(data);
+    //     })
+    //     .catch((e) => console.error(e));
+    // }
+    //
+    // //Update today task
+    // function updateTodayTask(taskId: string): void {
+    //   if (confirm("Task Completed?")) {
+    //     axios
+    //       .delete(`/api/dailytask/${taskId}`)
+    //       .then(() => {
+    //         todayTasks.value = todayTasks.value.filter(
+    //           (task: DailyTask) => task.taskId != taskId
+    //         );
+    //       })
+    //       .catch((e) => console.error(e));
+    //   }
+    // }
+    //
+    // // Delte today task
+    // function deleteTodayTask(taskId: string): void {
+    //   if (confirm("Are you sure")) {
+    //     //Delete this task from db
+    //     axios.delete(`/api/dailytask/${taskId}`).then(() => {
+    //       todayTasks.value = todayTasks.value.filter(
+    //         (task: DailyTask) => task.taskId != taskId
+    //       );
+    //     });
+    //   }
+    //}
   },
 };
 </script>
+<style scoped lang="scss">
+#right {
+  position: relative;
+  grid-area: Right;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 65px 20px 85px 70px;
 
-<style></style>
+  h1 {
+    font-family: "MyriadProBold", sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  .horizontal {
+    img {
+      width: 122px;
+    }
+
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-family: "Open Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    width: 500px;
+  }
+
+  .users-icon {
+    position: absolute;
+    right: 42px;
+    top: 65px;
+    cursor: pointer;
+
+    img {
+      height: 30px;
+    }
+  }
+
+  .tasks,
+  .upcoming {
+    margin-bottom: 1.3em;
+
+    .add-tasks {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+
+      h2 {
+        font-family: "MyriadProBold", sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+      }
+
+      img {
+        cursor: pointer;
+      }
+    }
+
+    input[type="text"] {
+      border: unset;
+      border-bottom: 1px solid var(--customgrey);
+      width: 100%;
+      caret-color: var(--primary1);
+    }
+
+    ul.tasks-list {
+      margin-top: 15px;
+
+      li {
+        display: flex;
+        flex-direction: column;
+
+        .info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          padding: 0 0.3em;
+          border-radius: 0 0.3em 3em;
+
+          &:hover {
+            background-color: #70707010;
+            transition: all 400ms ease-in-out;
+          }
+
+          .left {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            label {
+              cursor: pointer;
+              margin-top: 0.3em;
+              padding-top: 0.4em;
+
+              input {
+                display: none;
+              }
+
+              span {
+                height: 20px;
+                width: 20px;
+                display: inline-block;
+                position: relative;
+                border-radius: 50px;
+                border: 2px solid var(--customgreen1);
+              }
+
+              [type="checkbox"]:checked + span:before {
+                content: "\2714";
+                @extend .middle;
+                height: 20px;
+                width: 20px;
+                border-radius: 50px;
+                border: 2px solid var(--customgreen1);
+                background-color: var(--customgreen1);
+                opacity: 1;
+                font-size: 12px;
+                top: 45%;
+                color: #fff;
+              }
+            }
+
+            h4 {
+              margin-left: 15px;
+              font-family: "Open Sans", sans-serif;
+              font-size: 13px;
+              color: var(--primary2);
+              font-weight: 600;
+            }
+          }
+
+          .right {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            img {
+              margin-right: 1em;
+              cursor: pointer;
+            }
+
+            button {
+              padding: 5px 31px;
+              border-radius: 50px;
+              border: unset;
+              box-shadow: unset !important;
+              width: 120px;
+              font-family: "Open Sans", sans-serif;
+              font-size: 12px;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

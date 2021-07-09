@@ -1,5 +1,5 @@
 <template>
-  <div id="left">
+  <div id="left" class="p-5">
     <img
       src="../../assets/images/hamburger.png"
       class="hamburger"
@@ -9,7 +9,11 @@
       <h1>Hi Mohammed</h1>
       <h2>Let's make projects more amazing</h2>
       <div class="search">
-        <input type="text" placeholder="Search your project" />
+        <input
+          type="text"
+          class="text-white outline-none"
+          placeholder="Search your project"
+        />
         <img src="../../assets/images/search.png" alt="search" />
       </div>
     </div>
@@ -57,10 +61,17 @@
         </div>
 
         <div class="a-project">
-          <div class="box-color">
-            <img src="../../assets/images/plus.svg" id="plus-icon" />
-
-            <h6>Add Project</h6>
+          <div
+            class="
+              box-color
+              text-center text-white
+              d-flex
+              align-items-center
+              justify-content-center
+              flex-column
+            "
+          >
+            <fa icon="plus" class="display-4" />
           </div>
         </div>
       </div>
@@ -76,8 +87,6 @@ export default {
 
 <style lang="scss">
 #left {
-  grid-area: Left;
-  padding: 15%;
   position: relative;
 
   .hamburger {
@@ -118,7 +127,7 @@ export default {
     width: 90%;
 
     img {
-      @extend .middle;
+      @extend .custom-middle;
       opacity: 1;
       left: 25px;
       cursor: pointer;
@@ -192,7 +201,7 @@ export default {
           position: relative;
 
           span {
-            @extend .middle;
+            @extend .custom-middle;
             opacity: 1;
           }
 
@@ -202,8 +211,8 @@ export default {
           }
 
           &:hover {
-            border: 4px solid var(--custompink);
-            transition: border 400ms ease;
+            border: 3px solid var(--custompink);
+            transition: border 250ms ease-in-out;
           }
         }
 

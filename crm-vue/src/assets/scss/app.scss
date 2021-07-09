@@ -1,82 +1,43 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
-
-:root {
-  --primary1: #15172b;
-  --primary2: #262a41;
-  --customblue: #0026ff;
-  --custompink: #ff3250;
-  --customeyellow: #ffbb00;
-  --customgreen: #07e642;
-  --custompurple: #894fc6;
-  --customdarkblue: #121432;
-  --white: #ffffff;
-  --customgrey: #707070;
-  --customgreen1: #15d4a1;
-}
-
-body {
-  position: relative;
-  font-family: "MyriadProRegular", sans-serif;
-  background-color: var(--primary1);
-
-  &::-webkit-scrollbar {
-    display: none;
-    scrollbar-width: none;
-  }
-}
-
-.middle {
-  transition: 0.5s ease;
-  opacity: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 1;
-}
-
-input[type="text"] {
-  outline: none;
+@import "custom_bootstrap";
+@import "styles";
+@import url("https: //fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap");
+.custom-middle {
+    transition: 0.5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;
 }
 
 .approved {
-  background-color: #15d4a150;
-  color: #15d4a1;
+    background-color: #15d4a150;
+    color: #15d4a1;
 }
 
 .inprogress {
-  background-color: #0060ff20;
-  color: #0060ff;
+    background-color: #0060ff20;
+    color: #0060ff;
 }
 
 .rejected {
-  background-color: #ff0e4620;
-  color: #ff0e46;
+    background-color: #ff0e4620;
+    color: #ff0e46;
 }
 
 .enabled-input {
-  background-color: #fafafa;
-  height: 2rem;
-  border-radius: 5px;
-  border: none;
+    background-color: #fafafa;
+    height: 2rem;
+    border-radius: 5px;
+    border: none;
 }
 
 .disabled-input {
-  height: 2rem;
-  outline: none;
-  border-radius: 5px;
-  border: none;
-}
-
-#plus-icon {
-  height: 5px;
-  width: 5px;
-}
-
-#plus-icon * {
-  width: 100%;
-  height: 100%;
-  fill: white;
+    height: 2rem;
+    outline: none;
+    border-radius: 5px;
+    border: none;
 }

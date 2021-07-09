@@ -25,37 +25,7 @@
 
       <ul v-if="todayTasks.length > 0" class="tasks-list">
         <li v-for="task in todayTasks" v-bind:key="task.id">
-          <div class="info">
-            <div class="left">
-              <label class="myCheckbox">
-                <input
-                  type="checkbox"
-                  name="test"
-                  :checked="task.completed"
-                  @change="checkTodayTask(task.taskId)"
-                />
-                <span></span>
-              </label>
-
-              <h4>{{ task.title }}</h4>
-            </div>
-            <div class="right">
-              <img src="../../assets/images/edit.png" />
-              <img
-                src="../../assets/images/del.png"
-                @click="deleteTodayTask(task.taskId)"
-              />
-
-              <button
-                v-bind:class="{
-                  inprogress: !task.approved,
-                  approved: task.approved,
-                }"
-              >
-                {{ task.approved ? "Approved" : "In progress" }}
-              </button>
-            </div>
-          </div>
+          <TodayTask :task="task" />
         </li>
       </ul>
       <div v-else class="p-3 text-center text-custom-dark-blue bg-light">
@@ -125,11 +95,15 @@
 
 <script lang="ts">
 import axios from "axios";
-import { ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { DailyTask, UpComingTask } from "@/interfaces/Task";
+import TodayTask from "@/components/dashboard/TodayTask.vue";
 
-export default {
+export default defineComponent({
   name: "RightBody",
+  components: {
+    TodayTask,
+  },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {
     const todayTasks = ref<DailyTask[]>([]);
@@ -174,7 +148,7 @@ export default {
     }
 
     //** Delete Upcoming Task **//
-    function deleteUpcoming(taskId: string): void {
+    function deleteUpcoming(taskId: string | undefined): void {
       if (confirm("Are you sure?")) {
         //delete request
         axios
@@ -189,7 +163,7 @@ export default {
     }
 
     // Check upcoming task
-    function checkUpcoming(taskId: string): void {
+    function checkUpcoming(taskId: string | undefined): void {
       if (todayTasks.value.length > 4) {
         alert("Please complete existing tasks!");
       } else {
@@ -207,7 +181,7 @@ export default {
     }
 
     //** Add daily task and remove upcoming from database **//
-    function addDailyTask(taskId: string): void {
+    function addDailyTask(taskId: string | undefined): void {
       const task = upcoming.value.filter(
         (task: UpComingTask) => task.taskId == taskId
       )[0] as DailyTask;
@@ -260,7 +234,7 @@ export default {
       deleteTodayTask,
     };
   },
-};
+});
 </script>
 <style scoped lang="scss">
 #right {
@@ -337,90 +311,6 @@ export default {
       li {
         display: flex;
         flex-direction: column;
-
-        .info {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          cursor: pointer;
-          padding: 0 0.3em;
-          border-radius: 0 0.3em 3em;
-
-          &:hover {
-            background-color: #70707010;
-            transition: all 400ms ease-in-out;
-          }
-
-          .left {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-            label {
-              cursor: pointer;
-              margin-top: 0.3em;
-              padding-top: 0.4em;
-
-              input {
-                display: none;
-              }
-
-              span {
-                height: 20px;
-                width: 20px;
-                display: inline-block;
-                position: relative;
-                border-radius: 50px;
-                border: 2px solid var(--customgreen1);
-              }
-
-              [type="checkbox"]:checked + span:before {
-                content: "\2714";
-                @extend .custom-middle;
-                height: 20px;
-                width: 20px;
-                border-radius: 50px;
-                border: 2px solid var(--customgreen1);
-                background-color: var(--customgreen1);
-                opacity: 1;
-                font-size: 12px;
-                top: 45%;
-                color: #fff;
-              }
-            }
-
-            h4 {
-              margin-left: 15px;
-              font-family: "Open Sans", sans-serif;
-              font-size: 13px;
-              color: var(--primary2);
-              font-weight: 600;
-            }
-          }
-
-          .right {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-
-            img {
-              margin-right: 1em;
-              cursor: pointer;
-            }
-
-            button {
-              padding: 5px 31px;
-              border-radius: 50px;
-              border: unset;
-              box-shadow: unset !important;
-              width: 120px;
-              font-family: "Open Sans", sans-serif;
-              font-size: 12px;
-              white-space: nowrap;
-            }
-          }
-        }
       }
     }
   }

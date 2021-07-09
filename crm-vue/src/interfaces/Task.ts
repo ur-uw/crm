@@ -3,7 +3,7 @@ interface Task {
   title?: string;
   completed?: boolean | number;
   approved?: boolean | number;
-  taskId?: string;
+  taskId?: string | undefined;
   created_at?: string | null;
   updated_at?: string | null;
 }

@@ -11,8 +11,8 @@ library.add(fas);
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.headers.common["Accept"] = "application/json";
 axios.defaults.headers.common["Content-Type"] = "application/json";
-createApp(App)
+const app = createApp(App)
   .use(store)
   .use(router)
-  .component("fa", FontAwesomeIcon)
-  .mount("#app");
+  .component("fa", FontAwesomeIcon);
+app.mount("#app");

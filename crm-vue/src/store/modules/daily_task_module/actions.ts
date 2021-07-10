@@ -1,11 +1,10 @@
-import { DailyTask } from "@/interfaces/Task";
 import { ActionContext, ActionTree } from "vuex";
 import { Mutations, MutationType } from "./mutations";
 import { State } from "./state";
 import axios from "axios";
 
-export enum ActionTypes {
-  GetTodoItems = "GET_ITEMS",
+export enum DailyTaskActionTypes {
+  GetDailyTasks = "GET_ITEMS",
 }
 
 type ActionAugments = Omit<ActionContext<State, State>, "commit"> & {
@@ -16,18 +15,19 @@ type ActionAugments = Omit<ActionContext<State, State>, "commit"> & {
 };
 
 export type Actions = {
-  [ActionTypes.GetTodoItems](context: ActionAugments): void;
+  [DailyTaskActionTypes.GetDailyTasks](context: ActionAugments): void;
 };
 
 export const actions: ActionTree<State, State> & Actions = {
-  async [ActionTypes.GetTodoItems]({ commit }) {
-    commit(MutationType.SetLoading, true);
+  async [DailyTaskActionTypes.GetDailyTasks]({ commit }) {
     try {
-      const dailyTasks = (await axios.get("/api/dailytask")) as DailyTask[];
+      commit(MutationType.SetLoading, true);
+      const res = await axios.get("/api/dailytask");
       commit(MutationType.SetLoading, false);
-      commit(MutationType.SetItems, dailyTasks);
-    } catch (error) {
-      console.log(error);
+      commit(MutationType.SetItems, res.data["data"]);
+    } catch (e) {
+      console.log(e);
+      commit(MutationType.SetLoading, false);
     }
   },
 };

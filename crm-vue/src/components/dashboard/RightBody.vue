@@ -4,7 +4,6 @@
     <div class="horizontal">
       <img src="../../assets/images/horizontal.png" alt="horizontal" />
     </div>
-
     <p>
       Lorem Ipsum is simply dummy text of the printing and typesetting industry.
       Lorem Ipsum has been the industry's standard dummy text ever since the
@@ -23,14 +22,7 @@
         </div>
       </div>
 
-      <ul v-if="todayTasks.length > 0" class="tasks-list">
-        <li v-for="task in todayTasks" v-bind:key="task.id">
-          <TodayTask :task="task" />
-        </li>
-      </ul>
-      <div v-else class="p-3 text-center text-custom-dark-blue bg-light">
-        <h6>No Tasks Today <strong>😴</strong></h6>
-      </div>
+      <DailyTasksList />
     </div>
 
     <div class="upcoming">
@@ -97,12 +89,12 @@
 import axios from "axios";
 import { defineComponent, ref } from "vue";
 import { DailyTask, UpComingTask } from "@/interfaces/Task";
-import TodayTask from "@/components/dashboard/TodayTask.vue";
+import DailyTasksList from "@/components/dashboard/DailyTasksList.vue";
 
 export default defineComponent({
   name: "RightBody",
   components: {
-    TodayTask,
+    DailyTasksList,
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup() {

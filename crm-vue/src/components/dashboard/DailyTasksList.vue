@@ -1,9 +1,45 @@
 <template>
-  <h1>Hello</h1>
+  <div v-if="isLoading">
+    <div class="alert alert-info">Loading....</div>
+  </div>
+  <div v-else>
+    <ul v-if="dailyTasks.length > 0" class="tasks-list">
+      <li v-for="task in dailyTasks" v-bind:key="task.id">
+        <TodayTask :task="task" />
+      </li>
+    </ul>
+    <div v-else class="p-3 text-center text-custom-dark-blue bg-light">
+      <h6>No Tasks Today <strong>😴</strong></h6>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { DailyTask } from "@/interfaces/Task";
+import { computed, defineComponent } from "vue";
+import { useStore } from "@/store";
+import TodayTask from "./TodayTask.vue";
+export default defineComponent({
+  components: {
+    TodayTask,
+  },
+  setup() {
+    const store = useStore();
+    const isLoading = computed<boolean>(() => store.state.loading);
+    const dailyTasks = computed<DailyTask[]>(() => store.state.items);
 
-export default defineComponent({});
+    return { dailyTasks, isLoading };
+  },
+});
 </script>
+
+<style lang="scss" scoped>
+ul.tasks-list {
+  margin-top: 15px;
+
+  li {
+    display: flex;
+    flex-direction: column;
+  }
+}
+</style>

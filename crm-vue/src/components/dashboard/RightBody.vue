@@ -44,14 +44,18 @@
                 <li v-for="upcomingTask in upcoming" :key="upcomingTask.id">
                     <div class="info">
                         <div class="left">
-                            <label class="myCheckbox">
+                            <label
+                                class="custom-checkbox"
+                                tab-index="0"
+                                aria-label="Checkbox Label"
+                            >
                                 <input
                                     type="checkbox"
                                     name="test"
                                     :checked="upcomingTask.completed"
                                     @change="checkUpcoming(upcomingTask.taskId)"
                                 />
-                                <span></span>
+                                <span class="checkmark"></span>
                             </label>
                             <h4>
                                 {{ upcomingTask.title }}

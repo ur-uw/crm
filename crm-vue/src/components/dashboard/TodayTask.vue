@@ -1,9 +1,13 @@
 <template>
     <div class="info">
         <div class="left">
-            <label class="myCheckbox">
+            <label
+                class="custom-checkbox"
+                tab-index="0"
+                aria-label="Checkbox Label"
+            >
                 <input type="checkbox" name="test" :checked="task.completed" />
-                <span></span>
+                <span class="checkmark"></span>
             </label>
 
             <h4>{{ task.title }}</h4>
@@ -73,19 +77,6 @@ export default defineComponent({
                 position: relative;
                 border-radius: 50px;
                 border: 2px solid var(--customgreen1);
-            }
-
-            [type='checkbox']:checked + span:before {
-                content: '\2714';
-                height: 20px;
-                width: 20px;
-                border-radius: 50px;
-                border: 2px solid var(--customgreen1);
-                background-color: var(--customgreen1);
-                opacity: 1;
-                font-size: 12px;
-                top: 45%;
-                color: #fff;
             }
         }
 

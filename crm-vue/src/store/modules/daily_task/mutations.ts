@@ -23,7 +23,7 @@ export const mutations: MutationTree<DailyTaskStateTypes> &
     console.log('complete task - mutation');
   },
   [MutationTypes.DELETE_TASK](state: DailyTaskStateTypes, taskId: string): void {
-    state.tasks = state.tasks?.filter((task) => task !== taskId) ?? null;
+    state.tasks = state.tasks?.filter((task) => task.taskId !== taskId) ?? null;
   },
   [MutationTypes.ADD_TASK](state: DailyTaskStateTypes, task: DailyTask): void {
     state.tasks?.unshift(task);

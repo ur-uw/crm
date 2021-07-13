@@ -1,11 +1,7 @@
 <template>
     <div class="info">
         <div class="left">
-            <label
-                class="custom-checkbox"
-                tab-index="0"
-                aria-label="Checkbox Label"
-            >
+            <label class="custom-checkbox" tab-index="0" aria-label="Checkbox Label">
                 <input type="checkbox" name="test" :checked="task.completed" />
                 <span class="checkmark"></span>
             </label>
@@ -14,31 +10,44 @@
         </div>
         <div class="right">
             <img src="../../assets/images/edit.png" />
-            <img src="../../assets/images/del.png" />
-
+            <img
+                src="../../assets/images/del.png"
+                @click="task.taskId ? deleteTask(task.taskId) : null"
+            />
             <button
                 v-bind:class="{
                     inprogress: !task.approved,
-                    approved: task.approved,
+                    approved: task.approved
                 }"
             >
-                {{ task.approved ? 'Approved' : 'In progress' }}
+                {{ task.approved ? "Approved" : "In progress" }}
             </button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { DailyTask } from '@/interfaces/Task';
-import { defineComponent, PropType } from 'vue';
+import { DailyTask } from "@/interfaces/Task";
+import { defineComponent, PropType } from "vue";
+import { useStore } from "@/use/useStore";
+import { ActionTypes } from "@/store/modules/daily_task/action-types";
 export default defineComponent({
-    name: 'TodayTask',
+    name: "TodayTask",
     props: {
         task: {
             type: Object as PropType<DailyTask>,
-            required: true,
-        },
+            required: true
+        }
     },
+    setup() {
+        const store = useStore();
+        const deleteTask = (taskId: string): void => {
+            store.dispatch(ActionTypes.DELETE_TASK, taskId);
+        };
+        return {
+            deleteTask
+        };
+    }
 });
 </script>
 
@@ -82,7 +91,7 @@ export default defineComponent({
 
         h4 {
             margin-left: 15px;
-            font-family: 'Open Sans', sans-serif;
+            font-family: "Open Sans", sans-serif;
             font-size: 13px;
             color: var(--primary2);
             font-weight: 600;
@@ -106,7 +115,7 @@ export default defineComponent({
             border: unset;
             box-shadow: unset !important;
             width: 120px;
-            font-family: 'Open Sans', sans-serif;
+            font-family: "Open Sans", sans-serif;
             font-size: 12px;
             white-space: nowrap;
         }

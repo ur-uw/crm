@@ -36,12 +36,15 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
     // TODO: IMPLEMENT EDIT TASK ACTION
   },
   async [ActionTypes.DELETE_TASK]({ commit }, taskId: string) {
-    try {
-      commit(MutationTypes.SET_LOADING, true);
-      await axios.delete('/api/dailytask/', { data: { taskId: taskId } });
-      commit(MutationTypes.SET_LOADING, false);
-    } catch (error) {
-      console.error('DELETE_TASK_ACTION', error);
+    if (confirm("Are you sure?")) {
+      try {
+        commit(MutationTypes.SET_LOADING, true);
+        await axios.delete(`/api/dailytask/${taskId}`);
+        commit(MutationTypes.DELETE_TASK, taskId);
+        commit(MutationTypes.SET_LOADING, false);
+      } catch (error) {
+        console.error('DELETE_TASK_ACTION', error);
+      }
     }
   },
 };

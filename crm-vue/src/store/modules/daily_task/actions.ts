@@ -2,12 +2,14 @@ import { DailyTask } from './../../../interfaces/Task';
 import { ActionTree } from "vuex";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
+import Swal from "sweetalert2";
 import {
   DailyTaskActionsTypes,
   DailyTaskStateTypes,
   IRootState
 } from "@/store/interfaces";
 import axios from 'axios';
+import VueSweetalert2 from 'vue-sweetalert2';
 
 export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
   DailyTaskActionsTypes = {
@@ -41,13 +43,25 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
     }
   },
   async [ActionTypes.DELETE_TASK]({ commit }, taskId: string) {
-    if (confirm("Are you sure?")) {
+    const confirmResult = await Swal.fire({
+      titleText: "Delete Task",
+      text: "Are you sure you want to delete this task?",
+      allowOutsideClick: false,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No"
+    });
+    if (confirmResult.isConfirmed) {
       try {
-        commit(MutationTypes.SET_LOADING, true);
         await axios.delete(`/api/dailytask/${taskId}`);
         commit(MutationTypes.DELETE_TASK, taskId);
-        commit(MutationTypes.SET_LOADING, false);
       } catch (error) {
+        Swal.fire({
+          icon: "error",
+          toast: true,
+          titleText: "Some went thing wrong",
+          showConfirmButton: false,
+        });
         console.error('DELETE_TASK_ACTION', error);
       }
     }

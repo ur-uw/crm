@@ -25,6 +25,7 @@
       "jest",
       "vite/client",
       "node",
+      "vue-sweetalert2"
     ]
   },
   "include": [

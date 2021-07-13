@@ -15,20 +15,19 @@
 </template>
 
 <script lang="ts">
-import { DailyTask } from "@/interfaces/Task";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useStore } from "@/use/useStore";
 import TodayTask from "./TodayTask.vue";
 export default defineComponent({
     components: {
-        TodayTask,
+        TodayTask
     },
     setup() {
         const store = useStore();
         const isLoading = computed(() => store.getters.getLoadingState);
         const dailyTasks = computed(() => store.getters.getAllTasks);
         return { dailyTasks, isLoading };
-    },
+    }
 });
 </script>
 

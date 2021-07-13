@@ -10,12 +10,12 @@ import { ActionTypes } from "@/store/modules/daily_task/action-types";
 export default defineComponent({
     name: "Dashboard",
     components: {
-        Body,
+        Body
     },
     setup() {
         const store = useStore();
         onMounted(() => store.dispatch(ActionTypes.FETCH_TASKS));
-    },
+    }
 });
 </script>
 <style lang="scss"></style>

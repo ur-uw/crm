@@ -2,11 +2,18 @@
     <div class="info">
         <div class="left">
             <label class="custom-checkbox" tab-index="0" aria-label="Checkbox Label">
-                <input type="checkbox" name="test" :checked="task.completed" />
+                <input
+                    type="checkbox"
+                    name="test"
+                    @change="toogleTaskCompleted(task)"
+                    :checked="task.completed"
+                />
                 <span class="checkmark"></span>
             </label>
 
-            <h4>{{ task.title }}</h4>
+            <h4 :class="task.completed ? 'completed' : ''">
+                {{ task.title }}
+            </h4>
         </div>
         <div class="right">
             <img src="../../assets/images/edit.png" />
@@ -15,13 +22,15 @@
                 @click="task.taskId ? deleteTask(task.taskId) : null"
             />
             <button
-                v-bind:class="{
+                v-if="!task.completed"
+                :class="{
                     inprogress: !task.approved,
                     approved: task.approved
                 }"
             >
                 {{ task.approved ? "Approved" : "In progress" }}
             </button>
+            <button v-else class="bg-success text-white">completed</button>
         </div>
     </div>
 </template>
@@ -41,10 +50,22 @@ export default defineComponent({
     },
     setup() {
         const store = useStore();
+        /* TOGGLE TASK COMPLETED PROPERY */
+        const toogleTaskCompleted = (task: DailyTask): void => {
+            if (task.taskId) {
+                const data = {
+                    newTaskData: { completed: !task.completed },
+                    taskId: task.taskId
+                };
+                store.dispatch(ActionTypes.EDIT_TASK, data);
+            }
+        };
+        /* DELETE TASK */
         const deleteTask = (taskId: string): void => {
             store.dispatch(ActionTypes.DELETE_TASK, taskId);
         };
         return {
+            toogleTaskCompleted,
             deleteTask
         };
     }
@@ -57,8 +78,8 @@ export default defineComponent({
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    padding: 0 0.3em;
-    border-radius: 0 0.3em 3em;
+    padding: 0.5em 0.3em;
+    border-radius: 0 0.3em 0.3em;
 
     &:hover {
         background-color: #70707010;

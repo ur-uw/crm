@@ -32,8 +32,13 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
       console.error('CREATE_TASK_ACTION', error);
     }
   },
-  async [ActionTypes.EDIT_TASK]({ commit }, data: { newData: DailyTask, taskId: string }) {
-    // TODO: IMPLEMENT EDIT TASK ACTION
+  async [ActionTypes.EDIT_TASK]({ commit }, data: { newTaskData: DailyTask, taskId: string }) {
+    try {
+      await axios.put(`/api/dailytask/${data.taskId}`, data.newTaskData);
+      commit(MutationTypes.COMPLETE_TASK, data.taskId);
+    } catch (error) {
+
+    }
   },
   async [ActionTypes.DELETE_TASK]({ commit }, taskId: string) {
     if (confirm("Are you sure?")) {

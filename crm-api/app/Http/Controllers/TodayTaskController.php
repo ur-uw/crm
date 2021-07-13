@@ -7,6 +7,8 @@ use App\Http\Resources\TodayTaskResource;
 use App\Models\TodayTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
+use Validator;
 
 class TodayTaskController extends Controller
 {
@@ -53,12 +55,24 @@ class TodayTaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string  $taskId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $taskId)
     {
-        //
+        $request->validate(
+            [
+                'title' => 'string',
+                'taskId' => 'string',
+            ]
+        );
+        TodayTask::where('taskId', $taskId)->update($request->all());
+        return response()->json(
+            [
+                'message' => "task updated"
+            ],
+            Response::HTTP_ACCEPTED
+        );
     }
 
     /**

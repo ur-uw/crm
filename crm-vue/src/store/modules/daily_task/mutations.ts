@@ -16,11 +16,11 @@ export const mutations: MutationTree<DailyTaskStateTypes> &
   [MutationTypes.SET_LOADING](state: DailyTaskStateTypes, value: boolean): void {
     state.isLoading = value;
   },
-  [MutationTypes.COMPLETE_TASK](state: DailyTaskStateTypes, data: {
-    newData: DailyTask, taskId: string
-  }): void {
-    // TODO: IMPLEMENT COMPLETE TASK
-    console.log('complete task - mutation');
+  [MutationTypes.COMPLETE_TASK](state: DailyTaskStateTypes, taskId: string): void {
+    let task: DailyTask | undefined = state.tasks?.find((task) => task.taskId === taskId);
+    if (task) {
+      task.completed = !task.completed;
+    }
   },
   [MutationTypes.DELETE_TASK](state: DailyTaskStateTypes, taskId: string): void {
     state.tasks = state.tasks?.filter((task) => task.taskId !== taskId) ?? null;

@@ -1,5 +1,5 @@
-@import 'custom_bootstrap';
-@import 'styles';
+@import "custom_bootstrap";
+@import "styles";
 .approved {
     background-color: #15d4a150;
     color: #15d4a1;
@@ -29,4 +29,9 @@
     border: none;
 }
 
-@import 'checkbox';
+.completed {
+    text-decoration: line-through;
+    color: $primary;
+}
+
+@import "checkbox";

@@ -1,45 +1,25 @@
-import {
-    createStore,
-    Store as VuexStore,
-    CommitOptions,
-    DispatchOptions,
-    createLogger,
-} from 'vuex';
+import { createLogger, createStore } from "vuex";
+import { IRootState } from "@/store/interfaces";
 
-import { State, state } from './modules/daily_task_module/state';
-import { Mutations, mutations } from './modules/daily_task_module/mutations';
-import { Actions, actions } from './modules/daily_task_module/actions';
-import { Getters, getters } from './modules/daily_task_module/getters';
+import { RootStoreModuleTypes } from "./modules/root/types";
 
-export const store = createStore<State>({
-    plugins: import.meta.env.DEV ? [createLogger()] : [],
-    state,
-    mutations,
-    actions,
-    getters,
-});
+import root from "./modules/root";
+import { DailyTaskStoreModuleTypes } from "./modules/daily_task/types";
 
-export function useStore(): Store {
-    return store as Store;
-}
+export const store = createStore<IRootState>(
+  {
+    ...root,
+    plugins: import.meta.env.DEV ? [createLogger()] : []
+  }
+);
+// export const store = createStore<IRootState>(
+//   root
+// );
 
-export type Store = Omit<
-    VuexStore<State>,
-    'getters' | 'commit' | 'dispatch'
-> & {
-    commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
-        key: K,
-        payload: P,
-        options?: CommitOptions
-    ): ReturnType<Mutations[K]>;
-} & {
-    dispatch<K extends keyof Actions>(
-        key: K,
-        payload?: Parameters<Actions[K]>[1],
-        options?: DispatchOptions
-    ): ReturnType<Actions[K]>;
-} & {
-    getters: {
-        [K in keyof Getters]: ReturnType<Getters[K]>;
-    };
+type StoreModules = {
+  dailyTaskModule: DailyTaskStoreModuleTypes,
+  root: RootStoreModuleTypes;
 };
+
+export type Store = DailyTaskStoreModuleTypes<Pick<StoreModules, "dailyTaskModule">> &
+  RootStoreModuleTypes<Pick<StoreModules, "root">>;

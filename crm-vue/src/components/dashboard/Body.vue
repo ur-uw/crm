@@ -1,10 +1,17 @@
 <template>
     <div id="body" class="">
         <div class="row">
-            <div class="col-md-6 col-lg-4 col-sm-12">
+            <div
+                class="
+                    col-md-12 col-lg-4 col-sm-12
+                    d-flex
+                    justify-content-center
+                    align-itmes-center
+                "
+            >
                 <LeftBody />
             </div>
-            <div class="col-md-6 col-lg-8 col-sm-12">
+            <div class="col-md-12 col-lg-8 col-sm-12">
                 <RightBody />
             </div>
         </div>
@@ -12,22 +19,22 @@
 </template>
 
 <script>
-import LeftBody from '@/components/dashboard/LeftBody.vue';
-import RightBody from './RightBody.vue';
+import LeftBody from "@/components/dashboard/LeftBody.vue";
+import RightBody from "./RightBody.vue";
 
 export default {
-    name: 'Body',
+    name: "Body",
     components: {
         LeftBody,
-        RightBody,
-    },
+        RightBody
+    }
 };
 </script>
 
 <style lang="scss">
 #body {
     padding: 16px;
-    font-family: 'MyriadProRegular', sans-serif;
+    font-family: "MyriadProRegular", sans-serif;
     min-height: 100vh;
     background-color: var(--primary1);
 }

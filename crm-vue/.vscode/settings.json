@@ -1,8 +1,12 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
   "cSpell.words": [
     "Swal",
     "fontawesome",
     "fortawesome",
+    "scripthost",
     "sweetalert",
     "vite",
     "vuex"

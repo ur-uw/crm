@@ -20,9 +20,17 @@
                     <img src="../../assets/images/add.png" alt="add-action" />
                 </div>
             </div>
-
+            <!-- <form action="" @submit="addUpcomingTask">
+                <input
+                    class="form-control form-control-lg bg-primary2 text-white"
+                    type="text"
+                    placeholder="New task"
+                    v-model="newTaskTitle"
+                />
+            </form> -->
             <DailyTasksList />
         </div>
+        <hr />
 
         <div class="upcoming">
             <div class="add-tasks">
@@ -31,14 +39,6 @@
                     <img src="../../assets/images/add.png" alt="add-action" />
                 </div>
             </div>
-            <form action="" @submit="addUpcomingTask">
-                <input
-                    class="form-control form-control-lg bg-primary2 text-white"
-                    type="text"
-                    placeholder="Enter new task"
-                    v-model="newTaskTitle"
-                />
-            </form>
             <ul v-if="upcoming.length > 0" class="tasks-list">
                 <li v-for="upcomingTask in upcoming" :key="upcomingTask.id">
                     <div class="info">
@@ -125,11 +125,11 @@
                 if (upcoming.value.length > 4) {
                     alert("Please complete the upcoming tasks");
                 } else {
-                    const newTask = {
+                    const newTask: UpComingTask = {
                         title: newTaskTitle.value,
-                        waiting: true,
+                        status: "waiting",
                         taskId: Math.random().toString(36).substring(7)
-                    } as UpComingTask;
+                    };
 
                     //post request
                     axios

@@ -13,7 +13,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 
 export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
   DailyTaskActionsTypes = {
-
+  // FETCH TASKS
   async [ActionTypes.FETCH_TASKS]({ commit }) {
     try {
       commit(MutationTypes.SET_LOADING, true);
@@ -25,15 +25,16 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
       commit(MutationTypes.SET_LOADING, false);
     }
   },
+  // CREATE TASK
   async [ActionTypes.CREATE_TASK]({ commit }, task: DailyTask) {
     try {
-      commit(MutationTypes.SET_LOADING, true);
       await axios.post('/api/dailytask/', task);
-      commit(MutationTypes.SET_LOADING, false);
+      commit(MutationTypes.ADD_TASK, task);
     } catch (error) {
       console.error('CREATE_TASK_ACTION', error);
     }
   },
+  // EDIT TASK
   async [ActionTypes.EDIT_TASK]({ commit }, newTask: { data: DailyTask, taskId: string }) {
     try {
       await axios.put(`/api/dailytask/${newTask.taskId}`, newTask.data);
@@ -42,6 +43,7 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
       console.log('EDIT_TASK action' + error);
     }
   },
+  // DELETE TASK
   async [ActionTypes.DELETE_TASK]({ commit }, taskId: string) {
     const confirmResult = await Swal.fire({
       titleText: "Delete DailyTask",

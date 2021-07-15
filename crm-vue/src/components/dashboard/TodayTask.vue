@@ -75,7 +75,10 @@
                     status: task.value.status === "completed" ? "inprogress" : "completed",
                     taskId: task.value.taskId!
                 };
-                //FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
+                /*
+                BUG[1]
+                FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
+                */
                 task.value.status = task.value.status === "completed" ? "inprogress" : "completed";
                 store.dispatch(ActionTypes.EDIT_TASK, {
                     data: newTask,
@@ -101,7 +104,7 @@
                         icon: "warning",
                         toast: true,
                         showConfirmButton: false,
-                        text: "DailyTask already exists!",
+                        text: "Task already exists!",
                         timer: 2000,
                         position: "top-end"
                     });

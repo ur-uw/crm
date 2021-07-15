@@ -41,24 +41,32 @@
                 src="../../assets/images/del.png"
                 @click="task.taskId ? deleteTask(task.taskId) : null"
             />
-            <button :class="task.status">
-                {{ task.status === "inprogress" ? "Inprogress" : "Completed" }}
+            <button
+                v-bind:class="{
+                    inprogress: task.status === 'inprogress',
+                    approved: task.status === 'approved',
+                    completed: task.status === 'completed',
+                    waiting: task.status === 'waiting',
+                    rejected: task.status === 'denied'
+                }"
+            >
+                {{ task.status }}
             </button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import { DailyTask } from "@/interfaces/Task";
+    import { UpcomingTask } from "@/interfaces/Task";
     import { defineComponent, PropType, ref, watch } from "vue";
     import { useStore } from "@/use/useStore";
-    import { ActionTypes } from "@/store/modules/daily_task/action-types";
+    import { ActionTypes } from "@/store/modules/upcoming_task/action-types";
     import Swal from "sweetalert2";
     export default defineComponent({
         name: "TodayTask",
         props: {
             task: {
-                type: Object as PropType<DailyTask>,
+                type: Object as PropType<UpcomingTask>,
                 required: true
             }
         },
@@ -69,32 +77,33 @@
             const task = ref(props.task);
             let showEditTask = ref<boolean>(false);
             let newTaskTitle = ref<string>(task.value.title ?? "No title");
+            // FUNCTIONS
             /* TOGGLE TASK COMPLETED PROPERY */
             const toogleTaskCompleted = (): void => {
-                const newTask: DailyTask = {
+                const newTask: UpcomingTask = {
                     status: task.value.status === "completed" ? "inprogress" : "completed",
                     taskId: task.value.taskId!
                 };
+                /* EDIT UPCOMING TASK */
                 /*
                 BUG[1]
                 FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
                 */
                 task.value.status = task.value.status === "completed" ? "inprogress" : "completed";
-                store.dispatch(ActionTypes.EDIT_TASK, {
+                store.dispatch(ActionTypes.EDIT_UPCOMING_TASK, {
                     data: newTask,
                     taskId: task.value.taskId!
                 });
             };
-            // Edit task
             const toogleTaskForm = () => {
                 showEditTask.value = !showEditTask.value;
             };
             const updateTask = async () => {
                 if (!(task.value.title === newTaskTitle.value)) {
-                    const newTask: DailyTask = {
+                    const newTask: UpcomingTask = {
                         title: newTaskTitle.value
                     };
-                    store.dispatch(ActionTypes.EDIT_TASK, {
+                    store.dispatch(ActionTypes.EDIT_UPCOMING_TASK, {
                         data: newTask,
                         taskId: task.value.taskId!
                     });
@@ -112,7 +121,7 @@
             };
             /* DELETE TASK */
             const deleteTask = (taskId: string): void => {
-                store.dispatch(ActionTypes.DELETE_TASK, taskId);
+                store.dispatch(ActionTypes.DELETE_UPCOMING_TASK, taskId);
             };
 
             watch(task, (oldValue, newValue) => {

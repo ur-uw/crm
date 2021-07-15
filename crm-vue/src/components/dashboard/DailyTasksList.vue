@@ -37,8 +37,8 @@
             const store = useStore();
             // VARIABLES
             const newTaskTitle = ref<string>("");
-            const dailyTasks = computed(() => store.getters.getAllTasks);
-            const isLoading = computed(() => store.getters.getLoadingState);
+            const dailyTasks = computed(() => store.getters.getAllDailyTasks);
+            const isLoading = computed(() => store.getters.dailyTasksLoadingState);
             // Methods
             const addDailyTask = () => {
                 const task = dailyTasks.value.find((t) => t.title === newTaskTitle.value) ?? null;
@@ -49,7 +49,7 @@
                         taskId: Math.random().toString(36).substring(7)
                     };
 
-                    store.dispatch(ActionTypes.CREATE_TASK, newTask);
+                    store.dispatch(ActionTypes.CREATE_DAILY_TASK, newTask);
                     newTaskTitle.value = "";
                 } else {
                     console.log("Task exists");

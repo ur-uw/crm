@@ -10,20 +10,20 @@ import { UpcomingTask } from "@/interfaces/Task";
 */
 export const mutations: MutationTree<UpcomingTaskStateTypes> &
   UpcomingTaskMutationsTypes = {
-  [MutationTypes.SET_ITEMS](state: UpcomingTaskStateTypes, data: UpcomingTask[]): void {
+  [MutationTypes.SET_UPCOMING_ITEMS](state: UpcomingTaskStateTypes, data: UpcomingTask[]): void {
     state.tasks = data;
   },
-  [MutationTypes.SET_LOADING](state: UpcomingTaskStateTypes, value: boolean): void {
+  [MutationTypes.SET_UPCOMING_LOADING](state: UpcomingTaskStateTypes, value: boolean): void {
     state.isLoading = value;
   },
-  [MutationTypes.SET_ITEM](state: UpcomingTaskStateTypes, newTask: { data: UpcomingTask, taskId: string }): void {
+  [MutationTypes.SET_UPCOMING_ITEM](state: UpcomingTaskStateTypes, newTask: { data: UpcomingTask, taskId: string }): void {
     let task: UpcomingTask = state.tasks?.find((t) => t.taskId === newTask.taskId)!;
     task = newTask.data;
   },
-  [MutationTypes.DELETE_TASK](state: UpcomingTaskStateTypes, taskId: string): void {
+  [MutationTypes.DELETE_UPCOMING_TASK](state: UpcomingTaskStateTypes, taskId: string): void {
     state.tasks = state.tasks?.filter((task) => task.taskId !== taskId) ?? null;
   },
-  [MutationTypes.ADD_TASK](state: UpcomingTaskStateTypes, task: UpcomingTask): void {
+  [MutationTypes.ADD_UPCOMING_TASK](state: UpcomingTaskStateTypes, task: UpcomingTask): void {
     state.tasks?.unshift(task);
   },
 

@@ -12,7 +12,8 @@ Route::get('upcoming', [UpComingTaskController::class, 'index']);
 
 // Create new upcoming
 Route::post('upcoming', [UpComingTaskController::class, 'store']);
-
+// Edit upcoming task
+Route::put('upcoming/{taskId}', [UpComingTaskController::class, 'update']);
 // Delete an upcoming
 Route::delete('upcoming/{taskId}', [UpComingTaskController::class, 'destroy']);
 

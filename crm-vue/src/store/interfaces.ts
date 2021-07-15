@@ -81,11 +81,11 @@ export interface DailyTaskGettersTypes {
 }
 
 export type DailyTaskMutationsTypes<S = DailyTaskStateTypes> = {
-  [DailyTaskMTypes.SET_ITEMS](state: S, data: DailyTask[]): void;
-  [DailyTaskMTypes.ADD_TASK](state: S, data: DailyTask): void;
-  [DailyTaskMTypes.SET_ITEM](state: S, newTask: { data: DailyTask, taskId: string }): void;
-  [DailyTaskMTypes.SET_LOADING](state: S, value: boolean): void;
-  [DailyTaskMTypes.DELETE_TASK](state: S, taskId: string): void;
+  [DailyTaskMTypes.SET_DAILY_ITEMS](state: S, data: DailyTask[]): void;
+  [DailyTaskMTypes.ADD_DAILY_ITEM](state: S, data: DailyTask): void;
+  [DailyTaskMTypes.SET_DAILY_ITEM](state: S, newTask: { data: DailyTask, taskId: string }): void;
+  [DailyTaskMTypes.SET_DAILY_LOADING](state: S, value: boolean): void;
+  [DailyTaskMTypes.DELETE_DAILY_TASK](state: S, taskId: string): void;
 };
 
 export type AugmentedActionContextDailyTask = {
@@ -96,18 +96,18 @@ export type AugmentedActionContextDailyTask = {
 } & Omit<ActionContext<DailyTaskStateTypes, IRootState>, "commit">;
 
 export interface DailyTaskActionsTypes {
-  [DailyTaskATypes.FETCH_TASKS](
+  [DailyTaskATypes.FETCH_DAILY_TASKS](
     { commit }: AugmentedActionContextDailyTask,
   ): void;
-  [DailyTaskATypes.CREATE_TASK](
+  [DailyTaskATypes.CREATE_DAILY_TASK](
     { commit }: AugmentedActionContextDailyTask,
     payload: DailyTask
   ): void;
-  [DailyTaskATypes.EDIT_TASK](
+  [DailyTaskATypes.EDIT_DAILY_TASK](
     { commit }: AugmentedActionContextDailyTask,
     payload: { data: DailyTask, taskId: string }
   ): void;
-  [DailyTaskATypes.DELETE_TASK](
+  [DailyTaskATypes.DELETE_DAILY_TASK](
     { commit }: AugmentedActionContextDailyTask,
     payload: string
   ): void;
@@ -124,11 +124,11 @@ export interface UpcomingTaskGettersTypes {
 }
 
 export type UpcomingTaskMutationsTypes<S = UpcomingTaskStateTypes> = {
-  [UpcomingTaskMTypes.SET_ITEMS](state: S, data: UpcomingTask[]): void;
-  [UpcomingTaskMTypes.ADD_TASK](state: S, data: UpcomingTask): void;
-  [UpcomingTaskMTypes.SET_ITEM](state: S, newTask: { data: UpcomingTask, taskId: string }): void;
-  [UpcomingTaskMTypes.SET_LOADING](state: S, value: boolean): void;
-  [UpcomingTaskMTypes.DELETE_TASK](state: S, taskId: string): void;
+  [UpcomingTaskMTypes.SET_UPCOMING_ITEMS](state: S, data: UpcomingTask[]): void;
+  [UpcomingTaskMTypes.ADD_UPCOMING_TASK](state: S, data: UpcomingTask): void;
+  [UpcomingTaskMTypes.SET_UPCOMING_ITEM](state: S, newTask: { data: UpcomingTask, taskId: string }): void;
+  [UpcomingTaskMTypes.SET_UPCOMING_LOADING](state: S, value: boolean): void;
+  [UpcomingTaskMTypes.DELETE_UPCOMING_TASK](state: S, taskId: string): void;
 };
 
 export type AugmentedActionContextUpcomingTask = {
@@ -139,18 +139,18 @@ export type AugmentedActionContextUpcomingTask = {
 } & Omit<ActionContext<UpcomingTaskStateTypes, IRootState>, "commit">;
 
 export interface UpcomingTaskActionsTypes {
-  [UpcomingTaskATypes.FETCH_TASKS](
+  [UpcomingTaskATypes.FETCH_UPCOMING_TASKS](
     { commit }: AugmentedActionContextUpcomingTask,
   ): void;
-  [UpcomingTaskATypes.CREATE_TASK](
+  [UpcomingTaskATypes.CREATE_UPCOMING_TASK](
     { commit }: AugmentedActionContextUpcomingTask,
-    payload: DailyTask
+    payload: UpcomingTask
   ): void;
-  [UpcomingTaskATypes.EDIT_TASK](
+  [UpcomingTaskATypes.EDIT_UPCOMING_TASK](
     { commit }: AugmentedActionContextUpcomingTask,
-    payload: { data: DailyTask, taskId: string }
+    payload: { data: UpcomingTask, taskId: string }
   ): void;
-  [UpcomingTaskATypes.DELETE_TASK](
+  [UpcomingTaskATypes.DELETE_UPCOMING_TASK](
     { commit }: AugmentedActionContextUpcomingTask,
     payload: string
   ): void;

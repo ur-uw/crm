@@ -7,6 +7,7 @@ use App\Http\Resources\UpComingTaskResource;
 use App\Models\UpComingTask;
 use DB;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UpComingTaskController extends Controller
 {
@@ -17,7 +18,10 @@ class UpComingTaskController extends Controller
      */
     public function index()
     {
-        return UpComingTaskResource::collection(UpComingTask::all());
+        return UpComingTaskResource::collection(
+            UpComingTask::orderBy('updated_at', 'desc')
+                ->get()
+        );
     }
 
     /**
@@ -32,6 +36,7 @@ class UpComingTaskController extends Controller
             [
                 'title' => $request->title,
                 'taskId' => $request->taskId,
+                'status' => $request->status ?? 'waiting',
                 'waiting' => $request->waiting,
             ]
         );
@@ -55,9 +60,21 @@ class UpComingTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $taskId)
     {
-        //
+        $request->validate(
+            [
+                'title' => 'string',
+                'taskId' => 'string',
+            ]
+        );
+        UpComingTask::where('taskId', $taskId)->update($request->all());
+        return response()->json(
+            [
+                'message' => "task updated"
+            ],
+            Response::HTTP_ACCEPTED
+        );
     }
 
     /**

@@ -1,1 +1,11 @@
-### CRM Application using **VUE-3** and **LARAVEL**
+### Mangee Vue 3
+
+![Managee Dashboard](https://user-images.githubusercontent.com/16156658/125831177-f2b9f2fa-ea1d-48fd-aec9-587b264c1b55.png)
+
+First run:
+
+    npm install
+
+Then
+
+    npm run dev

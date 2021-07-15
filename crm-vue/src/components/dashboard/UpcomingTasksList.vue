@@ -9,7 +9,7 @@
             </li>
         </ul>
         <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
-            <h6>No Tasks Today <strong>😴</strong></h6>
+            <h6>No Tasks Yet <strong>😴</strong></h6>
         </div>
     </div>
 </template>

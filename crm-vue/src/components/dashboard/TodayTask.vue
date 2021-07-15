@@ -80,7 +80,7 @@
                 FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
                 */
                 task.value.status = task.value.status === "completed" ? "inprogress" : "completed";
-                store.dispatch(ActionTypes.EDIT_TASK, {
+                store.dispatch(ActionTypes.EDIT_DAILY_TASK, {
                     data: newTask,
                     taskId: task.value.taskId!
                 });
@@ -94,7 +94,7 @@
                     const newTask: DailyTask = {
                         title: newTaskTitle.value
                     };
-                    store.dispatch(ActionTypes.EDIT_TASK, {
+                    store.dispatch(ActionTypes.EDIT_DAILY_TASK, {
                         data: newTask,
                         taskId: task.value.taskId!
                     });
@@ -112,7 +112,7 @@
             };
             /* DELETE TASK */
             const deleteTask = (taskId: string): void => {
-                store.dispatch(ActionTypes.DELETE_TASK, taskId);
+                store.dispatch(ActionTypes.DELETE_DAILY_TASK, taskId);
             };
 
             watch(task, (oldValue, newValue) => {

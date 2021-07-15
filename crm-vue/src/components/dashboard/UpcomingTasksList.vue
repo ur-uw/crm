@@ -1,0 +1,80 @@
+<template>
+    <form @submit.prevent="addDailyTask()">
+        <input
+            class="form-control form-control-lg bg-primary2 text-white"
+            type="text"
+            placeholder="New task"
+            v-model="newTaskTitle"
+        />
+    </form>
+    <div v-if="isLoading" class="mt-1">
+        <div class="alert alert-info">Loading....</div>
+    </div>
+    <div v-else>
+        <ul v-if="dailyTasks.length > 0" class="tasks-list">
+            <li v-for="task in dailyTasks" v-bind:key="task.id">
+                <TodayTask :task="task" />
+            </li>
+        </ul>
+        <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
+            <h6>No Tasks Today <strong>😴</strong></h6>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+    import { computed, defineComponent, ref } from "vue";
+    import { useStore } from "@/use/useStore";
+    import TodayTask from "./TodayTask.vue";
+    import { ActionTypes } from "@/store/modules/daily_task/action-types";
+    import { DailyTask } from "@/interfaces/Task";
+    import Swal from "sweetalert2";
+    export default defineComponent({
+        components: {
+            TodayTask
+        },
+        setup() {
+            const store = useStore();
+            // VARIABLES
+            const newTaskTitle = ref<string>("");
+            const dailyTasks = computed(() => store.getters.getAllTasks);
+            const isLoading = computed(() => store.getters.getLoadingState);
+            // Methods
+            const addDailyTask = () => {
+                const task = dailyTasks.value.find((t) => t.title === newTaskTitle.value) ?? null;
+                if (!task) {
+                    const newTask: DailyTask = {
+                        title: newTaskTitle.value,
+                        status: "inprogress",
+                        taskId: Math.random().toString(36).substring(7)
+                    };
+
+                    store.dispatch(ActionTypes.CREATE_TASK, newTask);
+                    newTaskTitle.value = "";
+                } else {
+                    console.log("Task exists");
+                    Swal.fire({
+                        icon: "warning",
+                        toast: true,
+                        showConfirmButton: false,
+                        text: "Task already exists!",
+                        timer: 2000,
+                        position: "top-end"
+                    });
+                }
+            };
+            return { dailyTasks, isLoading, newTaskTitle, addDailyTask };
+        }
+    });
+</script>
+
+<style lang="scss" scoped>
+    ul.tasks-list {
+        margin-top: 15px;
+
+        li {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+</style>

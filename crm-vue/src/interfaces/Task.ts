@@ -12,4 +12,4 @@ export interface DailyTask extends Task {
   status?: "inprogress" | "completed";
 };
 
-export type UpComingTask = Task;
+export type UpcomingTask = Task;

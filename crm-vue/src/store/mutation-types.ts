@@ -1,4 +1,4 @@
-import { MutationTypes as counterTypes } from "./modules/counter/mutation-types";
-import { MutationTypes as counter1Types } from "./modules/counter1/mutation-types";
+import { MutationTypes as dailyTaskTypes } from "./modules/daily_task/mutation-types";
+import { MutationTypes as upcomingTaskTypes } from "./modules/upcoming_task/mutation-types";
 
-export const AllMutationTypes = { ...counterTypes, ...counter1Types };
+export const AllMutationTypes = { ...dailyTaskTypes, ...upcomingTaskTypes };

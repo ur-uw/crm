@@ -1,4 +1,4 @@
-import { DailyTask } from './../../../interfaces/DailyTask';
+import { DailyTask } from '@/interfaces/Task';
 import { GetterTree } from "vuex";
 import {
   DailyTaskGettersTypes,
@@ -7,10 +7,10 @@ import {
 } from "@/store/interfaces";
 export const getters: GetterTree<DailyTaskStateTypes, IRootState> &
   DailyTaskGettersTypes = {
-  getAllTasks(state: DailyTaskStateTypes): DailyTask[] {
+  getAllDailyTasks(state: DailyTaskStateTypes): DailyTask[] {
     return state.tasks ?? [];
   },
-  getLoadingState(state: DailyTaskStateTypes): boolean {
+  dailyTasksLoadingState(state: DailyTaskStateTypes): boolean {
     return state.isLoading;
   }
 };

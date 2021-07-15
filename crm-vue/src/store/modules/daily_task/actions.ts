@@ -28,8 +28,9 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
   // CREATE TASK
   async [ActionTypes.CREATE_TASK]({ commit }, task: DailyTask) {
     try {
-      await axios.post('/api/dailytask/', task);
-      commit(MutationTypes.ADD_TASK, task);
+      const response = await axios.post('/api/dailytask/', task);
+      const newTask: DailyTask = response.data['data'];
+      commit(MutationTypes.ADD_TASK, newTask);
     } catch (error) {
       console.error('CREATE_TASK_ACTION', error);
     }
@@ -46,7 +47,7 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
   // DELETE TASK
   async [ActionTypes.DELETE_TASK]({ commit }, taskId: string) {
     const confirmResult = await Swal.fire({
-      titleText: "Delete DailyTask",
+      titleText: "Delete Task",
       text: "Are you sure you want to delete this task?",
       allowOutsideClick: false,
       showCancelButton: true,

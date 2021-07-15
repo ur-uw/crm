@@ -48,11 +48,6 @@
                         status: "inprogress",
                         taskId: Math.random().toString(36).substring(7)
                     };
-                    /*
-                    BUG:[2]
-                    FIXME: if we add more than one task in a row the other task title will be same as the first one but in the backend it is correct
-                    ? [TEMP-FIX] The bellow line is temp fix
-                    */
 
                     store.dispatch(ActionTypes.CREATE_TASK, newTask);
                     newTaskTitle.value = "";

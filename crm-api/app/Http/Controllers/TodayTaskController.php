@@ -37,6 +37,7 @@ class TodayTaskController extends Controller
             [
                 'id' => $request->id,
                 'title' => $request->title,
+                'status' => 'inprogress',
                 'taskId' => $request->taskId,
             ]
         );

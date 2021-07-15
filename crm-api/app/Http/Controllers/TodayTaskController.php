@@ -19,7 +19,10 @@ class TodayTaskController extends Controller
      */
     public function index()
     {
-        return TodayTaskResource::collection(TodayTask::all());
+        return TodayTaskResource::collection(
+            TodayTask::orderBy('created_at', 'desc')
+                ->get()
+        );
     }
 
     /**

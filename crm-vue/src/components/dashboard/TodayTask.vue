@@ -17,28 +17,26 @@
             </label>
             <h4
                 @dblclick="!showEditTask ? toogleTaskForm() : null"
-                :class="task.status === 'completed' ? 'task-completed' : ''"
+                class="w-100"
+                v-bind:class="task.status === 'completed' ? 'task-completed' : ''"
             >
-                <form @submit.prevent="updateTask()">
+                <form @submit.prevent="updateTask()" class="w-100">
+                    <!-- TODO: Add visual to see the character limit -->
                     <input
-                        type="text"
+                        maxlength="26"
                         :disabled="!showEditTask"
                         v-model="newTaskTitle"
-                        class="form-control bg-transparent border-0 p-2 outline-none"
+                        class="bg-transparent border-0 p-2 w-100 overflow-auto outline-none h-100"
+                        v-bind:class="
+                            task.status === 'completed' && !showEditTask ? 'task-completed' : ''
+                        "
                         placeholder="Title"
                     />
                 </form>
             </h4>
         </div>
         <div class="right">
-            <img
-                :src="
-                    !showEditTask
-                        ? '../src/assets/images/edit.png'
-                        : '../src/assets/images/check.png'
-                "
-                @click="toogleTaskForm()"
-            />
+            <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
             <img
                 src="../../assets/images/del.png"
                 @click="task.taskId ? deleteTask(task.taskId) : null"
@@ -133,9 +131,9 @@
 
 <style lang="scss">
     .info {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
         align-items: center;
+        grid-template-columns: 3fr 1fr;
         padding: 0.5em 0.3em;
         border-radius: 0 0.3em 0.3em;
 
@@ -148,6 +146,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+            width: 100%;
             label {
                 cursor: pointer;
                 margin-top: 0.3em;

@@ -23,10 +23,13 @@ class TodayTaskFactory extends Factory
      */
     public function definition()
     {
+        $taskStatus = [
+            'inprogress',
+            'completed',
+        ];
         return [
             'title' => $this->faker->sentence($nbWords = 4, $variableWords = false),
-            'completed' => false,
-            'approved' => false,
+            'status' => $this->faker->randomElement($taskStatus),
             'taskId' => Str::random($length = 10),
         ];
     }

@@ -16,9 +16,12 @@ class CreateUpComingTasksTable extends Migration
         Schema::create('up_coming_tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->boolean('completed')->default(false);
-            $table->boolean('approved')->default(false);
-            $table->boolean('waiting')->default(true);
+            $table->enum(
+                'status',
+                [
+                    'waiting', 'approved', 'inprogress', 'completed', 'denied'
+                ]
+            )->default('waiting');
             $table->string('taskId');
             $table->timestamps();
         });

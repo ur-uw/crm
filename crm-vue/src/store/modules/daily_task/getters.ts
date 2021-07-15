@@ -1,4 +1,4 @@
-import { DailyTask } from './../../../interfaces/Task';
+import { DailyTask } from './../../../interfaces/DailyTask';
 import { GetterTree } from "vuex";
 import {
   DailyTaskGettersTypes,

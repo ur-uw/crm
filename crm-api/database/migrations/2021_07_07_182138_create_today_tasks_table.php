@@ -17,8 +17,12 @@ class CreateTodayTasksTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('taskId');
-            $table->boolean('completed')->default(false);
-            $table->boolean('approved')->default(false);
+            $table->enum(
+                'status',
+                [
+                    'inprogress', 'completed'
+                ]
+            )->default('inprogress');
             $table->timestamps();
         });
     }

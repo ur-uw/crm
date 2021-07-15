@@ -80,7 +80,7 @@ export interface DailyTaskGettersTypes {
 export type DailyTaskMutationsTypes<S = DailyTaskStateTypes> = {
   [DailyTaskMTypes.SET_ITEMS](state: S, data: DailyTask[]): void;
   [DailyTaskMTypes.ADD_TASK](state: S, data: DailyTask): void;
-  [DailyTaskMTypes.COMPLETE_TASK](state: S, taskId: string): void;
+  [DailyTaskMTypes.SET_ITEM](state: S, newTask: { data: DailyTask, taskId: string }): void;
   [DailyTaskMTypes.SET_LOADING](state: S, value: boolean): void;
   [DailyTaskMTypes.DELETE_TASK](state: S, taskId: string): void;
 };
@@ -102,7 +102,7 @@ export interface DailyTaskActionsTypes {
   ): void;
   [DailyTaskATypes.EDIT_TASK](
     { commit }: AugmentedActionContextDailyTask,
-    payload: { newTaskData: DailyTask, taskId: string }
+    payload: { data: DailyTask, taskId: string }
   ): void;
   [DailyTaskATypes.DELETE_TASK](
     { commit }: AugmentedActionContextDailyTask,

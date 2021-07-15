@@ -4,7 +4,7 @@ import { DailyTaskMutationsTypes, DailyTaskStateTypes } from "@/store/interfaces
 import { DailyTask } from "@/interfaces/Task";
 /*
   [DailyTaskMTypes.ADD_TASK](state: S, data: DailyTask): void;
-  [DailyTaskMTypes.COMPLETE_TASK](state: S, data: { newData: DailyTask, taskId: string }): void;
+  [DailyTaskMTypes.SET_ITEM](state: S, data: { newData: DailyTask, taskId: string }): void;
   [DailyTaskMTypes.SET_LOADING](state: S, value: boolean): void;
   [DailyTaskMTypes.DELETE_TASK](state: S, taskId: string): void;
 */
@@ -16,11 +16,9 @@ export const mutations: MutationTree<DailyTaskStateTypes> &
   [MutationTypes.SET_LOADING](state: DailyTaskStateTypes, value: boolean): void {
     state.isLoading = value;
   },
-  [MutationTypes.COMPLETE_TASK](state: DailyTaskStateTypes, taskId: string): void {
-    let task: DailyTask | undefined = state.tasks?.find((task) => task.taskId === taskId);
-    if (task) {
-      task.completed = !task.completed;
-    }
+  [MutationTypes.SET_ITEM](state: DailyTaskStateTypes, newTask: { data: DailyTask, taskId: string }): void {
+    let task: DailyTask = state.tasks?.find((t) => t.taskId === newTask.taskId)!;
+    task = newTask.data;
   },
   [MutationTypes.DELETE_TASK](state: DailyTaskStateTypes, taskId: string): void {
     state.tasks = state.tasks?.filter((task) => task.taskId !== taskId) ?? null;

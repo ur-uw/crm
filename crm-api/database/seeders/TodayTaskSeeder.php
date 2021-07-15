@@ -14,6 +14,6 @@ class TodayTaskSeeder extends Seeder
      */
     public function run()
     {
-        TodayTask::factory()->count(5)->create();
+        TodayTask::factory()->count(3)->create();
     }
 }

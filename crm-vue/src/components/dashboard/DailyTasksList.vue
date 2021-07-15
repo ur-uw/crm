@@ -15,29 +15,29 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from "vue";
-import { useStore } from "@/use/useStore";
-import TodayTask from "./TodayTask.vue";
-export default defineComponent({
-    components: {
-        TodayTask
-    },
-    setup() {
-        const store = useStore();
-        const isLoading = computed(() => store.getters.getLoadingState);
-        const dailyTasks = computed(() => store.getters.getAllTasks);
-        return { dailyTasks, isLoading };
-    }
-});
+    import { computed, defineComponent } from "vue";
+    import { useStore } from "@/use/useStore";
+    import TodayTask from "./TodayTask.vue";
+    export default defineComponent({
+        components: {
+            TodayTask
+        },
+        setup() {
+            const store = useStore();
+            const isLoading = computed(() => store.getters.getLoadingState);
+            const dailyTasks = computed(() => store.getters.getAllTasks);
+            return { dailyTasks, isLoading };
+        }
+    });
 </script>
 
 <style lang="scss" scoped>
-ul.tasks-list {
-    margin-top: 15px;
+    ul.tasks-list {
+        margin-top: 15px;
 
-    li {
-        display: flex;
-        flex-direction: column;
+        li {
+            display: flex;
+            flex-direction: column;
+        }
     }
-}
 </style>

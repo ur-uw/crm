@@ -1,4 +1,4 @@
-import { DailyTask } from './../../../interfaces/Task';
+import { DailyTask } from '@/interfaces/Task';
 import { ActionTree } from "vuex";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
@@ -34,17 +34,17 @@ export const actions: ActionTree<DailyTaskStateTypes, IRootState> &
       console.error('CREATE_TASK_ACTION', error);
     }
   },
-  async [ActionTypes.EDIT_TASK]({ commit }, data: { newTaskData: DailyTask, taskId: string }) {
+  async [ActionTypes.EDIT_TASK]({ commit }, newTask: { data: DailyTask, taskId: string }) {
     try {
-      await axios.put(`/api/dailytask/${data.taskId}`, data.newTaskData);
-      commit(MutationTypes.COMPLETE_TASK, data.taskId);
+      await axios.put(`/api/dailytask/${newTask.taskId}`, newTask.data);
+      commit(MutationTypes.SET_ITEM, newTask);
     } catch (error) {
-
+      console.log('EDIT_TASK action' + error);
     }
   },
   async [ActionTypes.DELETE_TASK]({ commit }, taskId: string) {
     const confirmResult = await Swal.fire({
-      titleText: "Delete Task",
+      titleText: "Delete DailyTask",
       text: "Are you sure you want to delete this task?",
       allowOutsideClick: false,
       showCancelButton: true,

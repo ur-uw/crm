@@ -5,6 +5,11 @@
     color: #15d4a1;
 }
 
+.completed {
+    background-color: $custom-purple;
+    color: white;
+}
+
 .inprogress {
     background-color: #0060ff20;
     color: #0060ff;
@@ -29,7 +34,7 @@
     border: none;
 }
 
-.completed {
+.task-completed {
     text-decoration: line-through;
     color: $primary;
 }

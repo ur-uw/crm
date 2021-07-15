@@ -10,8 +10,7 @@ class TodayTask extends Model
     use HasFactory;
     protected $fillable = [
         'title',
-        'completed',
-        'approved',
+        'status',
         'taskId',
     ];
 }

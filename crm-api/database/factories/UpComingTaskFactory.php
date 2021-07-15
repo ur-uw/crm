@@ -22,11 +22,16 @@ class UpComingTaskFactory extends Factory
      */
     public function definition()
     {
+        $taskStatus = [
+            'waiting',
+            'approved',
+            'inprogress',
+            'completed',
+            'denied'
+        ];
         return [
             'title' => $this->faker->sentence($nbWords = 4, $variableWords = false),
-            'completed' => false,
-            'approved' => false,
-            'waiting' => true,
+            'status' => $this->faker->randomElement($taskStatus),
             'taskId' => Str::random($length = 10),
         ];
     }

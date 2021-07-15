@@ -1,8 +1,13 @@
-@import 'custom_bootstrap';
-@import 'styles';
+@import "custom_bootstrap";
+@import "styles";
 .approved {
     background-color: #15d4a150;
     color: #15d4a1;
+}
+
+.completed {
+    background-color: $custom-purple;
+    color: white;
 }
 
 .inprogress {
@@ -28,3 +33,10 @@
     border-radius: 5px;
     border: none;
 }
+
+.task-completed {
+    text-decoration: line-through;
+    color: $primary;
+}
+
+@import "checkbox";

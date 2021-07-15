@@ -12,7 +12,8 @@ Route::get('upcoming', [UpComingTaskController::class, 'index']);
 
 // Create new upcoming
 Route::post('upcoming', [UpComingTaskController::class, 'store']);
-
+// Edit upcoming task
+Route::put('upcoming/{taskId}', [UpComingTaskController::class, 'update']);
 // Delete an upcoming
 Route::delete('upcoming/{taskId}', [UpComingTaskController::class, 'destroy']);
 
@@ -21,9 +22,9 @@ Route::delete('upcoming/{taskId}', [UpComingTaskController::class, 'destroy']);
 // Get all daily tasks
 
 Route::get('dailytask', [TodayTaskController::class, 'index']);
-
 // Create new daily task
 Route::post('dailytask', [TodayTaskController::class, 'store']);
-
+// Edit daily task
+Route::put('dailytask/{taskId}', [TodayTaskController::class, 'update']);
 // Delete an daily task
 Route::delete('dailytask/{taskId}', [TodayTaskController::class, 'destroy']);

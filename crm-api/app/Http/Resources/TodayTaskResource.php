@@ -14,12 +14,6 @@ class TodayTaskResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'completed' => $this->completed,
-            'approved' => $this->approved,
-            'taskId' => $this->taskId,
-        ];
+        return parent::toArray($request);
     }
 }

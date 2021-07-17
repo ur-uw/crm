@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use Validator;
 
 class TaskController extends Controller
@@ -57,22 +58,11 @@ class TaskController extends Controller
      * @param  string  $taskId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTaskRequest $request, $id)
     {
-        $request->validate(
-            [
-                'title' => 'string',
-                'slug' => 'string',
-                'description' => 'string'
-            ]
-        );
-        Task::where('id', $id)->update($request->all());
-        return response()->json(
-            [
-                'message' => "task updated"
-            ],
-            Response::HTTP_ACCEPTED
-        );
+        $task = Task::find($id);
+        $task->update($request->all());
+        return TaskResource::make($task);
     }
 
     /**
@@ -85,6 +75,6 @@ class TaskController extends Controller
     {
         DB::table('tasks')->where('id', $id)->delete();
 
-        return response()->json(['message' => 'Daily Task Deleted', 204]);
+        return response()->json(['message' => 'Task Deleted', 204]);
     }
 }

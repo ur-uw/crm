@@ -35,8 +35,9 @@ class TaskController extends Controller
     public function store(CreateTaskRequest $request)
     {
         $task = Task::create(
-            $request->all()
+            $request->validated()
         );
+
         return TaskResource::make($task);
     }
 

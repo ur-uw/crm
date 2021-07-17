@@ -4,13 +4,11 @@ import { getters } from "./getters";
 import { actions } from "./actions";
 import { mutations } from "./mutations";
 import { state } from "./state";
-import dailyTask from "../daily_task";
-import upcomingTask from '../upcoming_task';
+import task from "../task";
 
 // Modules
 const modules: ModuleTree<IRootState> = {
-  dailyTask,
-  upcomingTask,
+  task,
 };
 
 const root: Module<IRootState, IRootState> = {

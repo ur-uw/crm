@@ -15,4 +15,4 @@ Route::post('task', [TaskController::class, 'store']);
 // Edit task
 Route::put('task/{id}', [TaskController::class, 'update']);
 // Delete a
-Route::delete('task/{task}', [TaskController::class, 'destroy']);
+Route::delete('task/{id}', [TaskController::class, 'destroy']);

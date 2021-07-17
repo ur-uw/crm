@@ -37,36 +37,25 @@
         </div>
         <div class="right">
             <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
-            <img
-                src="../../assets/images/del.png"
-                @click="task.taskId ? deleteTask(task.taskId) : null"
-            />
-            <button
-                v-bind:class="{
-                    inprogress: task.status === 'inprogress',
-                    approved: task.status === 'approved',
-                    completed: task.status === 'completed',
-                    waiting: task.status === 'waiting',
-                    rejected: task.status === 'denied'
-                }"
-            >
-                {{ task.status }}
+            <img src="../../assets/images/del.png" @click="deleteTask()" />
+            <button :class="task.status">
+                {{ task.status === "inprogress" ? "Inprogress" : "Completed" }}
             </button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import { UpcomingTask } from "@/interfaces/Task";
+    import { Task } from "@/interfaces/Task";
     import { defineComponent, PropType, ref, watch } from "vue";
     import { useStore } from "@/use/useStore";
-    import { ActionTypes } from "@/store/modules/upcoming_task/action-types";
+    import { ActionTypes } from "@/store/modules/task/action-types";
     import Swal from "sweetalert2";
     export default defineComponent({
         name: "TodayTask",
         props: {
             task: {
-                type: Object as PropType<UpcomingTask>,
+                type: Object as PropType<Task>,
                 required: true
             }
         },
@@ -77,57 +66,47 @@
             const task = ref(props.task);
             let showEditTask = ref<boolean>(false);
             let newTaskTitle = ref<string>(task.value.title ?? "No title");
-            // FUNCTIONS
             /* TOGGLE TASK COMPLETED PROPERY */
             const toogleTaskCompleted = (): void => {
-                const newTask: UpcomingTask = {
+                const newTask: Task = {
                     status: task.value.status === "completed" ? "inprogress" : "completed",
-                    taskId: task.value.taskId!
+                    id: task.value.id!
                 };
-                /* EDIT UPCOMING TASK */
                 /*
                 BUG[1]
                 FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
                 */
                 task.value.status = task.value.status === "completed" ? "inprogress" : "completed";
-                store.dispatch(ActionTypes.EDIT_UPCOMING_TASK, {
-                    data: newTask,
-                    taskId: task.value.taskId!
-                });
+                store.dispatch(ActionTypes.EDIT_TASK, newTask);
             };
+            // Edit task
             const toogleTaskForm = () => {
                 showEditTask.value = !showEditTask.value;
             };
             const updateTask = async () => {
                 if (!(task.value.title === newTaskTitle.value)) {
-                    const newTask: UpcomingTask = {
+                    const newTask: Task = {
+                        id: task.value.id!,
                         title: newTaskTitle.value
                     };
-                    store.dispatch(ActionTypes.EDIT_UPCOMING_TASK, {
-                        data: newTask,
-                        taskId: task.value.taskId!
-                    });
+                    store.dispatch(ActionTypes.EDIT_TASK, newTask);
+                    task.value.title = newTask.title;
                     toogleTaskForm();
                 } else {
                     Swal.fire({
                         icon: "warning",
                         toast: true,
                         showConfirmButton: false,
-                        text: "Task already exists!",
+                        text: "Titles are the same",
                         timer: 2000,
                         position: "top-end"
                     });
                 }
             };
             /* DELETE TASK */
-            const deleteTask = (taskId: string): void => {
-                store.dispatch(ActionTypes.DELETE_UPCOMING_TASK, taskId);
+            const deleteTask = (): void => {
+                store.dispatch(ActionTypes.DELETE_TASK, task.value.id);
             };
-
-            watch(task, (oldValue, newValue) => {
-                console.log(oldValue);
-                console.log(newValue);
-            });
 
             return {
                 toogleTaskCompleted,

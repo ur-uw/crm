@@ -11,8 +11,8 @@
         <div class="alert alert-info">Loading....</div>
     </div>
     <div v-else>
-        <ul v-if="dailyTasks.length > 0" class="tasks-list">
-            <li v-for="task in dailyTasks" v-bind:key="task.id">
+        <ul v-if="tasks.length > 0" class="tasks-list">
+            <li v-for="task in tasks" v-bind:key="task.id">
                 <TodayTask :task="task" />
             </li>
         </ul>
@@ -25,9 +25,9 @@
 <script lang="ts">
     import { computed, defineComponent, ref } from "vue";
     import { useStore } from "@/use/useStore";
-    import TodayTask from "./TodayTask.vue";
-    import { ActionTypes } from "@/store/modules/daily_task/action-types";
-    import { DailyTask } from "@/interfaces/Task";
+    import TodayTask from "./Task.vue";
+    import { ActionTypes } from "@/store/modules/task/action-types";
+    import { Task } from "@/interfaces/Task";
     import Swal from "sweetalert2";
     export default defineComponent({
         components: {
@@ -37,19 +37,19 @@
             const store = useStore();
             // VARIABLES
             const newTaskTitle = ref<string>("");
-            const dailyTasks = computed(() => store.getters.getAllDailyTasks);
-            const isLoading = computed(() => store.getters.dailyTasksLoadingState);
+            const tasks = computed(() => store.getters.getAllTasks);
+            const isLoading = computed(() => store.getters.tasksLoadingState);
             // Methods
             const addDailyTask = () => {
-                const task = dailyTasks.value.find((t) => t.title === newTaskTitle.value) ?? null;
+                const task = tasks.value.find((t) => t.title === newTaskTitle.value) ?? null;
                 if (!task) {
-                    const newTask: DailyTask = {
+                    const newTask: Task = {
                         title: newTaskTitle.value,
-                        status: "inprogress",
-                        taskId: Math.random().toString(36).substring(7)
+                        status_id: 1,
+                        slug: Math.random().toString(36).substring(7)
                     };
 
-                    store.dispatch(ActionTypes.CREATE_DAILY_TASK, newTask);
+                    store.dispatch(ActionTypes.CREATE_TASK, newTask);
                     newTaskTitle.value = "";
                 } else {
                     console.log("Task exists");
@@ -63,7 +63,7 @@
                     });
                 }
             };
-            return { dailyTasks, isLoading, newTaskTitle, addDailyTask };
+            return { tasks, isLoading, newTaskTitle, addDailyTask };
         }
     });
 </script>

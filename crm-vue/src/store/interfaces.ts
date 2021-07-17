@@ -1,15 +1,13 @@
 import { ActionContext, DispatchOptions } from "vuex";
-/******************* [DAILY TASK]*********************/
-import { MutationTypes as DailyTaskMTypes } from "./modules/daily_task/mutation-types";
-import { ActionTypes as DailyTaskATypes } from "./modules/daily_task/action-types";
-/******************* [DAILY TASK]*********************/
-import { MutationTypes as UpcomingTaskMTypes } from "./modules/upcoming_task/mutation-types";
-import { ActionTypes as UpcomingTaskATypes } from "./modules/upcoming_task/action-types";
+/******************* [TASK]*********************/
+import { MutationTypes as TaskMTypes } from "./modules/task/mutation-types";
+import { ActionTypes as TaskATypes } from "./modules/task/action-types";
 /******************* [ROOT] *********************/
 import { MutationTypes as RootMTypes } from "./modules/root/mutation-types";
 import { ActionTypes as RootATypes } from "./modules/root/action-types";
 /******************* (DATA MODELS) *********************/
-import { DailyTask, UpcomingTask } from "@/interfaces/Task";
+import { Task } from '@/interfaces/Task';
+
 
 export interface IUserData {
   id: number
@@ -24,7 +22,7 @@ export interface IRootState {
 }
 
 export interface IMergedState extends IRootState {
-  dailyTaskModule: DailyTaskStateTypes;
+  dailyTaskModule: TaskStateTypes;
 }
 
 export interface IRootGettersTypes {
@@ -69,98 +67,53 @@ export interface RootActionsTypes {
   ): void;
 }
 
-/*********************** DAILY TASK MODULE TYPES  ***********************/
-export interface DailyTaskStateTypes {
-  tasks: DailyTask[] | null,
+/*********************** TASK MODULE TYPES  ***********************/
+export interface TaskStateTypes {
+  tasks: Task[] | null,
   isLoading: boolean,
 }
 
-export interface DailyTaskGettersTypes {
-  getAllDailyTasks(state: DailyTaskStateTypes): DailyTask[];
-  dailyTasksLoadingState(state: DailyTaskStateTypes): boolean;
+export interface TaskGettersTypes {
+  getAllTasks(state: TaskStateTypes): Task[];
+  tasksLoadingState(state: TaskStateTypes): boolean;
 }
 
-export type DailyTaskMutationsTypes<S = DailyTaskStateTypes> = {
-  [DailyTaskMTypes.SET_DAILY_ITEMS](state: S, data: DailyTask[]): void;
-  [DailyTaskMTypes.ADD_DAILY_ITEM](state: S, data: DailyTask): void;
-  [DailyTaskMTypes.SET_DAILY_ITEM](state: S, newTask: { data: DailyTask, taskId: string }): void;
-  [DailyTaskMTypes.SET_DAILY_LOADING](state: S, value: boolean): void;
-  [DailyTaskMTypes.DELETE_DAILY_TASK](state: S, taskId: string): void;
+export type TaskMutationsTypes<S = TaskStateTypes> = {
+  [TaskMTypes.SET_ITEMS](state: S, data: Task[]): void;
+  [TaskMTypes.ADD_ITEM](state: S, data: Task): void;
+  [TaskMTypes.SET_ITEM](state: S, updatedTask: Task): void;
+  [TaskMTypes.SET_LOADING](state: S, value: boolean): void;
+  [TaskMTypes.DELETE_TASK](state: S, id: number): void;
 };
 
-export type AugmentedActionContextDailyTask = {
-  commit<K extends keyof DailyTaskMutationsTypes>(
+export type AugmentedActionContextTask = {
+  commit<K extends keyof TaskMutationsTypes>(
     key: K,
-    payload: Parameters<DailyTaskMutationsTypes[K]>[1]
-  ): ReturnType<DailyTaskMutationsTypes[K]>;
-} & Omit<ActionContext<DailyTaskStateTypes, IRootState>, "commit">;
+    payload: Parameters<TaskMutationsTypes[K]>[1]
+  ): ReturnType<TaskMutationsTypes[K]>;
+} & Omit<ActionContext<TaskStateTypes, IRootState>, "commit">;
 
-export interface DailyTaskActionsTypes {
-  [DailyTaskATypes.FETCH_DAILY_TASKS](
-    { commit }: AugmentedActionContextDailyTask,
+export interface TaskActionsTypes {
+  [TaskATypes.FETCH_TASKS](
+    { commit }: AugmentedActionContextTask,
   ): void;
-  [DailyTaskATypes.CREATE_DAILY_TASK](
-    { commit }: AugmentedActionContextDailyTask,
-    payload: DailyTask
+  [TaskATypes.CREATE_TASK](
+    { commit }: AugmentedActionContextTask,
+    payload: Task
   ): void;
-  [DailyTaskATypes.EDIT_DAILY_TASK](
-    { commit }: AugmentedActionContextDailyTask,
-    payload: { data: DailyTask, taskId: string }
+  [TaskATypes.EDIT_TASK](
+    { commit }: AugmentedActionContextTask,
+    updatedTask: Task
   ): void;
-  [DailyTaskATypes.DELETE_DAILY_TASK](
-    { commit }: AugmentedActionContextDailyTask,
-    payload: string
-  ): void;
-}
-/*********************** UPCOMING TASK MODULE TYPES  ***********************/
-export interface UpcomingTaskStateTypes {
-  tasks: UpcomingTask[] | null,
-  isLoading: boolean,
-}
-
-export interface UpcomingTaskGettersTypes {
-  getAllTasks(state: UpcomingTaskStateTypes): UpcomingTask[];
-  getLoadingState(state: UpcomingTaskStateTypes): boolean;
-}
-
-export type UpcomingTaskMutationsTypes<S = UpcomingTaskStateTypes> = {
-  [UpcomingTaskMTypes.SET_UPCOMING_ITEMS](state: S, data: UpcomingTask[]): void;
-  [UpcomingTaskMTypes.ADD_UPCOMING_TASK](state: S, data: UpcomingTask): void;
-  [UpcomingTaskMTypes.SET_UPCOMING_ITEM](state: S, newTask: { data: UpcomingTask, taskId: string }): void;
-  [UpcomingTaskMTypes.SET_UPCOMING_LOADING](state: S, value: boolean): void;
-  [UpcomingTaskMTypes.DELETE_UPCOMING_TASK](state: S, taskId: string): void;
-};
-
-export type AugmentedActionContextUpcomingTask = {
-  commit<K extends keyof UpcomingTaskMutationsTypes>(
-    key: K,
-    payload: Parameters<UpcomingTaskMutationsTypes[K]>[1]
-  ): ReturnType<UpcomingTaskMutationsTypes[K]>;
-} & Omit<ActionContext<UpcomingTaskStateTypes, IRootState>, "commit">;
-
-export interface UpcomingTaskActionsTypes {
-  [UpcomingTaskATypes.FETCH_UPCOMING_TASKS](
-    { commit }: AugmentedActionContextUpcomingTask,
-  ): void;
-  [UpcomingTaskATypes.CREATE_UPCOMING_TASK](
-    { commit }: AugmentedActionContextUpcomingTask,
-    payload: UpcomingTask
-  ): void;
-  [UpcomingTaskATypes.EDIT_UPCOMING_TASK](
-    { commit }: AugmentedActionContextUpcomingTask,
-    payload: { data: UpcomingTask, taskId: string }
-  ): void;
-  [UpcomingTaskATypes.DELETE_UPCOMING_TASK](
-    { commit }: AugmentedActionContextUpcomingTask,
-    payload: string
+  [TaskATypes.DELETE_TASK](
+    { commit }: AugmentedActionContextTask,
+    id: number
   ): void;
 }
 export interface StoreActions
   extends RootActionsTypes,
-  DailyTaskActionsTypes,
-  UpcomingTaskActionsTypes { }
+  TaskActionsTypes { }
 
 export interface StoreGetters
   extends IRootGettersTypes,
-  DailyTaskGettersTypes,
-  UpcomingTaskGettersTypes { }
+  TaskGettersTypes { }

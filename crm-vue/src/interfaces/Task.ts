@@ -1,15 +1,13 @@
 
 export interface Task {
-  id?: number | string;
+  id?: number;
   title?: string;
+  status_id?: number,
   status?: "waiting" | "approved" | "inprogress" | "completed" | "denied";
-  taskId?: string;
-  created_at?: string | null;
-  updated_at?: string | null;
+  slug?: string;
+  description?: string;
+  start_date?: Date | string;
+  due_date?: Date | string;
+  created_at?: Date | string;
+  updated_at?: Date | string;
 }
-
-export interface DailyTask extends Task {
-  status?: "inprogress" | "completed";
-};
-
-export type UpcomingTask = Task;

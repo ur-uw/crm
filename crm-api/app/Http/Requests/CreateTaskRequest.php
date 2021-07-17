@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateTodayTaskRequest extends FormRequest
+class CreateTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,12 @@ class CreateTodayTaskRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'taskId' => 'required|string'
+            // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
+            'slug' => 'required|string|unique:tasks,title',
+            'description' => 'string',
+            'start_date' => 'date',
+            'due_date' => 'date',
+            'status_id' => 'required|numeric',
         ];
     }
 }

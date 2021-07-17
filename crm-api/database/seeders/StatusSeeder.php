@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\TodayTask;
+use App\Models\Status;
 use Illuminate\Database\Seeder;
 
-class TodayTaskSeeder extends Seeder
+class StatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class TodayTaskSeeder extends Seeder
      */
     public function run()
     {
-        TodayTask::factory()->count(3)->create();
+        Status::factory()->count(4)->create();
     }
 }

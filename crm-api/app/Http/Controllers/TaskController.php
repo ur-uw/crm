@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUpcomingTaskRequest;
-use App\Http\Resources\UpComingTaskResource;
-use App\Models\UpComingTask;
-use DB;
+use App\Http\Resources\TaskResource;
+use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\CreateTaskRequest;
+use Validator;
 
-class UpComingTaskController extends Controller
+class TaskController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +19,8 @@ class UpComingTaskController extends Controller
      */
     public function index()
     {
-        return UpComingTaskResource::collection(
-            UpComingTask::orderBy('updated_at', 'desc')
+        return TaskResource::collection(
+            Task::orderBy('created_at', 'desc')
                 ->get()
         );
     }
@@ -30,16 +31,12 @@ class UpComingTaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateUpcomingTaskRequest $request)
+    public function store(CreateTaskRequest $request)
     {
-        return UpComingTask::create(
-            [
-                'title' => $request->title,
-                'taskId' => $request->taskId,
-                'status' => $request->status ?? 'waiting',
-                'waiting' => $request->waiting,
-            ]
+        $task = Task::create(
+            $request->all()
         );
+        return TaskResource::make($task);
     }
 
     /**
@@ -57,18 +54,19 @@ class UpComingTaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string  $taskId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $taskId)
+    public function update(Request $request, $id)
     {
         $request->validate(
             [
                 'title' => 'string',
-                'taskId' => 'string',
+                'slug' => 'string',
+                'description' => 'string'
             ]
         );
-        UpComingTask::where('taskId', $taskId)->update($request->all());
+        Task::where('id', $id)->update($request->all());
         return response()->json(
             [
                 'message' => "task updated"
@@ -83,14 +81,10 @@ class UpComingTaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($taskId)
+    public function destroy($id)
     {
-        DB::table('up_coming_tasks')->where('taskId', $taskId)->delete();
-        return response()->json(
-            [
-                'message' => 'Upcoming Deleted!',
-            ],
-            204
-        );
+        DB::table('tasks')->where('id', $id)->delete();
+
+        return response()->json(['message' => 'Daily Task Deleted', 204]);
     }
 }

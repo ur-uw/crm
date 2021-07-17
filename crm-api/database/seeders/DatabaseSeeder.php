@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
         $this->call([
-            TodayTaskSeeder::class,
-            UpComingTaskSeeder::class,
+            StatusSeeder::class,
+            TaskSeeder::class,
         ]);
     }
 }

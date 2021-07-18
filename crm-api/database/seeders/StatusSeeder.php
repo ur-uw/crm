@@ -14,6 +14,13 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-        Status::factory()->count(4)->create();
+        /*
+        * Default Statuses
+        */
+        Status::factory()->waiting()->create();
+        Status::factory()->approved()->create();
+        Status::factory()->inprogress()->create();
+        Status::factory()->completed()->create();
+        Status::factory()->rejected()->create();
     }
 }

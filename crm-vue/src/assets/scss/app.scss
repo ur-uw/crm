@@ -1,13 +1,13 @@
 @import "custom_bootstrap";
 @import "styles";
 .approved {
-    background-color: #15d4a150;
-    color: #15d4a1;
+    background-color: rgba($color: $custom-green, $alpha: 0.125);
+    color: $success;
 }
 
 .completed {
-    background-color: $custom-purple;
-    color: white;
+    background-color: rgba($color: $custom-purple, $alpha: 0.125);
+    color: $custom-purple;
 }
 
 .inprogress {
@@ -20,6 +20,10 @@
     color: #ff0e46;
 }
 
+.waiting {
+    background-color: rgba($color: #ffbf0e, $alpha: 0.125);
+    color: #ffbf0e;
+}
 .enabled-input {
     background-color: #fafafa;
     height: 2rem;
@@ -36,7 +40,7 @@
 
 .task-completed {
     text-decoration: line-through;
-    color: $primary;
+    color: $custom-dark-blue;
 }
 
 @import "checkbox";

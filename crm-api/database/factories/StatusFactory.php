@@ -22,11 +22,66 @@ class StatusFactory extends Factory
      */
     public function definition()
     {
-        $name = $this->faker->company();
+        $statues = ['waiting', 'approved', 'inprogress', 'completed', 'denied'];
+        $status = $this->faker->unique()->randomElement($statues);
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
+            'name' => $status,
+            'slug' => Str::slug($status),
             'color' => $this->faker->hexColor(),
         ];
+    }
+
+    public function waiting()
+    {
+        return $this->state(function () {
+            return [
+                'name' => 'Waiting',
+                'slug' => 'waiting',
+                'color' => "#ffbf0e",
+            ];
+        });
+    }
+    public function approved()
+    {
+        return $this->state(function () {
+            return [
+                'name' => 'Approved',
+                'slug' => 'approved',
+                'color' => "#15d4a150",
+            ];
+        });
+    }
+
+
+    public function inprogress()
+    {
+        return $this->state(function () {
+            return [
+                'name' => 'Inprogress',
+                'slug' => 'inprogress',
+                'color' => "#0060ff20",
+            ];
+        });
+    }
+    public function completed()
+    {
+        return $this->state(function () {
+            return [
+                'name' => 'Completed',
+                'slug' => 'completed',
+                'color' => "#894fc6",
+            ];
+        });
+    }
+
+    public function rejected()
+    {
+        return $this->state(function () {
+            return [
+                'name' => 'Rejected',
+                'slug' => 'rejected',
+                'color' => "#ff0e4620",
+            ];
+        });
     }
 }

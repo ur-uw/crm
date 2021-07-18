@@ -15,12 +15,12 @@
 
         <div class="tasks">
             <div class="add-tasks">
-                <h2>Today's DailyTask</h2>
+                <h2>Today's Task</h2>
                 <div class="add-action">
                     <img src="../../assets/images/add.png" alt="add-action" />
                 </div>
             </div>
-            <DailyTasksList />
+            <TaskList />
         </div>
         <hr />
 
@@ -31,7 +31,6 @@
                     <img src="../../assets/images/add.png" alt="add-action" />
                 </div>
             </div>
-            <UpcomingTasksList />
         </div>
     </div>
 </template>
@@ -39,14 +38,12 @@
 <script lang="ts">
     import axios from "axios";
     import { defineComponent, ref } from "vue";
-    import DailyTasksList from "@/components/dashboard/DailyTasksList.vue";
-    import UpcomingTasksList from "@/components/dashboard/UpcomingTasksList.vue";
+    import TaskList from "@/components/dashboard/TasksList.vue";
 
     export default defineComponent({
         name: "RightBody",
         components: {
-            DailyTasksList,
-            UpcomingTasksList
+            TaskList
         }
     });
 </script>

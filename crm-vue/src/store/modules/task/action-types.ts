@@ -1,0 +1,7 @@
+export enum ActionTypes {
+    FETCH_TASKS = "FETCH_TASKS",
+    CREATE_TASK = "CREATE_TASK",
+    EDIT_TASK = "EDIT_TASK",
+    CHANGE_STATUS = "CHANGE_STATUS",
+    DELETE_TASK = "DELETE_TASK"
+}

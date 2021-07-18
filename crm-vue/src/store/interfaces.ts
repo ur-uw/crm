@@ -1,40 +1,37 @@
 import { ActionContext, DispatchOptions } from "vuex";
-/******************* [DAILY TASK]*********************/
-import { MutationTypes as DailyTaskMTypes } from "./modules/daily_task/mutation-types";
-import { ActionTypes as DailyTaskATypes } from "./modules/daily_task/action-types";
-/******************* [DAILY TASK]*********************/
-import { MutationTypes as UpcomingTaskMTypes } from "./modules/upcoming_task/mutation-types";
-import { ActionTypes as UpcomingTaskATypes } from "./modules/upcoming_task/action-types";
+/******************* [TASK]*********************/
+import { MutationTypes as TaskMTypes } from "./modules/task/mutation-types";
+import { ActionTypes as TaskATypes } from "./modules/task/action-types";
 /******************* [ROOT] *********************/
 import { MutationTypes as RootMTypes } from "./modules/root/mutation-types";
 import { ActionTypes as RootATypes } from "./modules/root/action-types";
 /******************* (DATA MODELS) *********************/
-import { DailyTask, UpcomingTask } from "@/interfaces/Task";
+import { Task } from "@/interfaces/Task";
 
 export interface IUserData {
-  id: number
-  userId: number
-  title: string
-  body: string
+    id: number;
+    userId: number;
+    title: string;
+    body: string;
 }
 export interface IRootState {
-  root: boolean;
-  version: string;
-  userlists: any[]
+    root: boolean;
+    version: string;
+    userlists: any[];
 }
 
 export interface IMergedState extends IRootState {
-  dailyTaskModule: DailyTaskStateTypes;
+    dailyTaskModule: TaskStateTypes;
 }
 
 export interface IRootGettersTypes {
-  getVersion(state: IRootState): string;
-  getUserList(state: IRootState): IUserData[];
+    getVersion(state: IRootState): string;
+    getUserList(state: IRootState): IUserData[];
 }
 
 export type RootMutationsTypes<S = IRootState> = {
-  [RootMTypes.UPDATE_VERSION](state: S, payload: string): void;
-  [RootMTypes.USER_LISTS](state: S, payload: IUserData[]): void;
+    [RootMTypes.UPDATE_VERSION](state: S, payload: string): void;
+    [RootMTypes.USER_LISTS](state: S, payload: IUserData[]): void;
 };
 
 /**
@@ -42,125 +39,64 @@ export type RootMutationsTypes<S = IRootState> = {
  * as counterTypes.ts and then can be imported here
  */
 type AugmentedActionContextRoot = {
-  commit<K extends keyof RootMutationsTypes>(
-    key: K,
-    payload: Parameters<RootMutationsTypes[K]>[1]
-  ): ReturnType<RootMutationsTypes[K]>;
+    commit<K extends keyof RootMutationsTypes>(
+        key: K,
+        payload: Parameters<RootMutationsTypes[K]>[1]
+    ): ReturnType<RootMutationsTypes[K]>;
 } & Omit<ActionContext<IRootState, IRootState>, "commit"> & {
-  dispatch<K extends keyof StoreActions>(
-    key: K,
-    payload?: Parameters<StoreActions[K]>[1],
-    options?: DispatchOptions
-  ): ReturnType<StoreActions[K]>;
-};
+        dispatch<K extends keyof StoreActions>(
+            key: K,
+            payload?: Parameters<StoreActions[K]>[1],
+            options?: DispatchOptions
+        ): ReturnType<StoreActions[K]>;
+    };
 
 export interface RootActionsTypes {
-  [RootATypes.UPDATE_VERSION](
-    { commit }: AugmentedActionContextRoot,
-    payload: string
-  ): void;
-  [RootATypes.COUNTER_CHECK](
-    { dispatch }: AugmentedActionContextRoot,
-    payload: boolean
-  ): void;
-  [RootATypes.USER_LISTS](
-    { dispatch }: AugmentedActionContextRoot,
-    payload: IUserData[]
-  ): void;
+    [RootATypes.UPDATE_VERSION]({ commit }: AugmentedActionContextRoot, payload: string): void;
+    [RootATypes.COUNTER_CHECK]({ dispatch }: AugmentedActionContextRoot, payload: boolean): void;
+    [RootATypes.USER_LISTS]({ dispatch }: AugmentedActionContextRoot, payload: IUserData[]): void;
 }
 
-/*********************** DAILY TASK MODULE TYPES  ***********************/
-export interface DailyTaskStateTypes {
-  tasks: DailyTask[] | null,
-  isLoading: boolean,
+/*********************** TASK MODULE TYPES  ***********************/
+export interface TaskStateTypes {
+    tasks: Task[] | null;
+    isLoading: boolean;
 }
 
-export interface DailyTaskGettersTypes {
-  getAllDailyTasks(state: DailyTaskStateTypes): DailyTask[];
-  dailyTasksLoadingState(state: DailyTaskStateTypes): boolean;
+export interface TaskGettersTypes {
+    getAllTasks(state: TaskStateTypes): Task[];
+    tasksLoadingState(state: TaskStateTypes): boolean;
 }
 
-export type DailyTaskMutationsTypes<S = DailyTaskStateTypes> = {
-  [DailyTaskMTypes.SET_DAILY_ITEMS](state: S, data: DailyTask[]): void;
-  [DailyTaskMTypes.ADD_DAILY_ITEM](state: S, data: DailyTask): void;
-  [DailyTaskMTypes.SET_DAILY_ITEM](state: S, newTask: { data: DailyTask, taskId: string }): void;
-  [DailyTaskMTypes.SET_DAILY_LOADING](state: S, value: boolean): void;
-  [DailyTaskMTypes.DELETE_DAILY_TASK](state: S, taskId: string): void;
+export type TaskMutationsTypes<S = TaskStateTypes> = {
+    [TaskMTypes.SET_ITEMS](state: S, data: Task[]): void;
+    [TaskMTypes.ADD_ITEM](state: S, data: Task): void;
+    [TaskMTypes.SET_ITEM](state: S, payload: { index: number; updatedTask: Task }): void;
+    [TaskMTypes.SET_LOADING](state: S, value: boolean): void;
+    [TaskMTypes.CHANGE_STATUS](state: S, payload: { index: number; updatedTask: Task }): void;
+    [TaskMTypes.DELETE_TASK](state: S, id: number): void;
 };
 
-export type AugmentedActionContextDailyTask = {
-  commit<K extends keyof DailyTaskMutationsTypes>(
-    key: K,
-    payload: Parameters<DailyTaskMutationsTypes[K]>[1]
-  ): ReturnType<DailyTaskMutationsTypes[K]>;
-} & Omit<ActionContext<DailyTaskStateTypes, IRootState>, "commit">;
+export type AugmentedActionContextTask = {
+    commit<K extends keyof TaskMutationsTypes>(
+        key: K,
+        payload: Parameters<TaskMutationsTypes[K]>[1]
+    ): ReturnType<TaskMutationsTypes[K]>;
+} & Omit<ActionContext<TaskStateTypes, IRootState>, "commit">;
 
-export interface DailyTaskActionsTypes {
-  [DailyTaskATypes.FETCH_DAILY_TASKS](
-    { commit }: AugmentedActionContextDailyTask,
-  ): void;
-  [DailyTaskATypes.CREATE_DAILY_TASK](
-    { commit }: AugmentedActionContextDailyTask,
-    payload: DailyTask
-  ): void;
-  [DailyTaskATypes.EDIT_DAILY_TASK](
-    { commit }: AugmentedActionContextDailyTask,
-    payload: { data: DailyTask, taskId: string }
-  ): void;
-  [DailyTaskATypes.DELETE_DAILY_TASK](
-    { commit }: AugmentedActionContextDailyTask,
-    payload: string
-  ): void;
+export interface TaskActionsTypes {
+    [TaskATypes.FETCH_TASKS]({ commit }: AugmentedActionContextTask): void;
+    [TaskATypes.CREATE_TASK]({ commit }: AugmentedActionContextTask, payload: Task): void;
+    [TaskATypes.EDIT_TASK](
+        { commit }: AugmentedActionContextTask,
+        payload: { index: number; id: number; updatedTask: Task }
+    ): void;
+    [TaskATypes.CHANGE_STATUS](
+        { commit }: AugmentedActionContextTask,
+        payload: { id: number; status_slug: string; index: number }
+    ): void;
+    [TaskATypes.DELETE_TASK]({ commit }: AugmentedActionContextTask, id: number): void;
 }
-/*********************** UPCOMING TASK MODULE TYPES  ***********************/
-export interface UpcomingTaskStateTypes {
-  tasks: UpcomingTask[] | null,
-  isLoading: boolean,
-}
+export interface StoreActions extends RootActionsTypes, TaskActionsTypes {}
 
-export interface UpcomingTaskGettersTypes {
-  getAllTasks(state: UpcomingTaskStateTypes): UpcomingTask[];
-  getLoadingState(state: UpcomingTaskStateTypes): boolean;
-}
-
-export type UpcomingTaskMutationsTypes<S = UpcomingTaskStateTypes> = {
-  [UpcomingTaskMTypes.SET_UPCOMING_ITEMS](state: S, data: UpcomingTask[]): void;
-  [UpcomingTaskMTypes.ADD_UPCOMING_TASK](state: S, data: UpcomingTask): void;
-  [UpcomingTaskMTypes.SET_UPCOMING_ITEM](state: S, newTask: { data: UpcomingTask, taskId: string }): void;
-  [UpcomingTaskMTypes.SET_UPCOMING_LOADING](state: S, value: boolean): void;
-  [UpcomingTaskMTypes.DELETE_UPCOMING_TASK](state: S, taskId: string): void;
-};
-
-export type AugmentedActionContextUpcomingTask = {
-  commit<K extends keyof UpcomingTaskMutationsTypes>(
-    key: K,
-    payload: Parameters<UpcomingTaskMutationsTypes[K]>[1]
-  ): ReturnType<UpcomingTaskMutationsTypes[K]>;
-} & Omit<ActionContext<UpcomingTaskStateTypes, IRootState>, "commit">;
-
-export interface UpcomingTaskActionsTypes {
-  [UpcomingTaskATypes.FETCH_UPCOMING_TASKS](
-    { commit }: AugmentedActionContextUpcomingTask,
-  ): void;
-  [UpcomingTaskATypes.CREATE_UPCOMING_TASK](
-    { commit }: AugmentedActionContextUpcomingTask,
-    payload: UpcomingTask
-  ): void;
-  [UpcomingTaskATypes.EDIT_UPCOMING_TASK](
-    { commit }: AugmentedActionContextUpcomingTask,
-    payload: { data: UpcomingTask, taskId: string }
-  ): void;
-  [UpcomingTaskATypes.DELETE_UPCOMING_TASK](
-    { commit }: AugmentedActionContextUpcomingTask,
-    payload: string
-  ): void;
-}
-export interface StoreActions
-  extends RootActionsTypes,
-  DailyTaskActionsTypes,
-  UpcomingTaskActionsTypes { }
-
-export interface StoreGetters
-  extends IRootGettersTypes,
-  DailyTaskGettersTypes,
-  UpcomingTaskGettersTypes { }
+export interface StoreGetters extends IRootGettersTypes, TaskGettersTypes {}

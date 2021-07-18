@@ -2,7 +2,12 @@
     <div class="info">
         <div class="left">
             <label
-                v-if="!showEditTask"
+                v-if="
+                    !showEditTask &&
+                    (task.status?.slug === 'inprogress' ||
+                        task.status?.slug === 'completed' ||
+                        task.status?.slug === 'waiting')
+                "
                 class="custom-checkbox"
                 tab-index="0"
                 aria-label="Checkbox Label"
@@ -11,16 +16,12 @@
                     type="checkbox"
                     name="test"
                     @change="toogleTaskCompleted()"
-                    :checked="task.status === 'completed'"
+                    :checked="task.status?.slug === 'completed'"
                 />
                 <span class="checkmark"></span>
             </label>
-            <h4
-                @dblclick="!showEditTask ? toogleTaskForm() : null"
-                class="w-100"
-                v-bind:class="task.status === 'completed' ? 'task-completed' : ''"
-            >
-                <form @submit.prevent="updateTask()" class="w-100">
+            <h4 @dblclick="!showEditTask ? toogleTaskForm() : null" class="w-100">
+                <form @submit.prevent="updateTaskTitle()" class="w-100">
                     <!-- TODO: Add visual to see the character limit -->
                     <input
                         maxlength="26"
@@ -28,7 +29,9 @@
                         v-model="newTaskTitle"
                         class="bg-transparent border-0 p-2 w-100 overflow-auto outline-none h-100"
                         v-bind:class="
-                            task.status === 'completed' && !showEditTask ? 'task-completed' : ''
+                            task.status?.slug === 'completed' && !showEditTask
+                                ? 'task-completed'
+                                : ''
                         "
                         placeholder="Title"
                     />
@@ -37,75 +40,62 @@
         </div>
         <div class="right">
             <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
-            <img
-                src="../../assets/images/del.png"
-                @click="task.taskId ? deleteTask(task.taskId) : null"
-            />
-            <button
-                v-bind:class="{
-                    inprogress: task.status === 'inprogress',
-                    approved: task.status === 'approved',
-                    completed: task.status === 'completed',
-                    waiting: task.status === 'waiting',
-                    rejected: task.status === 'denied'
-                }"
-            >
-                {{ task.status }}
+            <img src="../../assets/images/del.png" @click="deleteTask()" />
+            <!-- NOTE: there is a css class for every default task status -->
+            <button v-bind:class="task.status?.slug">
+                {{ task.status?.name }}
             </button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-    import { UpcomingTask } from "@/interfaces/Task";
-    import { defineComponent, PropType, ref, watch } from "vue";
+    import { Task } from "@/interfaces/Task";
+    import { computed, defineComponent, PropType, ref } from "vue";
     import { useStore } from "@/use/useStore";
-    import { ActionTypes } from "@/store/modules/upcoming_task/action-types";
+    import { ActionTypes } from "@/store/modules/task/action-types";
     import Swal from "sweetalert2";
+    import { AllMutationTypes } from "@/store/mutation-types";
     export default defineComponent({
         name: "TodayTask",
         props: {
             task: {
-                type: Object as PropType<UpcomingTask>,
+                type: Object as PropType<Task>,
                 required: true
+            },
+            index: {
+                type: Number
             }
         },
         setup(props) {
             // Intialize custom vuex-store
             const store = useStore();
             // variables
-            const task = ref(props.task);
+
             let showEditTask = ref<boolean>(false);
-            let newTaskTitle = ref<string>(task.value.title ?? "No title");
-            // FUNCTIONS
+            let newTaskTitle = ref<string>(props.task.title ?? "No title");
             /* TOGGLE TASK COMPLETED PROPERY */
-            const toogleTaskCompleted = (): void => {
-                const newTask: UpcomingTask = {
-                    status: task.value.status === "completed" ? "inprogress" : "completed",
-                    taskId: task.value.taskId!
-                };
-                /* EDIT UPCOMING TASK */
-                /*
-                BUG[1]
-                FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
-                */
-                task.value.status = task.value.status === "completed" ? "inprogress" : "completed";
-                store.dispatch(ActionTypes.EDIT_UPCOMING_TASK, {
-                    data: newTask,
-                    taskId: task.value.taskId!
+            const toogleTaskCompleted = async () => {
+                store.dispatch(ActionTypes.CHANGE_STATUS, {
+                    id: props.task.id!,
+                    status_slug:
+                        props.task.status?.slug === "completed" ? "inprogress" : "completed",
+                    index: props.index!
                 });
             };
+            // Edit task
             const toogleTaskForm = () => {
                 showEditTask.value = !showEditTask.value;
             };
-            const updateTask = async () => {
-                if (!(task.value.title === newTaskTitle.value)) {
-                    const newTask: UpcomingTask = {
+            const updateTaskTitle = () => {
+                if (!(props.task.title === newTaskTitle.value)) {
+                    const newTask: Task = {
                         title: newTaskTitle.value
                     };
-                    store.dispatch(ActionTypes.EDIT_UPCOMING_TASK, {
-                        data: newTask,
-                        taskId: task.value.taskId!
+                    store.dispatch(ActionTypes.EDIT_TASK, {
+                        id: props.task.id!,
+                        updatedTask: newTask,
+                        index: props.index!
                     });
                     toogleTaskForm();
                 } else {
@@ -113,21 +103,16 @@
                         icon: "warning",
                         toast: true,
                         showConfirmButton: false,
-                        text: "Task already exists!",
+                        text: "Titles are the same",
                         timer: 2000,
                         position: "top-end"
                     });
                 }
             };
             /* DELETE TASK */
-            const deleteTask = (taskId: string): void => {
-                store.dispatch(ActionTypes.DELETE_UPCOMING_TASK, taskId);
+            const deleteTask = (): void => {
+                store.dispatch(ActionTypes.DELETE_TASK, props.task.id);
             };
-
-            watch(task, (oldValue, newValue) => {
-                console.log(oldValue);
-                console.log(newValue);
-            });
 
             return {
                 toogleTaskCompleted,
@@ -135,7 +120,7 @@
                 showEditTask,
                 toogleTaskForm,
                 newTaskTitle,
-                updateTask
+                updateTaskTitle
             };
         }
     });

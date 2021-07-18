@@ -19,23 +19,23 @@
 </template>
 
 <script>
-import LeftBody from "@/components/dashboard/LeftBody.vue";
-import RightBody from "./RightBody.vue";
+    import LeftBody from "@/components/dashboard/LeftBody.vue";
+    import RightBody from "./RightBody.vue";
 
-export default {
-    name: "Body",
-    components: {
-        LeftBody,
-        RightBody
-    }
-};
+    export default {
+        name: "Body",
+        components: {
+            LeftBody,
+            RightBody
+        }
+    };
 </script>
 
 <style lang="scss">
-#body {
-    padding: 16px;
-    font-family: "MyriadProRegular", sans-serif;
-    min-height: 100vh;
-    background-color: var(--primary1);
-}
+    #body {
+        padding: 16px;
+        font-family: "MyriadProSemiBold", sans-serif;
+        min-height: 100vh;
+        background-color: var(--primary1);
+    }
 </style>

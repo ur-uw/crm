@@ -10,9 +10,13 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     [MutationTypes.SET_LOADING](state: TaskStateTypes, value: boolean): void {
         state.isLoading = value;
     },
-    [MutationTypes.SET_ITEM](state: TaskStateTypes, updatedTask: Task): void {
-        let task: Task = state.tasks?.find((t) => t.id === updatedTask.id)!;
-        task = updatedTask;
+    [MutationTypes.SET_ITEM](
+        state: TaskStateTypes,
+        payload: { updatedTask: Task; index: number }
+    ): void {
+        if (state.tasks) {
+            state.tasks[payload.index] = payload.updatedTask;
+        }
     },
     [MutationTypes.DELETE_TASK](state: TaskStateTypes, id: number): void {
         state.tasks = state.tasks?.filter((task) => task.id !== id) ?? null;
@@ -22,12 +26,10 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     },
     [MutationTypes.CHANGE_STATUS](
         state: TaskStateTypes,
-        payload: { id: number; updatedTask: Task }
-    ): void {// TODO: implement change status in mutations
-        let task: Task = state.tasks?.find((t) => t.id === payload.id)!;
-        console.log(task.status)
-
-        task = { ...task, ...payload.updatedTask };
-        console.log(task.status)
+        payload: { index: number; updatedTask: Task }
+    ): void {
+        if (state.tasks) {
+            state.tasks[payload.index] = payload.updatedTask;
+        }
     }
 };

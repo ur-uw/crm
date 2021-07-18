@@ -4,7 +4,9 @@
             <label
                 v-if="
                     !showEditTask &&
-                    (task.status?.slug === 'inprogress' || task.status?.slug === 'completed')
+                    (task.status?.slug === 'inprogress' ||
+                        task.status?.slug === 'completed' ||
+                        task.status?.slug === 'waiting')
                 "
                 class="custom-checkbox"
                 tab-index="0"
@@ -49,31 +51,36 @@
 
 <script lang="ts">
     import { Task } from "@/interfaces/Task";
-    import { defineComponent, PropType, ref } from "vue";
+    import { computed, defineComponent, PropType, ref } from "vue";
     import { useStore } from "@/use/useStore";
     import { ActionTypes } from "@/store/modules/task/action-types";
     import Swal from "sweetalert2";
+    import { AllMutationTypes } from "@/store/mutation-types";
     export default defineComponent({
         name: "TodayTask",
         props: {
             task: {
                 type: Object as PropType<Task>,
                 required: true
+            },
+            index: {
+                type: Number
             }
         },
         setup(props) {
             // Intialize custom vuex-store
             const store = useStore();
             // variables
-            const task = ref(props.task);
+
             let showEditTask = ref<boolean>(false);
-            let newTaskTitle = ref<string>(task.value.title ?? "No title");
+            let newTaskTitle = ref<string>(props.task.title ?? "No title");
             /* TOGGLE TASK COMPLETED PROPERY */
             const toogleTaskCompleted = async () => {
                 store.dispatch(ActionTypes.CHANGE_STATUS, {
-                    id: task.value.id!,
+                    id: props.task.id!,
                     status_slug:
-                        task.value.status?.slug === "completed" ? "inprogress" : "completed"
+                        props.task.status?.slug === "completed" ? "inprogress" : "completed",
+                    index: props.index!
                 });
             };
             // Edit task
@@ -81,13 +88,15 @@
                 showEditTask.value = !showEditTask.value;
             };
             const updateTaskTitle = () => {
-                if (!(task.value.title === newTaskTitle.value)) {
+                if (!(props.task.title === newTaskTitle.value)) {
                     const newTask: Task = {
-                        id: task.value.id!,
                         title: newTaskTitle.value
                     };
-                    store.dispatch(ActionTypes.EDIT_TASK, newTask);
-                    task.value.title = newTask.title;
+                    store.dispatch(ActionTypes.EDIT_TASK, {
+                        id: props.task.id!,
+                        updatedTask: newTask,
+                        index: props.index!
+                    });
                     toogleTaskForm();
                 } else {
                     Swal.fire({
@@ -102,7 +111,7 @@
             };
             /* DELETE TASK */
             const deleteTask = (): void => {
-                store.dispatch(ActionTypes.DELETE_TASK, task.value.id);
+                store.dispatch(ActionTypes.DELETE_TASK, props.task.id);
             };
 
             return {

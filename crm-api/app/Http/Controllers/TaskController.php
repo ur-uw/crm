@@ -27,7 +27,6 @@ class TaskController extends Controller
                 ->get()
         );
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -36,11 +35,12 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        $task = Task::create(
-            $request->validated()
-        );
+        $task = Task::with('status')->create($request->validated());
 
-        return TaskResource::make($task);
+
+        return TaskResource::make(
+            $task->load('status:id,name,color,slug')
+        );
     }
 
     /**
@@ -64,8 +64,8 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, $id)
     {
         $task = Task::find($id);
-        $task->update($request->all());
-        return TaskResource::make($task);
+        $task->update($request->validated());
+        return TaskResource::make($task->load('status:id,name,color,slug'));
     }
 
     /**

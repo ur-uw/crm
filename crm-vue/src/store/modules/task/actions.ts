@@ -36,21 +36,33 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
         }
     },
     // EDIT TASK
-    async [ActionTypes.EDIT_TASK]({ commit }, updatedTask: Task) {
+    async [ActionTypes.EDIT_TASK](
+        { commit },
+        payload: { index: number; id: number; updatedTask: Task }
+    ) {
         try {
-            const response = await axios.put(`/api/task/${updatedTask.id}`, updatedTask);
-            commit(MutationTypes.SET_ITEM, response.data["data"]);
+            const response = await axios.put(`/api/task/${payload.id}`, payload.updatedTask);
+            commit(MutationTypes.SET_ITEM, {
+                index: payload.index,
+                updatedTask: response.data["data"]
+            });
         } catch (error) {
             console.log("EDIT_TASK action" + error);
         }
     },
     // CHANGE TASK STATUS
-    async [ActionTypes.CHANGE_STATUS]({ commit }, payload: { id: number; status_slug: string }) {
+    async [ActionTypes.CHANGE_STATUS](
+        { commit },
+        payload: { id: number; index: number; status_slug: string }
+    ) {
         try {
             const response = await axios.put(`/api/task/changestatus/${payload.id}`, {
                 status_slug: payload.status_slug
             });
-            commit(MutationTypes.CHANGE_STATUS, { id: payload.id, updatedTask: response.data['data'] })
+            commit(MutationTypes.CHANGE_STATUS, {
+                index: payload.index,
+                updatedTask: response.data["data"]
+            });
         } catch (error) {
             console.log("EDIT_TASK action" + error);
         }

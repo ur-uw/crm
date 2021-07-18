@@ -34,7 +34,7 @@ class CreateTaskRequest extends FormRequest
             'description' => 'string',
             'start_date' => 'date',
             'due_date' => 'date',
-            'status_id' => 'required|numeric',
+            'status_id' => 'required|numeric|exists:statuses,id',
         ];
     }
 }

@@ -12,8 +12,8 @@
     </div>
     <div v-else>
         <ul v-if="tasks.length > 0" class="tasks-list">
-            <li v-for="(task, index) in tasks" v-bind:index="index" v-bind:key="task.id">
-                <TodayTask :task="task" />
+            <li v-for="(task, index) in tasks" v-bind:key="task.id">
+                <TodayTask :index="index" :task="task" />
             </li>
         </ul>
         <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
@@ -46,11 +46,6 @@
                     const newTask: Task = {
                         title: newTaskTitle.value,
                         status_id: 1,
-                        status: {
-                            id: 1,
-                            name: "Waiting",
-                            slug: "waiting"
-                        },
                         slug: newTaskTitle.value.toLowerCase().replaceAll(" ", "-")
                     };
 

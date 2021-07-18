@@ -50,6 +50,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
             const response = await axios.put(`/api/task/changestatus/${payload.id}`, {
                 status_slug: payload.status_slug
             });
+            commit(MutationTypes.CHANGE_STATUS, { id: payload.id, updatedTask: response.data['data'] })
         } catch (error) {
             console.log("EDIT_TASK action" + error);
         }

@@ -44,12 +44,12 @@ type AugmentedActionContextRoot = {
         payload: Parameters<RootMutationsTypes[K]>[1]
     ): ReturnType<RootMutationsTypes[K]>;
 } & Omit<ActionContext<IRootState, IRootState>, "commit"> & {
-        dispatch<K extends keyof StoreActions>(
-            key: K,
-            payload?: Parameters<StoreActions[K]>[1],
-            options?: DispatchOptions
-        ): ReturnType<StoreActions[K]>;
-    };
+    dispatch<K extends keyof StoreActions>(
+        key: K,
+        payload?: Parameters<StoreActions[K]>[1],
+        options?: DispatchOptions
+    ): ReturnType<StoreActions[K]>;
+};
 
 export interface RootActionsTypes {
     [RootATypes.UPDATE_VERSION]({ commit }: AugmentedActionContextRoot, payload: string): void;
@@ -73,7 +73,7 @@ export type TaskMutationsTypes<S = TaskStateTypes> = {
     [TaskMTypes.ADD_ITEM](state: S, data: Task): void;
     [TaskMTypes.SET_ITEM](state: S, updatedTask: Task): void;
     [TaskMTypes.SET_LOADING](state: S, value: boolean): void;
-    [TaskMTypes.CHANGE_STATUS](state: S, payload: { id: number; status_slug: string }): void;
+    [TaskMTypes.CHANGE_STATUS](state: S, payload: { id: number; updatedTask: Task }): void;
     [TaskMTypes.DELETE_TASK](state: S, id: number): void;
 };
 
@@ -94,6 +94,6 @@ export interface TaskActionsTypes {
     ): void;
     [TaskATypes.DELETE_TASK]({ commit }: AugmentedActionContextTask, id: number): void;
 }
-export interface StoreActions extends RootActionsTypes, TaskActionsTypes {}
+export interface StoreActions extends RootActionsTypes, TaskActionsTypes { }
 
-export interface StoreGetters extends IRootGettersTypes, TaskGettersTypes {}
+export interface StoreGetters extends IRootGettersTypes, TaskGettersTypes { }

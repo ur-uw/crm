@@ -12,7 +12,7 @@
     </div>
     <div v-else>
         <ul v-if="tasks.length > 0" class="tasks-list">
-            <li v-for="task in tasks" v-bind:key="task.id">
+            <li v-for="(task, index) in tasks" v-bind:index="index" v-bind:key="task.id">
                 <TodayTask :task="task" />
             </li>
         </ul>
@@ -46,7 +46,12 @@
                     const newTask: Task = {
                         title: newTaskTitle.value,
                         status_id: 1,
-                        slug: Math.random().toString(36).substring(7)
+                        status: {
+                            id: 1,
+                            name: "Waiting",
+                            slug: "waiting"
+                        },
+                        slug: newTaskTitle.value.toLowerCase().replaceAll(" ", "-")
                     };
 
                     store.dispatch(ActionTypes.CREATE_TASK, newTask);

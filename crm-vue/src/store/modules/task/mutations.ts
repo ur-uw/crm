@@ -22,8 +22,12 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     },
     [MutationTypes.CHANGE_STATUS](
         state: TaskStateTypes,
-        payload: { id: number; status_slug: string }
-    ): void {
-        // TODO: implement change status in mutations
+        payload: { id: number; updatedTask: Task }
+    ): void {// TODO: implement change status in mutations
+        let task: Task = state.tasks?.find((t) => t.id === payload.id)!;
+        console.log(task.status)
+
+        task = { ...task, ...payload.updatedTask };
+        console.log(task.status)
     }
 };

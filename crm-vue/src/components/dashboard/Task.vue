@@ -2,7 +2,10 @@
     <div class="info">
         <div class="left">
             <label
-                v-if="!showEditTask"
+                v-if="
+                    !showEditTask &&
+                    (task.status?.slug === 'inprogress' || task.status?.slug === 'completed')
+                "
                 class="custom-checkbox"
                 tab-index="0"
                 aria-label="Checkbox Label"
@@ -11,16 +14,12 @@
                     type="checkbox"
                     name="test"
                     @change="toogleTaskCompleted()"
-                    :checked="task.status === 'completed'"
+                    :checked="task.status?.slug === 'completed'"
                 />
                 <span class="checkmark"></span>
             </label>
-            <h4
-                @dblclick="!showEditTask ? toogleTaskForm() : null"
-                class="w-100"
-                v-bind:class="task.status === 'completed' ? 'task-completed' : ''"
-            >
-                <form @submit.prevent="updateTask()" class="w-100">
+            <h4 @dblclick="!showEditTask ? toogleTaskForm() : null" class="w-100">
+                <form @submit.prevent="updateTaskTitle()" class="w-100">
                     <!-- TODO: Add visual to see the character limit -->
                     <input
                         maxlength="26"
@@ -28,7 +27,9 @@
                         v-model="newTaskTitle"
                         class="bg-transparent border-0 p-2 w-100 overflow-auto outline-none h-100"
                         v-bind:class="
-                            task.status === 'completed' && !showEditTask ? 'task-completed' : ''
+                            task.status?.slug === 'completed' && !showEditTask
+                                ? 'task-completed'
+                                : ''
                         "
                         placeholder="Title"
                     />
@@ -38,8 +39,9 @@
         <div class="right">
             <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
             <img src="../../assets/images/del.png" @click="deleteTask()" />
-            <button :class="task.status">
-                {{ task.status === "inprogress" ? "Inprogress" : "Completed" }}
+            <!-- NOTE: there is a css class for every default task status -->
+            <button v-bind:class="task.status?.slug">
+                {{ task.status?.name }}
             </button>
         </div>
     </div>
@@ -47,7 +49,7 @@
 
 <script lang="ts">
     import { Task } from "@/interfaces/Task";
-    import { defineComponent, PropType, ref, watch } from "vue";
+    import { defineComponent, PropType, ref } from "vue";
     import { useStore } from "@/use/useStore";
     import { ActionTypes } from "@/store/modules/task/action-types";
     import Swal from "sweetalert2";
@@ -67,23 +69,18 @@
             let showEditTask = ref<boolean>(false);
             let newTaskTitle = ref<string>(task.value.title ?? "No title");
             /* TOGGLE TASK COMPLETED PROPERY */
-            const toogleTaskCompleted = (): void => {
-                const newTask: Task = {
-                    status: task.value.status === "completed" ? "inprogress" : "completed",
-                    id: task.value.id!
-                };
-                /*
-                BUG[1]
-                FIXME: الخط ما يظهر مباشرة بدون السطر اللي جوه اله اسوي ريفريش للمتصفح
-                */
-                task.value.status = task.value.status === "completed" ? "inprogress" : "completed";
-                store.dispatch(ActionTypes.EDIT_TASK, newTask);
+            const toogleTaskCompleted = async () => {
+                store.dispatch(ActionTypes.CHANGE_STATUS, {
+                    id: task.value.id!,
+                    status_slug:
+                        task.value.status?.slug === "completed" ? "inprogress" : "completed"
+                });
             };
             // Edit task
             const toogleTaskForm = () => {
                 showEditTask.value = !showEditTask.value;
             };
-            const updateTask = async () => {
+            const updateTaskTitle = () => {
                 if (!(task.value.title === newTaskTitle.value)) {
                     const newTask: Task = {
                         id: task.value.id!,
@@ -114,7 +111,7 @@
                 showEditTask,
                 toogleTaskForm,
                 newTaskTitle,
-                updateTask
+                updateTaskTitle
             };
         }
     });

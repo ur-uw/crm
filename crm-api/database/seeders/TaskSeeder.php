@@ -17,7 +17,7 @@ class TaskSeeder extends Seeder
     {
         $statues = Status::all();
         foreach ($statues as $status) {
-            $status->tasks()->saveMany(Task::factory(random_int(1, 7))->make());
+            $status->tasks()->saveMany(Task::factory(random_int(1, 2))->make());
         }
     }
 }

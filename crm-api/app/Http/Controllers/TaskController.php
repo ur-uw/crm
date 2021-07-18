@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Status;
 use Validator;
 
 class TaskController extends Controller
@@ -21,7 +22,8 @@ class TaskController extends Controller
     public function index()
     {
         return TaskResource::collection(
-            Task::orderBy('created_at', 'desc')
+            Task::with('status:id,name,color,slug')
+                ->orderBy('created_at', 'desc')
                 ->get()
         );
     }
@@ -77,5 +79,21 @@ class TaskController extends Controller
         DB::table('tasks')->where('id', $id)->delete();
 
         return response()->json(['message' => 'Task Deleted', 204]);
+    }
+
+
+    public function changeStatus(Request $request, $id)
+    {
+        $request->validate(
+            [
+                'status_slug' => 'required',
+            ]
+        );
+        $status = Status::where('slug', $request->status_slug)->first();
+
+        $task = Task::with('status:id,slug,name,color')->find($id);
+        $task->status()->associate($status);
+        $task->save();
+        return TaskResource::make($task);
     }
 }

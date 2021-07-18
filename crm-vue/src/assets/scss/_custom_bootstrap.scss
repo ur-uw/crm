@@ -21,10 +21,18 @@ $success: #15d4a1;
 $custom-grey: #707070;
 $input-placeholder-color: #dddddd;
 $custom-purple: #894fc6;
+$custom-dark-blue: #121432;
+$custom-green: #07e642;
 //IMPORT FUNCTIONS AND VARIABLES
 @import "../../../node_modules/bootstrap/scss/_functions.scss";
 @import "../../../node_modules/bootstrap/scss/_variables.scss";
-$custom-theme-colors: ( "primary2": $primary2, "custom-green": #07e642, "custom-purple": $custom-purple, "custom-dark-blue": #121432, "custom-grey": $custom-grey);
+$custom-theme-colors: (
+    "primary2": $primary2,
+    "custom-green": $custom-green,
+    "custom-purple": $custom-purple,
+    "custom-dark-blue": $custom-dark-blue,
+    "custom-grey": $custom-grey
+);
 $theme-colors: map-merge($custom-theme-colors, $theme-colors);
 //IMPORT BOOTSTRAP
 @import "../../../node_modules/bootstrap/scss/bootstrap.scss";

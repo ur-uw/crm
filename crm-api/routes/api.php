@@ -1,12 +1,23 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
+//** Auth *//
+
+Route::prefix('auth')->group(function () {
+    // Login
+    Route::post('/login', [AuthController::class, 'login']);
+    // Register
+    Route::post('/register', [AuthController::class, 'register']);
+    // Logout
+    Route::get('/logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
+});
+
+
 //** Tasks *//
-
-
 Route::prefix('task')->group(function () {
     // Get all tasks
     Route::get('/', [TaskController::class, 'index']);
@@ -22,6 +33,7 @@ Route::prefix('task')->group(function () {
     Route::put('/changestatus/{task}', [TaskController::class, 'changeStatus']);
 });
 
+//** Addresses *//
 
 Route::prefix('address')->group(function () {
     // Get all address

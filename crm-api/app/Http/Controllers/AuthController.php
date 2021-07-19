@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -31,7 +33,7 @@ class AuthController extends Controller
     {
         try {
             $user = User::create($request->validated());
-            $token = $user->createToken('authToken')->plainTextToken;
+            $token = $user->createToken($request->device_name)->plainTextToken;
             return response()->json([
                 'message' => 'User created',
                 'user' => $user,
@@ -41,6 +43,23 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $exception->getMessage(),
+            ]);
+        }
+    }
+    public function logOut(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $request->user()->tokens()->delete();
+            return response()->json(
+                [
+                    'message' => 'Tokens Deleted!',
+                ],
+                Response::HTTP_NO_CONTENT
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
             ]);
         }
     }

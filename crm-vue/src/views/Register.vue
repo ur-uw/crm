@@ -47,7 +47,7 @@
             <div class="col-md-6">
                 <label for="passwordConfirm" class="form-label">Confirm Password</label>
                 <input
-                    name="password-confirm"
+                    name="password_confirmation"
                     v-model="formData.passwordConfirm"
                     type="password"
                     class="form-control"

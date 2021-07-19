@@ -1,5 +1,5 @@
 import { createLogger, createStore } from "vuex";
-import { IRootState } from "@/store/interfaces";
+import { IRootState } from "@/store/register";
 
 import { RootStoreModuleTypes } from "./modules/root/types";
 

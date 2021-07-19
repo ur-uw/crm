@@ -1,6 +1,6 @@
 import { MutationTree } from "vuex";
 import { MutationTypes } from "./mutation-types";
-import { RootMutationsTypes, IRootState, IUserData } from "./../../interfaces";
+import { RootMutationsTypes, IRootState, IUserData } from "../../register";
 
 export const mutations: MutationTree<IRootState> & RootMutationsTypes = {
   [MutationTypes.UPDATE_VERSION](state: IRootState, payload: string) {

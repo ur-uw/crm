@@ -1,5 +1,5 @@
 import { DispatchOptions } from "vuex/types";
-import { StoreActions, StoreGetters } from "./interfaces";
+import { StoreActions, StoreGetters } from "./register";
 
 export type CustomDispatch = {
   dispatch<K extends keyof StoreActions>(

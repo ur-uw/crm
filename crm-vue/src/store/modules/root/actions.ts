@@ -1,7 +1,8 @@
 import { ActionTree } from "vuex";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
-import { RootActionsTypes, IRootState, IUserData } from "@/store/interfaces";
+import { IRootState, IUserData } from "@/store/register";
+import { RootActionsTypes } from "@/store/store_interfaces/root_store_interface";
 
 export const actions: ActionTree<IRootState, IRootState> & RootActionsTypes = {
   [ActionTypes.UPDATE_VERSION]({ commit }, payload: string) {

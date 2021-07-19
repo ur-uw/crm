@@ -3,8 +3,9 @@ import { ActionTree } from "vuex";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
 import Swal from "sweetalert2";
-import { TaskActionsTypes, TaskStateTypes, IRootState } from "@/store/interfaces";
+import { IRootState } from "@/store/register";
 import axios, { AxiosError } from "axios";
+import { TaskActionsTypes, TaskStateTypes } from "@/store/store_interfaces/task_store_interface";
 
 export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes = {
     // FETCH TASKS

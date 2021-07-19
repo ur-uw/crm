@@ -51,11 +51,10 @@
 
 <script lang="ts">
     import { Task } from "@/interfaces/Task";
-    import { computed, defineComponent, PropType, ref } from "vue";
+    import { defineComponent, PropType, ref } from "vue";
     import { useStore } from "@/use/useStore";
     import { ActionTypes } from "@/store/modules/task/action-types";
     import Swal from "sweetalert2";
-    import { AllMutationTypes } from "@/store/mutation-types";
     export default defineComponent({
         name: "TodayTask",
         props: {

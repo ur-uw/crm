@@ -5,7 +5,7 @@
             <input
                 type="email"
                 name="email"
-                v-model="email"
+                v-model="formData.email"
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
@@ -19,7 +19,7 @@
             <input
                 type="password"
                 name="password"
-                v-model="password"
+                v-model="formData.password"
                 id="inputPassword5"
                 class="form-control"
                 aria-describedby="passwordHelpBlock"
@@ -38,16 +38,18 @@
 
     export default defineComponent({
         setup() {
-            const email = ref<string>("");
-            const password = ref<string>("");
+            const formData = ref({
+                email: "",
+                password: ""
+            });
+
             // ? LOGIN FUNCTION
             const login = (): void => {
-                console.log(`${email.value} ${password.value}`);
+                console.log(`${formData.value.email} ${formData.value.password}`);
             };
 
             return {
-                email,
-                password,
+                formData,
                 login
             };
         }

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateAddressRequest;
+use App\Http\Requests\UpdateAddressRequest;
+use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Http\Request;
 
@@ -14,7 +17,7 @@ class AddressController extends Controller
      */
     public function index()
     {
-        //
+        return AddressResource::collection(Address::all());
     }
 
     /**
@@ -23,9 +26,10 @@ class AddressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateAddressRequest $request)
     {
-        //
+        $address = Address::create($request->validated());
+        return  AddressResource::make($address);
     }
 
     /**
@@ -46,9 +50,11 @@ class AddressController extends Controller
      * @param  \App\Models\Address  $address
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Address $address)
+    public function update(UpdateAddressRequest $request, Address $address)
     {
-        //
+        $address->update($request->validate());
+
+        return AddressResource::make($address);
     }
 
     /**

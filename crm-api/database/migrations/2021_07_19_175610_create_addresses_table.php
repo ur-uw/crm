@@ -15,12 +15,12 @@ class CreateAddressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique()->default('default_location');
+            $table->string('name')->default('default_location');
             $table->string('address1');
             $table->string('address2');
             $table->string('city');
             $table->string('state');
-            $table->integer('zip');
+            $table->string('zip');
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')

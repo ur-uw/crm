@@ -17,7 +17,7 @@ class AddressSeeder extends Seeder
     {
         $users = User::all();
         foreach ($users as $user) {
-            $user->address()->saveMany(Address::factory(rand(1, 3))->make());
+            $user->addresses()->saveMany(Address::factory(rand(1, 3))->make());
         }
     }
 }

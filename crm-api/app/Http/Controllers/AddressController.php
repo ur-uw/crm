@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateAddressRequest;
 use App\Http\Resources\AddressResource;
 use App\Models\Address;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AddressController extends Controller
 {
@@ -40,7 +41,7 @@ class AddressController extends Controller
      */
     public function show(Address $address)
     {
-        //
+        return AddressResource::make($address);
     }
 
     /**
@@ -52,8 +53,7 @@ class AddressController extends Controller
      */
     public function update(UpdateAddressRequest $request, Address $address)
     {
-        $address->update($request->validate());
-
+        $address->update($request->validated());
         return AddressResource::make($address);
     }
 
@@ -65,6 +65,12 @@ class AddressController extends Controller
      */
     public function destroy(Address $address)
     {
-        //
+        $address->delete();
+        return  response()->json(
+            [
+                'message' => 'Address deleted'
+            ],
+            Response::HTTP_NO_CONTENT
+        );
     }
 }

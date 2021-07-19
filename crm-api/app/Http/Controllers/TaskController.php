@@ -49,9 +49,9 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        //
+        return TaskResource::make($task->load('status'));
     }
 
     /**
@@ -61,9 +61,8 @@ class TaskController extends Controller
      * @param  string  $taskId
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTaskRequest $request, $id)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task = Task::find($id);
         $task->update($request->validated());
         return TaskResource::make($task->load('status:id,name,color,slug'));
     }
@@ -74,15 +73,17 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        DB::table('tasks')->where('id', $id)->delete();
-
-        return response()->json(['message' => 'Task Deleted', 204]);
+        $task->delete();
+        return response()->json([
+            'message' => 'Task Deleted',
+            Response::HTTP_NO_CONTENT
+        ]);
     }
 
 
-    public function changeStatus(Request $request, $id)
+    public function changeStatus(Request $request, Task $task)
     {
         $request->validate(
             [
@@ -90,8 +91,6 @@ class TaskController extends Controller
             ]
         );
         $status = Status::where('slug', $request->status_slug)->first();
-
-        $task = Task::with('status:id,slug,name,color')->find($id);
         $task->status()->associate($status);
         $task->save();
         return TaskResource::make($task);

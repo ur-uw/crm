@@ -1,9 +1,13 @@
 
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Dashboard from '../views/Dashboard.vue';
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+
+import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
+
+import { store as myStore } from '@/store';
+import Dashboard from '@/views/Dashboard.vue';
+import Home from '@/views/Home.vue';
+import Login from '@/views/Login.vue';
+import Register from '@/views/Register.vue';
+
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
@@ -19,6 +23,7 @@ const routes: Array<RouteRecordRaw> = [
         component: Dashboard,
         meta: {
             title: 'Dashboard',
+            auth: true,
         },
     },
     {
@@ -27,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         component: Login,
         meta: {
             title: 'Login',
+            auth: false,
         },
     },
     {
@@ -35,6 +41,7 @@ const routes: Array<RouteRecordRaw> = [
         component: Register,
         meta: {
             title: 'Register',
+            auth: false,
         },
     },
 ];
@@ -43,9 +50,25 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
 });
+const store = myStore;
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title}`;
-    next();
+    authGuard(to, from, next);
 });
+const authGuard = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext
+) => {
+    const routeProtected = to.meta.auth && 'auth' in to.meta;
+    if (routeProtected && !store.getters.isUserLoggedIn) {
+        document.title = "Login";
+        next('/login');
+    } else if (!routeProtected && store.getters.isUserLoggedIn) {
+        document.title = "Dashboard";
+        next('/dashboard');
+    } else {
+        document.title = `${to.meta.title}`;
+        next();
+    }
+};
+
+
 export default router;

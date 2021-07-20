@@ -19,6 +19,8 @@ const app = createApp(App)
     .use(router)
     .use(VueSweetalert2)
     .component('fa', FontAwesomeIcon);
+
+// ? GLOBAL DIRECTIVES  
 app.directive('focus', {
     // When the bound element is mounted into the DOM...
     mounted(el: HTMLElement) {

@@ -16,6 +16,7 @@ export interface AuthStateTypes {
 export interface AuthGettersTypes {
     getCurrentUser(state: AuthStateTypes): User | null;
     getToken(state: AuthStateTypes): string | null;
+    isUserLoggedIn(state: AuthStateTypes): boolean;
 }
 
 export type AuthMutationsTypes<S = AuthStateTypes> = {

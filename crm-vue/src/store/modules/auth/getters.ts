@@ -10,5 +10,8 @@ export const getters: GetterTree<AuthStateTypes, IRootState> &
   },
   getToken(state: AuthStateTypes): string | null {
     return state.token;
+  },
+  isUserLoggedIn(state: AuthStateTypes): boolean {
+    return state.isLoggedIn;
   }
 };

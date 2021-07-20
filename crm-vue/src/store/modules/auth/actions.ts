@@ -5,44 +5,71 @@ import { IRootState } from "@/store/register";
 import { AuthActionsTypes, AuthStateTypes } from "@/store/store_interfaces/auth_store_interface";
 import { User } from "@/interfaces/User";
 import Swal from "sweetalert2";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import { handleApi } from "@/utils/helpers";
 
 export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes = {
-    async [ActionTypes.LOGIN]({ commit }, payload: { email: string, password: string }) {
-        try {
+    [ActionTypes.LOGIN]({ commit }, payload: { email: string; password: string }): Promise<any> {
+        return new Promise(async (resolve, reject) => {
             commit(MutationTypes.SET_LOADING, true);
-            const response = await axios.post('/api/auth/login', {
-                email: payload.email,
-                password: payload.password,
-                device_name: navigator.userAgent,
+            const promise = axios.post("/api/auth/login", {
+                ...payload,
+                device_name: navigator.userAgent
             });
+            const [data, error] = await handleApi(promise);
+            if (error) {
+                commit(MutationTypes.SET_LOADING, false);
+                localStorage.removeItem("token");
+                commit(MutationTypes.SET_USER, null);
+                commit(MutationTypes.SET_TOKEN, null);
+                reject(error);
+                return;
+            }
+            axios.defaults.headers;
             commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_USER, response.data['user']);
-            commit(MutationTypes.SET_TOKEN, response.data['token']);
+            commit(MutationTypes.SET_USER, data["user"]);
+            commit(MutationTypes.SET_TOKEN, data["token"]);
             commit(MutationTypes.SET_LOGIN_STATE, true);
-        } catch (err: any | Error | AxiosError) {
-            commit(MutationTypes.SET_LOADING, false);
-            console.log(err.response.data);
-        }
+            resolve(data);
+        });
     },
-    async [ActionTypes.REGISTER]({ commit }, payload: { name: string, email: string, password: string, password_confirmation: string, phone_number: string }) {
-        try {
-            commit(MutationTypes.SET_LOADING, true);
-            const response = await axios.post('/api/auth/register', payload);
-            commit(MutationTypes.SET_USER, response.data['user']);
-            commit(MutationTypes.SET_TOKEN, response.data['token']);
-            commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_LOGIN_STATE, true);
-        } catch (errors) {
-            commit(MutationTypes.SET_LOADING, false);
-            console.log(errors);
+    async [ActionTypes.REGISTER](
+        { commit },
+        payload: {
+            name: string;
+            email: string;
+            password: string;
+            password_confirmation: string;
+            phone_number: string;
         }
+    ) {
+        return new Promise(async (resolve, reject) => {
+            commit(MutationTypes.SET_LOADING, true);
+            const promise = axios.post("/api/auth/register", {
+                ...payload,
+                device_name: navigator.userAgent
+            });
+            const [data, error] = await handleApi(promise);
+            if (error) {
+                commit(MutationTypes.SET_LOADING, false);
+                localStorage.removeItem("token");
+                commit(MutationTypes.SET_USER, null);
+                commit(MutationTypes.SET_TOKEN, null);
+                reject(error);
+                return;
+            }
+            commit(MutationTypes.SET_LOADING, false);
+            commit(MutationTypes.SET_USER, data["user"]);
+            commit(MutationTypes.SET_TOKEN, data["token"]);
+            commit(MutationTypes.SET_LOGIN_STATE, true);
+            resolve(data);
+        });
     },
     async [ActionTypes.LOGOUT]({ commit }) {
         try {
             // TODO: add default Authorization:Bearer ${token} when the app is mounted and user has already logged in
             commit(MutationTypes.SET_LOADING, true);
-            const response = await axios.get('/api/auth/logout');
+            const response = await axios.get("/api/auth/logout");
             commit(MutationTypes.SET_LOADING, false);
             commit(MutationTypes.SET_USER, null);
             commit(MutationTypes.SET_TOKEN, null);
@@ -52,5 +79,5 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             commit(MutationTypes.SET_LOADING, false);
             console.log(errors);
         }
-    },
+    }
 };

@@ -1,10 +1,9 @@
-import { User } from '@/interfaces/User';
-import { AuthMutationsTypes, AuthStateTypes } from '@/store/store_interfaces/auth_store_interface';
+import { User } from "@/interfaces/User";
+import { AuthMutationsTypes, AuthStateTypes } from "@/store/store_interfaces/auth_store_interface";
 import { MutationTree } from "vuex";
 import { MutationTypes } from "./mutation-types";
 
 export const mutations: MutationTree<AuthStateTypes> & AuthMutationsTypes = {
-
     [MutationTypes.SET_LOADING](state: AuthStateTypes, payload: boolean) {
         state.isLoading = payload;
     },
@@ -16,5 +15,5 @@ export const mutations: MutationTree<AuthStateTypes> & AuthMutationsTypes = {
     },
     [MutationTypes.SET_TOKEN](state: AuthStateTypes, payload: string): void {
         state.token = payload;
-    },
+    }
 };

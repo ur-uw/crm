@@ -1,0 +1,22 @@
+import { AxiosError } from "axios";
+
+// Used with api calls and logs the error
+export const handleApi = async (promise: Promise<any>) => {
+    try {
+        const data = await promise;
+        return [data, null];
+    } catch (err: AxiosError | any | Error) {
+        console.error(err.response.data);
+        return [null, err];
+    }
+};
+
+// Used with vuex actions
+export const handleActions = async (promise: Promise<any>) => {
+    try {
+        const data = await promise;
+        return [data, null];
+    } catch (err: AxiosError | any | Error) {
+        return [null, err];
+    }
+};

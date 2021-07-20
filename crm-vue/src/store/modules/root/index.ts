@@ -5,9 +5,11 @@ import { actions } from "./actions";
 import { mutations } from "./mutations";
 import { state } from "./state";
 import task from "../task";
+import auth from "../auth";
 
 // Modules
 const modules: ModuleTree<IRootState> = {
+  auth,
   task,
 };
 

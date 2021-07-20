@@ -35,9 +35,13 @@
 </template>
 <script lang="ts">
     import { ref, defineComponent } from "vue";
+    import { useStore } from "@/use/useStore";
+    import { ActionTypes } from "@/store/modules/auth/action-types";
 
     export default defineComponent({
         setup() {
+            // create store instance
+            const store = useStore();
             const formData = ref({
                 email: "",
                 password: ""
@@ -45,7 +49,7 @@
 
             // ? LOGIN FUNCTION
             const login = (): void => {
-                console.log(`${formData.value.email} ${formData.value.password}`);
+                store.dispatch(ActionTypes.LOGIN, formData.value);
             };
 
             return {

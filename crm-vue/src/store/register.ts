@@ -1,5 +1,6 @@
 /******************* [Root] *********************/
 
+import { AuthActionsTypes, AuthGettersTypes, AuthStateTypes } from "./store_interfaces/auth_store_interface";
 import { IRootGettersTypes, RootActionsTypes } from "./store_interfaces/root_store_interface";
 /******************* [Task] *********************/
 
@@ -18,10 +19,11 @@ export interface IRootState {
 }
 
 export interface IMergedState extends IRootState {
-    dailyTaskModule: TaskStateTypes;
+    taskModule: TaskStateTypes;
+    authModule: AuthStateTypes,
 }
 
 
 
-export interface StoreActions extends RootActionsTypes, TaskActionsTypes { }
-export interface StoreGetters extends IRootGettersTypes, TaskGettersTypes { }
+export interface StoreActions extends RootActionsTypes, AuthActionsTypes, TaskActionsTypes { }
+export interface StoreGetters extends IRootGettersTypes, AuthGettersTypes, TaskGettersTypes { }

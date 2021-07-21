@@ -1,4 +1,4 @@
-import { IRootState } from "./../../interfaces";
+import { IRootState } from "../../register";
 
 export const state: IRootState = {
   root: true,

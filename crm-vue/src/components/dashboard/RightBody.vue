@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-    import axios from "axios";
     import { defineComponent, ref } from "vue";
     import TaskList from "@/components/dashboard/TasksList.vue";
 

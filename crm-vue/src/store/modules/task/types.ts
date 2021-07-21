@@ -3,10 +3,10 @@ import {
   TaskMutationsTypes,
   TaskGettersTypes,
   TaskActionsTypes
-} from "@/store/interfaces";
+} from "@/store/store_interfaces/task_store_interface";
 import { Store as VuexStore, CommitOptions, DispatchOptions } from "vuex";
 
-export type DailyTaskStoreModuleTypes<S = TaskStateTypes> = Omit<
+export type TaskStoreModuleTypes<S = TaskStateTypes> = Omit<
   VuexStore<S>,
   "commit" | "getters" | "dispatch"
 > & {

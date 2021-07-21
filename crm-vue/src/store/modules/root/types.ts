@@ -1,9 +1,7 @@
 import {
   IRootState,
-  RootMutationsTypes,
-  IRootGettersTypes,
-  RootActionsTypes
-} from "@/store/interfaces";
+} from "@/store/register";
+import { IRootGettersTypes, RootActionsTypes, RootMutationsTypes } from "@/store/store_interfaces/root_store_interface";
 import { Store as VuexStore, CommitOptions, DispatchOptions } from "vuex";
 
 export type RootStoreModuleTypes<S = IRootState> = Omit<

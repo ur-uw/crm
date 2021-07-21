@@ -1,10 +1,12 @@
 import { createLogger, createStore } from "vuex";
-import { IRootState } from "@/store/interfaces";
+import { IRootState } from "@/store/register";
 
 import { RootStoreModuleTypes } from "./modules/root/types";
 
 import root from "./modules/root";
-import { DailyTaskStoreModuleTypes } from "./modules/task/types";
+import { TaskStoreModuleTypes } from "./modules/task/types";
+import { AuthStoreModuleTypes } from "./modules/auth/types";
+import auth from "./modules/auth";
 
 export const store = createStore<IRootState>(
   {
@@ -14,9 +16,10 @@ export const store = createStore<IRootState>(
 );
 
 type StoreModules = {
-  dailyTaskModule: DailyTaskStoreModuleTypes,
+  authModule: AuthStoreModuleTypes,
+  taskModule: TaskStoreModuleTypes,
   root: RootStoreModuleTypes;
 };
 
-export type Store = DailyTaskStoreModuleTypes<Pick<StoreModules, "dailyTaskModule">> &
+export type Store = AuthStoreModuleTypes<Pick<StoreModules, "authModule">> & TaskStoreModuleTypes<Pick<StoreModules, "taskModule">> &
   RootStoreModuleTypes<Pick<StoreModules, "root">>;

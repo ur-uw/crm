@@ -19,14 +19,19 @@
                         <router-link class="nav-link" to="dashboard">Dashboard</router-link>
                     </li>
                 </ul>
-                <div class="d-flex text-white">
+                <div v-if="!isUserLoggedIn" class="navbar-nav text-white">
                     <div class="nav-item">
-                        <router-link class="nav-link text-white" to="login">Login</router-link>
+                        <router-link class="nav-link" to="login">Login</router-link>
                     </div>
                     <div class="nav-item">
-                        <router-link class="btn btn-outline-success" to="register"
-                            >Register</router-link
-                        >
+                        <router-link class="btn btn-outline-success" to="register">
+                            Register
+                        </router-link>
+                    </div>
+                </div>
+                <div v-else class="navbar-nav text-white">
+                    <div class="nav-item">
+                        <button class="btn btn-custom-purple">Sign out</button>
                     </div>
                 </div>
             </div>
@@ -34,9 +39,15 @@
     </nav>
 </template>
 <script lang="ts">
-    import { defineComponent } from "vue";
-
+    import { computed, defineComponent } from "vue";
+    import { useStore } from "@/use/useStore";
     export default defineComponent({
-        setup() {}
+        setup() {
+            const store = useStore();
+            const isUserLoggedIn = computed(() => store.getters.isUserLoggedIn);
+            return {
+                isUserLoggedIn
+            };
+        }
     });
 </script>

@@ -2,11 +2,11 @@
 
 import { createRouter, createWebHistory, NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 
-import { store as myStore } from '@/store';
 import Dashboard from '@/views/Dashboard.vue';
 import Home from '@/views/Home.vue';
 import Login from '@/views/Login.vue';
 import Register from '@/views/Register.vue';
+import { store as myStore } from '@/store';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -46,22 +46,21 @@ const routes: Array<RouteRecordRaw> = [
     },
 ];
 
+const store = myStore;
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
 });
-const store = myStore;
-
 router.beforeEach((to, from, next) => {
     authGuard(to, from, next);
 });
 const authGuard = (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext
 ) => {
-    const routeProtected = to.meta.auth && 'auth' in to.meta;
-    if (routeProtected && !store.getters.isUserLoggedIn) {
+    const routeProtected = to.meta.auth;
+    if (routeProtected && 'auth' in to.meta && !store.getters.isUserLoggedIn) {
         document.title = "Login";
         next('/login');
-    } else if (!routeProtected && store.getters.isUserLoggedIn) {
+    } else if (!routeProtected && 'auth' in to.meta && store.getters.isUserLoggedIn) {
         document.title = "Dashboard";
         next('/dashboard');
     } else {

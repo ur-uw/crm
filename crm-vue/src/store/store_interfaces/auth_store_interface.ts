@@ -14,7 +14,7 @@ export interface AuthStateTypes {
 }
 
 export interface AuthGettersTypes {
-    getCurrentUser(state: AuthStateTypes): User | null;
+    getCurrentUser(state: AuthStateTypes): null | User;
     getToken(state: AuthStateTypes): string | null;
     isUserLoggedIn(state: AuthStateTypes): boolean;
 }
@@ -52,4 +52,5 @@ export interface AuthActionsTypes {
         }
     ): Promise<any>;
     [AuthATypes.LOGOUT]({ commit }: AugmentedActionContextAuth): void;
+    [AuthATypes.GET_USER]({ commit }: AugmentedActionContextAuth): void;
 }

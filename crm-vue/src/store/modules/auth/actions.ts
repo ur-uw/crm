@@ -25,10 +25,11 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
                 reject(error);
                 return;
             }
-            axios.defaults.headers;
+            const token = data.data['token'];
+            localStorage.setItem('token', token);
             commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_USER, data["user"]);
-            commit(MutationTypes.SET_TOKEN, data["token"]);
+            commit(MutationTypes.SET_USER, data.data["user"]);
+            commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
             resolve(data);
         });
@@ -79,5 +80,18 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             commit(MutationTypes.SET_LOADING, false);
             console.log(errors);
         }
+    },
+    [ActionTypes.GET_USER]({ commit }): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const response = axios.get('/api/auth/user');
+            const [data, error] = await handleApi(response);
+            if (error) {
+                reject(error);
+                return;
+            }
+            commit(MutationTypes.SET_USER, data.data['user']);
+            resolve(data);
+
+        });
     }
 };

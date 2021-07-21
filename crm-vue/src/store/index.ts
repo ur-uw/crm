@@ -6,6 +6,7 @@ import { RootStoreModuleTypes } from "./modules/root/types";
 import root from "./modules/root";
 import { TaskStoreModuleTypes } from "./modules/task/types";
 import { AuthStoreModuleTypes } from "./modules/auth/types";
+import auth from "./modules/auth";
 
 export const store = createStore<IRootState>(
   {

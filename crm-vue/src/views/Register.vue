@@ -48,42 +48,49 @@
                 <label for="passwordConfirm" class="form-label">Confirm Password</label>
                 <input
                     name="password_confirmation"
-                    v-model="formData.passwordConfirm"
+                    v-model="formData.password_confirmation"
                     type="password"
                     class="form-control"
                     id="passwordConfirm"
                 />
             </div>
-
             <div class="col-12">
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-success text-white">Register</button>
             </div>
         </form>
     </div>
 </template>
 <script lang="ts">
+    import { ActionTypes } from "@/store/modules/auth/action-types";
+    import { useStore } from "@/use/useStore";
+    import { handleActions } from "@/utils/helpers";
     import { defineComponent, ref } from "vue";
+    import { useRouter } from "vue-router";
 
     export default defineComponent({
         setup() {
+            // Store and router instances
+            const store = useStore();
+            const router = useRouter();
+            // variables
             const formData = ref({
                 name: "",
                 email: "",
                 password: "",
-                passwordConfirm: "",
+                password_confirmation: "",
                 phoneNumber: ""
             });
 
             // ? REGISTER FUNCTION
-            const register = (): void => {
-                console.log(
-                    `
-                    ${formData.value.name}
-                    ${formData.value.email}
-                    ${formData.value.phoneNumber}
-                    ${formData.value.password}
-                    `
+            const register = async () => {
+                const [data, error] = await handleActions(
+                    store.dispatch(ActionTypes.REGISTER, formData.value)
                 );
+                if (error) {
+                    // TODO: handle errors
+                    return;
+                }
+                router.push("/dashboard");
             };
             return {
                 formData,

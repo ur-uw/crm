@@ -32,10 +32,10 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             commit(MutationTypes.SET_USER, data.data["user"]);
             commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
-            resolve(data);
             axios.defaults.headers.common[
                 "Authorization"
             ] = `Bearer ${token}`;
+            resolve(data);
         });
     },
     async [ActionTypes.REGISTER](
@@ -63,10 +63,15 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
                 reject(error);
                 return;
             }
+            const token = data.data['token'];
+            localStorage.setItem('token', token);
             commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_USER, data["user"]);
-            commit(MutationTypes.SET_TOKEN, data["token"]);
+            commit(MutationTypes.SET_USER, data.data["user"]);
+            commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
+            axios.defaults.headers.common[
+                "Authorization"
+            ] = `Bearer ${token}`;
             resolve(data);
         });
     },

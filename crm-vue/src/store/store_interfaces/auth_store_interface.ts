@@ -51,6 +51,6 @@ export interface AuthActionsTypes {
             phone?: string;
         }
     ): Promise<any>;
-    [AuthATypes.LOGOUT]({ commit }: AugmentedActionContextAuth): void;
     [AuthATypes.GET_USER]({ commit }: AugmentedActionContextAuth): void;
+    [AuthATypes.LOGOUT]({ commit }: AugmentedActionContextAuth): Promise<any>;
 }

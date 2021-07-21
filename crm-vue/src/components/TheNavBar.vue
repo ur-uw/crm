@@ -29,9 +29,9 @@
                         </router-link>
                     </div>
                 </div>
-                <div v-else class="navbar-nav text-white">
+                <div v-if="isUserLoggedIn" class="navbar-nav text-white">
                     <div class="nav-item">
-                        <button class="btn btn-custom-purple">Sign out</button>
+                        <button class="btn btn-custom-purple" @click="logOut()">Sign out</button>
                     </div>
                 </div>
             </div>
@@ -41,12 +41,33 @@
 <script lang="ts">
     import { computed, defineComponent } from "vue";
     import { useStore } from "@/use/useStore";
+    import { ActionTypes as AuthActions } from "@/store/modules/auth/action-types";
+    import Swal from "sweetalert2";
+    import { useRouter } from "vue-router";
     export default defineComponent({
         setup() {
+            // Create store & router instances
             const store = useStore();
+            const router = useRouter();
+            // Variables
             const isUserLoggedIn = computed(() => store.getters.isUserLoggedIn);
+            // functions
+            const logOut = async () => {
+                const confirmChoice = await Swal.fire({
+                    icon: "question",
+                    text: "Are you sure you want to sign out ?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No"
+                });
+                if (confirmChoice.isConfirmed) {
+                    await store.dispatch(AuthActions.LOGOUT);
+                    router.push("/login");
+                }
+            };
             return {
-                isUserLoggedIn
+                isUserLoggedIn,
+                logOut
             };
         }
     });

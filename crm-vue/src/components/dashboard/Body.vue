@@ -18,17 +18,24 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
     import LeftBody from "@/components/dashboard/LeftBody.vue";
     import RightBody from "./RightBody.vue";
-
-    export default {
+    import { defineComponent, PropType, ref } from "vue";
+    import { User } from "@/interfaces/User";
+    export default defineComponent({
         name: "Body",
+        props: {
+            user: {
+                type: Object as PropType<User>,
+                required: true
+            }
+        },
         components: {
             LeftBody,
             RightBody
         }
-    };
+    });
 </script>
 
 <style lang="scss">

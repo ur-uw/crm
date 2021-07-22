@@ -3,24 +3,20 @@ import { IRootState } from "../register";
 /******************* [Auth]*********************/
 import { MutationTypes as AuthMTypes } from "../modules/auth/mutation-types";
 import { ActionTypes as AuthATypes } from "../modules/auth/action-types";
-/******************* (DATA MODELS) *********************/
-import { User } from "@/interfaces/User";
 /*********************** Auth MODULE TYPES  ***********************/
 export interface AuthStateTypes {
-    user: User | null;
     token: string | null;
     isLoggedIn: boolean;
     isLoading: boolean;
 }
 
 export interface AuthGettersTypes {
-    getCurrentUser(state: AuthStateTypes): null | User;
+    isLoading(state: AuthStateTypes): boolean;
     getToken(state: AuthStateTypes): string | null;
     isUserLoggedIn(state: AuthStateTypes): boolean;
 }
 
 export type AuthMutationsTypes<S = AuthStateTypes> = {
-    [AuthMTypes.SET_USER](state: S, payload: User | null): void;
     [AuthMTypes.SET_LOADING](state: S, payload: boolean): void;
     [AuthMTypes.SET_LOGIN_STATE](state: S, payload: boolean): void;
     [AuthMTypes.SET_TOKEN](state: S, payload: string | null): void;
@@ -51,6 +47,6 @@ export interface AuthActionsTypes {
             phone?: string;
         }
     ): Promise<any>;
-    [AuthATypes.GET_USER]({ commit }: AugmentedActionContextAuth): void;
+
     [AuthATypes.LOGOUT]({ commit }: AugmentedActionContextAuth): Promise<any>;
 }

@@ -10,9 +10,6 @@ export const mutations: MutationTree<AuthStateTypes> & AuthMutationsTypes = {
     [MutationTypes.SET_LOGIN_STATE](state: AuthStateTypes, payload: boolean): void {
         state.isLoggedIn = payload;
     },
-    [MutationTypes.SET_USER](state: AuthStateTypes, payload: User): void {
-        state.user = payload;
-    },
     [MutationTypes.SET_TOKEN](state: AuthStateTypes, payload: string): void {
         state.token = payload;
     }

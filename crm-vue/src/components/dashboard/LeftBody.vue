@@ -75,10 +75,17 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: "LeftBody"
-    };
+<script lang="ts">
+    import { computed, defineComponent } from "vue";
+    import { useStore } from "@/use/useStore";
+    import { User } from "@/interfaces/User";
+
+    export default defineComponent({
+        name: "LeftBody",
+        setup() {
+            const store = useStore();
+        }
+    });
 </script>
 
 <style lang="scss">

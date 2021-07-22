@@ -1,8 +1,7 @@
 import { AuthStateTypes } from "@/store/store_interfaces/auth_store_interface";
-let token = localStorage.getItem('token');
+let token = localStorage.getItem("token");
 export const state: AuthStateTypes = {
-    user: null,
     token: token,
     isLoading: false,
-    isLoggedIn: token != null,
+    isLoggedIn: token != null
 };

@@ -7,6 +7,7 @@ import { User } from "@/interfaces/User";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { handleApi } from "@/utils/helpers";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes = {
     [ActionTypes.LOGIN]({ commit }, payload: { email: string; password: string }): Promise<any> {
@@ -20,20 +21,20 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             if (error) {
                 commit(MutationTypes.SET_LOADING, false);
                 localStorage.removeItem("token");
-                // TODO:COMMIT TO USER MODULE MUTATION
-                // commit(MutationTypes.SET_USER, data.data["user"]);
+                commit(MutationTypes.SET_USER, null);
                 commit(MutationTypes.SET_TOKEN, null);
                 reject(error);
                 return;
             }
-            const token = data.data["token"];
-            localStorage.setItem("token", token);
+            const token = data.data['token'];
+            localStorage.setItem('token', token);
             commit(MutationTypes.SET_LOADING, false);
-            // TODO:COMMIT TO USER MODULE MUTATION
-            // commit(MutationTypes.SET_USER, data.data["user"]);
+            commit(MutationTypes.SET_USER, data.data["user"]);
             commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            axios.defaults.headers.common[
+                "Authorization"
+            ] = `Bearer ${token}`;
             resolve(data);
         });
     },
@@ -57,20 +58,20 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             if (error) {
                 commit(MutationTypes.SET_LOADING, false);
                 localStorage.removeItem("token");
-                // TODO:COMMIT TO USER MODULE MUTATION
-                // commit(MutationTypes.SET_USER, null);
+                commit(MutationTypes.SET_USER, null);
                 commit(MutationTypes.SET_TOKEN, null);
                 reject(error);
                 return;
             }
-            const token = data.data["token"];
-            localStorage.setItem("token", token);
+            const token = data.data['token'];
+            localStorage.setItem('token', token);
             commit(MutationTypes.SET_LOADING, false);
-            // TODO:COMMIT TO USER MODULE MUTATION
-            // commit(MutationTypes.SET_USER, data.data["user"]);
+            commit(MutationTypes.SET_USER, data.data["user"]);
             commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            axios.defaults.headers.common[
+                "Authorization"
+            ] = `Bearer ${token}`;
             resolve(data);
         });
     },
@@ -80,26 +81,39 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             const response = axios.get("/api/auth/logout");
             const [data, error] = await handleApi(response);
             if (error) {
-                Swal.fire({
-                    icon: "error",
-                    text: "Some thing went wrong, please try again later",
-                    showConfirmButton: false,
-                    toast: true,
-                    timer: 1500,
-                    position: "top-end"
-                });
+                Swal.fire(
+                    {
+                        icon: 'error',
+                        text: 'Some thing went wrong, please try again later',
+                        showConfirmButton: false,
+                        toast: true,
+                        timer: 1500,
+                        position: 'top-end',
+                    }
+                );
                 reject(error);
                 return;
             }
 
-            localStorage.removeItem("token");
+            localStorage.removeItem('token');
             commit(MutationTypes.SET_LOADING, false);
-            // TODO:COMMIT TO USER MODULE MUTATION
-
-            // commit(MutationTypes.SET_USER, null);
+            commit(MutationTypes.SET_USER, null);
             commit(MutationTypes.SET_TOKEN, null);
             commit(MutationTypes.SET_LOGIN_STATE, false);
             resolve(data);
+        });
+    },
+    [ActionTypes.GET_USER]({ commit }): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            const response = axios.get('/api/auth/user');
+            const [data, error] = await handleApi(response);
+            if (error) {
+                reject(error);
+                return;
+            }
+            commit(MutationTypes.SET_USER, data.data['user']);
+            resolve(data);
+
         });
     }
 };

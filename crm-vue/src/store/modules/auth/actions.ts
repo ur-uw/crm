@@ -105,13 +105,16 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
     },
     [ActionTypes.GET_USER]({ commit }): Promise<any> {
         return new Promise(async (resolve, reject) => {
+            commit(MutationTypes.SET_LOADING, true);
             const response = axios.get('/api/auth/user');
             const [data, error] = await handleApi(response);
             if (error) {
+                commit(MutationTypes.SET_LOADING, false);
                 reject(error);
                 return;
             }
             commit(MutationTypes.SET_USER, data.data['user']);
+            commit(MutationTypes.SET_LOADING, false);
             resolve(data);
 
         });

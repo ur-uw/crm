@@ -17,6 +17,7 @@ export interface AuthGettersTypes {
     getCurrentUser(state: AuthStateTypes): null | User;
     getToken(state: AuthStateTypes): string | null;
     isUserLoggedIn(state: AuthStateTypes): boolean;
+    isAuthLoading(state: AuthStateTypes): boolean;
 }
 
 export type AuthMutationsTypes<S = AuthStateTypes> = {

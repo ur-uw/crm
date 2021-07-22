@@ -14,5 +14,8 @@ export const getters: GetterTree<AuthStateTypes, IRootState> &
   },
   isUserLoggedIn(state: AuthStateTypes): boolean {
     return state.isLoggedIn;
+  },
+  isAuthLoading(state: AuthStateTypes): boolean {
+    return state.isLoading;
   }
 };

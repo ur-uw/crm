@@ -28,7 +28,7 @@
                         :disabled="!showEditTask"
                         v-model="newTaskTitle"
                         class="bg-transparent border-0 p-2 w-100 overflow-auto outline-none h-100"
-                        v-bind:class="
+                        :class="
                             task.status?.slug === 'completed' && !showEditTask
                                 ? 'task-completed'
                                 : ''
@@ -42,7 +42,7 @@
             <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
             <img src="../../assets/images/del.png" @click="deleteTask()" />
             <!-- NOTE: there is a css class for every default task status -->
-            <button v-bind:class="task.status?.slug">
+            <button :class="task.status?.slug">
                 {{ task.status?.name }}
             </button>
         </div>
@@ -63,11 +63,12 @@
                 required: true
             },
             index: {
-                type: Number
+                type: Number,
+                required: true
             }
         },
         setup(props) {
-            // Intialize custom vuex-store
+            // Initialize custom vuex-store
             const store = useStore();
             // variables
 

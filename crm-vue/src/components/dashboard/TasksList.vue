@@ -1,10 +1,10 @@
 <template>
     <form @submit.prevent="addDailyTask()">
         <input
+            v-model="newTaskTitle"
             class="form-control form-control-lg bg-primary2 text-white"
             type="text"
             placeholder="New task"
-            v-model="newTaskTitle"
         />
     </form>
     <div v-if="isLoading" class="mt-1">
@@ -12,7 +12,7 @@
     </div>
     <div v-else>
         <ul v-if="tasks.length > 0" class="tasks-list">
-            <li v-for="(task, index) in tasks" v-bind:key="task.id">
+            <li v-for="(task, index) in tasks" :key="task.id">
                 <TodayTask :index="index" :task="task" />
             </li>
         </ul>

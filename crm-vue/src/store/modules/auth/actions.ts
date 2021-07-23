@@ -3,15 +3,13 @@ import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
 import { IRootState } from "@/store/register";
 import { AuthActionsTypes, AuthStateTypes } from "@/store/store_interfaces/auth_store_interface";
-import { User } from "@/interfaces/User";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { handleApi } from "@/utils/helpers";
-import { icon } from "@fortawesome/fontawesome-svg-core";
 
 export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes = {
     [ActionTypes.LOGIN]({ commit }, payload: { email: string; password: string }): Promise<any> {
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve, reject): Promise<void> => {
             commit(MutationTypes.SET_LOADING, true);
             const promise = axios.post("/api/auth/login", {
                 ...payload,

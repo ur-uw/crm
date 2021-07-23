@@ -69,7 +69,7 @@
             const authErrors = ref();
             // ? LOGIN FUNCTION
             const login = async () => {
-                const [data, error] = await handleActions(
+                const [, error] = await handleActions(
                     store.dispatch(ActionTypes.LOGIN, formData.value)
                 );
                 if (error) {

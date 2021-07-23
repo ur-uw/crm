@@ -17,6 +17,7 @@ class Task extends Model
         'start_date',
         'due_date',
         'status_id',
+        'user_id',
     ];
 
     /**
@@ -27,5 +28,15 @@ class Task extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);
+    }
+
+    /**
+     * Get the user that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

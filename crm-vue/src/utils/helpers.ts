@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 
 // Used to generate a delay
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Used with api calls and logs the error
 export const handleApi = async (promise: Promise<any>) => {

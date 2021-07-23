@@ -26,15 +26,13 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
                 reject(error);
                 return;
             }
-            const token = data.data['token'];
-            localStorage.setItem('token', token);
+            const token = data.data["token"];
+            localStorage.setItem("token", token);
             commit(MutationTypes.SET_LOADING, false);
             commit(MutationTypes.SET_USER, data.data["user"]);
             commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
-            axios.defaults.headers.common[
-                "Authorization"
-            ] = `Bearer ${token}`;
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             resolve(data);
         });
     },
@@ -63,15 +61,13 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
                 reject(error);
                 return;
             }
-            const token = data.data['token'];
-            localStorage.setItem('token', token);
+            const token = data.data["token"];
+            localStorage.setItem("token", token);
             commit(MutationTypes.SET_LOADING, false);
             commit(MutationTypes.SET_USER, data.data["user"]);
             commit(MutationTypes.SET_TOKEN, token);
             commit(MutationTypes.SET_LOGIN_STATE, true);
-            axios.defaults.headers.common[
-                "Authorization"
-            ] = `Bearer ${token}`;
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
             resolve(data);
         });
     },
@@ -81,21 +77,19 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
             const response = axios.get("/api/auth/logout");
             const [data, error] = await handleApi(response);
             if (error) {
-                Swal.fire(
-                    {
-                        icon: 'error',
-                        text: 'Some thing went wrong, please try again later',
-                        showConfirmButton: false,
-                        toast: true,
-                        timer: 1500,
-                        position: 'top-end',
-                    }
-                );
+                Swal.fire({
+                    icon: "error",
+                    text: "Some thing went wrong, please try again later",
+                    showConfirmButton: false,
+                    toast: true,
+                    timer: 1500,
+                    position: "top-end"
+                });
                 reject(error);
                 return;
             }
 
-            localStorage.removeItem('token');
+            localStorage.removeItem("token");
             commit(MutationTypes.SET_LOADING, false);
             commit(MutationTypes.SET_USER, null);
             commit(MutationTypes.SET_TOKEN, null);
@@ -106,17 +100,16 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
     [ActionTypes.GET_USER]({ commit }): Promise<any> {
         return new Promise(async (resolve, reject) => {
             commit(MutationTypes.SET_LOADING, true);
-            const response = axios.get('/api/auth/user');
+            const response = axios.get("/api/auth/user");
             const [data, error] = await handleApi(response);
             if (error) {
                 commit(MutationTypes.SET_LOADING, false);
                 reject(error);
                 return;
             }
-            commit(MutationTypes.SET_USER, data.data['user']);
+            commit(MutationTypes.SET_USER, data.data["user"]);
             commit(MutationTypes.SET_LOADING, false);
             resolve(data);
-
         });
     }
 };

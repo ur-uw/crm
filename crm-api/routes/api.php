@@ -28,13 +28,13 @@ Route::put('/task/changestatus/{task}', [TaskController::class, 'changeStatus'])
 // Protected routes
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get all tasks
-    Route::get('/{user}/tasks', [TaskController::class, 'index']);
+    Route::get('/tasks', [TaskController::class, 'index']);
     // Create new task
-    Route::post('/{user}/task', [TaskController::class, 'store']);
+    Route::post('/task/create', [TaskController::class, 'store']);
     // Edit task
-    Route::put('/{user}/task/{task}', [TaskController::class, 'update']);
+    Route::put('/task/update/{task}', [TaskController::class, 'update']);
     // Delete task
-    Route::delete('/{user}/task/{task}', [TaskController::class, 'destroy']);
+    Route::delete('/task/delete/{task}', [TaskController::class, 'destroy']);
 });
 
 //** Addresses *//

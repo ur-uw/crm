@@ -18,11 +18,11 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(User $user)
+    public function index(Request $request)
     {
 
         return TaskResource::collection(
-            $user->tasks()->with('status:id,name,color,slug')
+            $request->user()->tasks()->with('status:id,name,color,slug')
                 ->orderBy('created_at', 'desc')
                 ->get()
         );
@@ -33,10 +33,10 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateTaskRequest $request, User $user)
+    public function store(CreateTaskRequest $request)
     {
         $task = Task::with('status')->make($request->validated());
-        $user->tasks()->save($task);
+        $request->user()->tasks()->save($task);
         return TaskResource::make(
             $task->load('status:id,name,color,slug')
         );
@@ -62,7 +62,7 @@ class TaskController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTaskRequest $request, User $user, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
         $task->update($request->validated());
         return TaskResource::make($task->load('status:id,name,color,slug'));
@@ -75,7 +75,7 @@ class TaskController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user, Task $task)
+    public function destroy(Task $task)
     {
         $task->delete();
         return response()->json([

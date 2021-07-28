@@ -11,11 +11,11 @@
         <div class="alert alert-info">Loading....</div>
     </div>
     <div v-else>
-        <ul v-if="tasks.length > 0" class="tasks-list">
+        <transition-group v-if="tasks.length > 0" tag="ul" name="list" class="tasks-list">
             <li v-for="(task, index) in tasks" :key="task.id">
                 <TodayTask :index="index" :task="task" />
             </li>
-        </ul>
+        </transition-group>
         <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
             <h6>No Tasks Today <strong>😴</strong></h6>
         </div>
@@ -76,5 +76,17 @@
             display: flex;
             flex-direction: column;
         }
+    }
+    .list-enter-active,
+    .list-leave-active {
+        transition: all 0.5s ease;
+    }
+    .list-enter-from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    .list-leave-to {
+        opacity: 0;
+        transform: translateX(30px);
     }
 </style>

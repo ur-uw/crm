@@ -9,7 +9,7 @@ export const handleApi = async (
     promise: Promise<any>
 ): Promise<[any, Error | AxiosError | any]> => {
     try {
-        await sleep(1000);
+        await sleep(250);
         const data = await promise;
         return [data, null];
     } catch (err: AxiosError | any | Error) {

@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Status;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class TaskUserSeeder extends Seeder
+class ProjectTaskSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,11 +17,11 @@ class TaskUserSeeder extends Seeder
     public function run()
     {
         $statuses = Status::all();
-        User::all()->each(function (User $user) use ($statuses) {
+        Project::all()->each(function (Project $project) use ($statuses) {
             $tasks = Task::factory(20)->make([
                 'status_id' => rand(1, count($statuses))
             ]);
-            $user->tasks()->saveMany($tasks);
+            $project->tasks()->saveMany($tasks);
         });
     }
 }

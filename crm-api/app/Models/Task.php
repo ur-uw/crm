@@ -18,6 +18,7 @@ class Task extends Model
         'due_date',
         'status_id',
         'user_id',
+        'project_id',
     ];
 
     /**
@@ -31,12 +32,12 @@ class Task extends Model
     }
 
     /**
-     * Get the user that owns the Task
+     * Get the project that owns the Task
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): BelongsTo
+    public function project(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Project::class);
     }
 }

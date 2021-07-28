@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 import { ActionTree } from "vuex";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";

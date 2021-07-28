@@ -1,7 +1,7 @@
 import { MutationTree } from "vuex";
 import { MutationTypes } from "./mutation-types";
-import { TaskMutationsTypes, TaskStateTypes } from "@/store/interfaces";
 import { Task } from "@/interfaces/Task";
+import { TaskMutationsTypes, TaskStateTypes } from "@/store/store_interfaces/task_store_interface";
 
 export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     [MutationTypes.SET_ITEMS](state: TaskStateTypes, data: Task[]): void {

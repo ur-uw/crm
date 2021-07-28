@@ -1,21 +1,21 @@
 <template>
     <form @submit.prevent="addDailyTask()">
         <input
+            v-model="newTaskTitle"
             class="form-control form-control-lg bg-primary2 text-white"
             type="text"
             placeholder="New task"
-            v-model="newTaskTitle"
         />
     </form>
     <div v-if="isLoading" class="mt-1">
         <div class="alert alert-info">Loading....</div>
     </div>
     <div v-else>
-        <ul v-if="tasks.length > 0" class="tasks-list">
-            <li v-for="(task, index) in tasks" v-bind:key="task.id">
+        <transition-group v-if="tasks.length > 0" tag="ul" name="list" class="tasks-list">
+            <li v-for="(task, index) in tasks" :key="task.id">
                 <TodayTask :index="index" :task="task" />
             </li>
-        </ul>
+        </transition-group>
         <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
             <h6>No Tasks Today <strong>😴</strong></h6>
         </div>
@@ -76,5 +76,17 @@
             display: flex;
             flex-direction: column;
         }
+    }
+    .list-enter-active,
+    .list-leave-active {
+        transition: all 0.5s ease;
+    }
+    .list-enter-from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    .list-leave-to {
+        opacity: 0;
+        transform: translateX(30px);
     }
 </style>

@@ -1,71 +1,83 @@
+/* eslint-disable no-async-promise-executor */
+import { handleApi } from "@/utils/helpers";
 import { Task } from "@/interfaces/Task";
 import { ActionTree } from "vuex";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
 import Swal from "sweetalert2";
-import { TaskActionsTypes, TaskStateTypes, IRootState } from "@/store/interfaces";
-import axios, { AxiosError } from "axios";
+import { IRootState } from "@/store/register";
+import axios from "axios";
+import { TaskActionsTypes, TaskStateTypes } from "@/store/store_interfaces/task_store_interface";
 
 export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes = {
     // FETCH TASKS
     async [ActionTypes.FETCH_TASKS]({ commit }) {
-        try {
+        return new Promise(async (resolve, reject) => {
             commit(MutationTypes.SET_LOADING, true);
-            const res = await axios.get("/api/task");
+            const res = axios.get("/api/tasks");
+            const [data, error] = await handleApi(res);
+            if (error) {
+                reject(error);
+                return;
+            }
             commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_ITEMS, res.data["data"]);
-        } catch (e) {
-            console.log(e);
-            commit(MutationTypes.SET_LOADING, false);
-        }
+            commit(MutationTypes.SET_ITEMS, data.data["data"]);
+            resolve(data);
+        });
     },
     // CREATE TASK
     async [ActionTypes.CREATE_TASK]({ commit }, task: Task) {
-        try {
-            const response = await axios.post("/api/task/", task);
-            const newTask: Task = response.data["data"];
-            commit(MutationTypes.ADD_ITEM, newTask);
-        } catch (err: Error | AxiosError | unknown) {
-            if (axios.isAxiosError(err)) {
-                // Access to config, request, and response
-                console.log(err.response?.data);
-            } else {
-                // Just a stock error
-                console.error(err);
+        return new Promise(async (resolve, reject) => {
+            const response = axios.post("/api/task/create", task);
+            const [data, error] = await handleApi(response);
+            if (error) {
+                reject(error);
+                return;
             }
-        }
+            const newTask: Task = data.data["data"];
+            commit(MutationTypes.ADD_ITEM, newTask);
+            resolve(data);
+        });
     },
     // EDIT TASK
     async [ActionTypes.EDIT_TASK](
         { commit },
         payload: { index: number; id: number; updatedTask: Task }
     ) {
-        try {
-            const response = await axios.put(`/api/task/${payload.id}`, payload.updatedTask);
+        return new Promise(async (resolve, reject) => {
+            const response = axios.put(`/api/task/update/${payload.id}`, payload.updatedTask);
+            const [data, error] = await handleApi(response);
+            if (error) {
+                reject(error);
+                return;
+            }
             commit(MutationTypes.SET_ITEM, {
                 index: payload.index,
-                updatedTask: response.data["data"]
+                updatedTask: data.data["data"]
             });
-        } catch (error) {
-            console.log("EDIT_TASK action" + error);
-        }
+            resolve(data);
+        });
     },
     // CHANGE TASK STATUS
     async [ActionTypes.CHANGE_STATUS](
         { commit },
         payload: { id: number; index: number; status_slug: string }
     ) {
-        try {
-            const response = await axios.put(`/api/task/changestatus/${payload.id}`, {
+        return new Promise(async (resolve, reject) => {
+            const response = axios.put(`/api/task/changestatus/${payload.id}`, {
                 status_slug: payload.status_slug
             });
+            const [data, error] = await handleApi(response);
+            if (error) {
+                reject(error);
+                return;
+            }
             commit(MutationTypes.CHANGE_STATUS, {
                 index: payload.index,
-                updatedTask: response.data["data"]
+                updatedTask: data.data["data"]
             });
-        } catch (error) {
-            console.log("EDIT_TASK action" + error);
-        }
+            resolve(data);
+        });
     },
     // DELETE TASK
     async [ActionTypes.DELETE_TASK]({ commit }, id: number) {
@@ -78,18 +90,21 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
             cancelButtonText: "No"
         });
         if (confirmResult.isConfirmed) {
-            try {
-                await axios.delete(`/api/task/${id}`);
+            return new Promise(async (resolve, reject) => {
+                const response = axios.delete(`/api/task/delete/${id}`);
+                const [data, error] = await handleApi(response);
+                if (error) {
+                    Swal.fire({
+                        icon: "error",
+                        toast: true,
+                        titleText: "Some went thing wrong",
+                        showConfirmButton: false
+                    });
+                    reject(error);
+                }
                 commit(MutationTypes.DELETE_TASK, id);
-            } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    toast: true,
-                    titleText: "Some went thing wrong",
-                    showConfirmButton: false
-                });
-                console.error("DELETE_TASK_ACTION", error);
-            }
+                resolve(data);
+            });
         }
     }
 };

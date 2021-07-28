@@ -1,10 +1,10 @@
 <template>
     <div id="right" class="p-5">
-        <h1>Development Crm</h1>
+        <h1 class="text-primary2">Development Crm</h1>
         <div class="horizontal">
             <img src="../../assets/images/horizontal.png" alt="horizontal" />
         </div>
-        <p>
+        <p class="text-primary">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
             has been the industry's standard dummy text ever since the 1500s
         </p>
@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-    import axios from "axios";
     import { defineComponent, ref } from "vue";
     import TaskList from "@/components/dashboard/TasksList.vue";
 
@@ -111,9 +110,9 @@
 
             input[type="text"] {
                 border: unset;
-                border-bottom: 1px solid var(--customgrey);
+                border-bottom: 1px solid var(--bs-custom-grey);
                 width: 100%;
-                caret-color: var(--primary1);
+                caret-color: var(--bs-primary);
             }
 
             ul.tasks-list {

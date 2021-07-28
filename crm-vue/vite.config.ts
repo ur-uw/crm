@@ -1,18 +1,27 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path';
+import { defineConfig } from "vite";
+
+import vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
+import eslintPlugin from "vite-plugin-eslint";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: './',
+    base: "./",
     resolve: {
         alias: {
-            '@': resolve(__dirname, './src'),
-        },
+            "@": resolve(__dirname, "./src")
+        }
     },
 
-    plugins: [vue()],
+    plugins: [
+        vue({
+            script: {
+                refSugar: true
+            }
+        }),
+        eslintPlugin({ include: ["src/**/*.vue", "src/**/*.js"] })
+    ],
     server: {
-        port: 8080,
-    },
+        port: 8080
+    }
 });

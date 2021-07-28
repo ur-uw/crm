@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Task;
+use Date;
+use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Str;
 
@@ -23,15 +25,16 @@ class TaskFactory extends Factory
     public function definition()
     {
         $title = $this->faker->sentence($nbWords = 5, $variableWords = false);
-        $date_format = 'Y-m-d';
-        $due_date = $this->faker->date;
+        $task_created_at = $this->faker->dateTimeBetween('-3 month', '-1 day');
+        $due_date = $this->faker->dateTimeBetween($task_created_at, '+1 month');
         return [
-
             'title' => $title,
             'slug' => Str::slug($title),
-            'start_date' => $this->faker->date($date_format, $due_date),
+            'start_date' => $this->faker->dateTimeBetween($task_created_at, $due_date),
             'due_date' => $due_date,
             'description' => $this->faker->text(100),
+            'created_at' => $task_created_at,
+            'updated_at' => $this->faker->dateTimeBetween($task_created_at, now())
         ];
     }
 }

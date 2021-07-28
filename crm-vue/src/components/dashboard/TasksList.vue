@@ -1,12 +1,13 @@
 <template>
-    <form @submit.prevent="addDailyTask()">
+    <!-- <form @submit.prevent="addDailyTask()">
         <input
             v-model="newTaskTitle"
             class="form-control form-control-lg bg-primary2 text-white"
             type="text"
             placeholder="New task"
         />
-    </form>
+    </form> -->
+    <h3 class="text-primary">Recent Tasks</h3>
     <div v-if="isLoading" class="mt-1">
         <div class="alert alert-info">Loading....</div>
     </div>

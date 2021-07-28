@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
-use App\Models\User;
 
 class TaskController extends Controller
 {
@@ -96,5 +95,15 @@ class TaskController extends Controller
         $task->status()->associate($status);
         $task->save();
         return TaskResource::make($task);
+    }
+
+    public function recently(Request $request)
+    {
+        $tasks = $request->user()
+            ->tasks()
+            ->with('status')
+            ->recent()
+            ->get();
+        return TaskResource::collection($tasks);
     }
 }

@@ -28,7 +28,7 @@ class CreateTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|unique:tasks,title',
+            'title' => 'required|string',
             // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
             'slug' => 'required|string|unique:tasks,title',
             'description' => 'string',

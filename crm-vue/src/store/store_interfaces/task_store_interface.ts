@@ -34,15 +34,19 @@ export type AugmentedActionContextTask = {
 } & Omit<ActionContext<TaskStateTypes, IRootState>, "commit">;
 
 export interface TaskActionsTypes {
-    [TaskATypes.FETCH_TASKS]({ commit }: AugmentedActionContextTask): Promise<any>;
-    [TaskATypes.CREATE_TASK]({ commit }: AugmentedActionContextTask, payload: Task): Promise<any>;
+    [TaskATypes.FETCH_TASKS]({ commit }: AugmentedActionContextTask): Promise<unknown>;
+    [TaskATypes.FETCH_RECENT_TASKS]({ commit }: AugmentedActionContextTask): Promise<unknown>;
+    [TaskATypes.CREATE_TASK](
+        { commit }: AugmentedActionContextTask,
+        payload: Task
+    ): Promise<unknown>;
     [TaskATypes.EDIT_TASK](
         { commit }: AugmentedActionContextTask,
         payload: { index: number; id: number; updatedTask: Task }
-    ): Promise<any>;
+    ): Promise<unknown>;
     [TaskATypes.CHANGE_STATUS](
         { commit }: AugmentedActionContextTask,
         payload: { id: number; status_slug: string; index: number }
-    ): Prmise<any>;
+    ): Promise<unknown>;
     [TaskATypes.DELETE_TASK]({ commit }: AugmentedActionContextTask, id: number): void;
 }

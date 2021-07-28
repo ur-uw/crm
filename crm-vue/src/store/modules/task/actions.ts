@@ -25,6 +25,21 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
             resolve(data);
         });
     },
+    // FETCH RECENT TASKS
+    async [ActionTypes.FETCH_RECENT_TASKS]({ commit }) {
+        return new Promise(async (resolve, reject) => {
+            commit(MutationTypes.SET_LOADING, true);
+            const res = axios.get("/api/tasks/recently");
+            const [data, error] = await handleApi(res);
+            if (error) {
+                reject(error);
+                return;
+            }
+            commit(MutationTypes.SET_LOADING, false);
+            commit(MutationTypes.SET_ITEMS, data.data["data"]);
+            resolve(data);
+        });
+    },
     // CREATE TASK
     async [ActionTypes.CREATE_TASK]({ commit }, task: Task) {
         return new Promise(async (resolve, reject) => {

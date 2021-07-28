@@ -46,7 +46,7 @@
 
 <style lang="scss">
     #body {
-        padding: 16px;
+        padding: 16px 16px 0 16px;
         font-family: "MyriadProSemiBold", sans-serif;
         min-height: 100vh;
         background-color: var(--bs-primary);

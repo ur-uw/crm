@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref } from "vue";
+    import { defineComponent } from "vue";
     import TaskList from "@/components/dashboard/TasksList.vue";
 
     export default defineComponent({
@@ -52,7 +52,7 @@
         grid-area: Right;
         background-color: #fff;
         border-radius: 15px;
-        min-height: 100vh;
+        // min-height: 100vh;
 
         h1 {
             font-family: "MyriadProBold", sans-serif;

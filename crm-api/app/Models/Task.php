@@ -40,4 +40,22 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
+    /**
+     * Scope a query to only include recent updated tasks.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  int  $days
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRecent($query)
+    {
+        return $query->whereColumn(
+            'tasks.updated_at',
+            '>',
+            'tasks.created_at'
+        )
+            // * NOTE: IN HAS MANY THROUGH RELATIONS WE MUST THE FULL PATH TO COLUMN
+            ->latest('tasks.updated_at')
+            ->limit(5);
+    }
 }

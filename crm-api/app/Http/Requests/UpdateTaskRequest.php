@@ -24,7 +24,7 @@ class UpdateTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'string|unique:tasks,title',
+            'title' => 'string',
             'description' => 'string',
             'start_date' => 'date',
             'due_date' => 'date',

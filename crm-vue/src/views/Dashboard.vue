@@ -15,7 +15,7 @@
         setup() {
             const store = useStore();
             onMounted(() => {
-                store.dispatch(TaskATypes.FETCH_TASKS);
+                store.dispatch(TaskATypes.FETCH_RECENT_TASKS);
             });
         }
     });

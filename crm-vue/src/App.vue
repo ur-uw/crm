@@ -3,14 +3,14 @@
     <router-view />
 </template>
 <script lang="ts">
-    import { computed, defineComponent, onBeforeMount, onMounted } from "vue";
+    import { defineComponent } from "vue";
     import TheNavBar from "@/components/TheNavBar.vue";
     import { useStore } from "@/use/useStore";
     import { ActionTypes } from "./store/modules/auth/action-types";
     import axios from "axios";
     export default defineComponent({
-        components: { TheNavBar },
         name: "App",
+        components: { TheNavBar },
         setup() {
             const store = useStore();
             const getUser = () => {

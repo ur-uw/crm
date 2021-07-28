@@ -4,10 +4,10 @@
             <div class="col-12">
                 <label for="fullName" class="form-label">Name</label>
                 <input
+                    id="fullName"
                     v-model="formData.name"
                     type="text"
                     class="form-control"
-                    id="fullName"
                     name="name"
                     placeholder="John Doe"
                 />
@@ -16,42 +16,42 @@
             <div class="col-md-12">
                 <label for="inputEmail4" class="form-label">Email</label>
                 <input
-                    name="email"
+                    id="inputEmail4"
                     v-model="formData.email"
+                    name="email"
                     type="email"
                     class="form-control"
-                    id="inputEmail4"
                 />
             </div>
             <div class="col-12">
                 <label for="phoneNumber" class="form-label">Phone</label>
                 <input
+                    id="phoneNumber"
                     v-model="formData.phoneNumber"
                     name="phone_number"
                     type="text"
                     class="form-control"
-                    id="phoneNumber"
                     placeholder="+1343-434-4444"
                 />
             </div>
             <div class="col-md-6">
                 <label for="inputPassword4" class="form-label">Password</label>
                 <input
-                    name="password"
+                    id="inputPassword4"
                     v-model="formData.password"
+                    name="password"
                     type="password"
                     class="form-control"
-                    id="inputPassword4"
                 />
             </div>
             <div class="col-md-6">
                 <label for="passwordConfirm" class="form-label">Confirm Password</label>
                 <input
-                    name="password_confirmation"
+                    id="passwordConfirm"
                     v-model="formData.password_confirmation"
+                    name="password_confirmation"
                     type="password"
                     class="form-control"
-                    id="passwordConfirm"
                 />
             </div>
             <div class="col-12">
@@ -83,7 +83,7 @@
 
             // ? REGISTER FUNCTION
             const register = async () => {
-                const [data, error] = await handleActions(
+                const [, error] = await handleActions(
                     store.dispatch(ActionTypes.REGISTER, formData.value)
                 );
                 if (error) {

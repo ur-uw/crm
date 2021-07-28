@@ -1,3 +1,3 @@
-test('hi', () => {
+test("hi", () => {
     expect(true).toBe(true);
 });

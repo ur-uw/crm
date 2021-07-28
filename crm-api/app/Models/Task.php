@@ -17,6 +17,8 @@ class Task extends Model
         'start_date',
         'due_date',
         'status_id',
+        'user_id',
+        'project_id',
     ];
 
     /**
@@ -27,5 +29,15 @@ class Task extends Model
     public function status(): BelongsTo
     {
         return $this->belongsTo(Status::class);
+    }
+
+    /**
+     * Get the project that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 }

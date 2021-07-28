@@ -9,16 +9,16 @@ import auth from "../auth";
 
 // Modules
 const modules: ModuleTree<IRootState> = {
-  auth,
-  task,
+    auth,
+    task
 };
 
 const root: Module<IRootState, IRootState> = {
-  state,
-  getters,
-  mutations,
-  actions,
-  modules
+    state,
+    getters,
+    mutations,
+    actions,
+    modules
 };
 
 export default root;

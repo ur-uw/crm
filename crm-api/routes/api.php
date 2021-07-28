@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 
 //** Auth *//
@@ -20,19 +21,20 @@ Route::prefix('auth')->group(function () {
 
 
 //** Tasks *//
-Route::prefix('task')->group(function () {
+// Get single tasks
+Route::get('/{user}/task/{task}', [TaskController::class, 'show']);
+// Mark task as completed
+Route::put('/task/changestatus/{task}', [TaskController::class, 'changeStatus']);
+// Protected routes
+Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get all tasks
-    Route::get('/', [TaskController::class, 'index']);
-    // Get single tasks
-    Route::get('/{task}', [TaskController::class, 'show']);
+    Route::get('/tasks', [TaskController::class, 'index']);
     // Create new task
-    Route::post('/', [TaskController::class, 'store']);
+    Route::post('/task/create', [TaskController::class, 'store']);
     // Edit task
-    Route::put('/{task}', [TaskController::class, 'update']);
+    Route::put('/task/update/{task}', [TaskController::class, 'update']);
     // Delete task
-    Route::delete('/{task}', [TaskController::class, 'destroy']);
-    // Mark task as completed
-    Route::put('/changestatus/{task}', [TaskController::class, 'changeStatus']);
+    Route::delete('/task/delete/{task}', [TaskController::class, 'destroy']);
 });
 
 //** Addresses *//

@@ -53,6 +53,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
+                'name' => "Mohammed Fadhil",
                 'email' => 'test@test.com',
                 'phone' => '+9647800183076'
             ];

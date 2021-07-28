@@ -1,17 +1,20 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true
-  },
-  "cSpell.words": [
-    "Swal",
-    "fontawesome",
-    "fortawesome",
-    "inprogress",
-    "msapplication",
-    "scripthost",
-    "sweetalert",
-    "userlists",
-    "vite",
-    "vuex"
-  ]
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "cSpell.words": [
+        "Swal",
+        "axios",
+        "fontawesome",
+        "fortawesome",
+        "inprogress",
+        "msapplication",
+        "scripthost",
+        "stylelint",
+        "sweetalert",
+        "userlists",
+        "vite",
+        "vitejs",
+        "vuex"
+    ]
 }

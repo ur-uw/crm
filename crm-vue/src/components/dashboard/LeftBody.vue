@@ -2,7 +2,7 @@
     <div id="left" class="p-5">
         <img src="../../assets/images/hamburger.png" class="hamburger" alt="hamburger" />
         <div class="profile">
-            <h1>Hi Mohammed</h1>
+            <h1>Hi {{ currentUser?.name }}</h1>
             <h2>Let's make projects more amazing</h2>
             <div class="search">
                 <input
@@ -75,10 +75,21 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: "LeftBody"
-    };
+<script lang="ts">
+    import { computed, defineComponent } from "vue";
+    import { useStore } from "@/use/useStore";
+
+    export default defineComponent({
+        setup() {
+            // store instance
+            const store = useStore();
+            // variables
+            const currentUser = computed(() => store.getters.getCurrentUser);
+            return {
+                currentUser
+            };
+        }
+    });
 </script>
 
 <style lang="scss">
@@ -98,7 +109,7 @@
             h1 {
                 font-family: "Open Sans", sans-serif;
                 font-size: 34px;
-                color: var(--white);
+                color: var(--bs-white);
                 font-weight: 500;
                 text-transform: capitalize;
             }
@@ -106,7 +117,7 @@
             h2 {
                 font-family: "Open Sans", sans-serif;
                 font-size: 16px;
-                color: var(--customgrey);
+                color: var(--bs-custom-grey);
                 font-weight: 300;
             }
         }
@@ -156,11 +167,11 @@
                 background-color: transparent;
                 width: 100%;
                 height: 100%;
-                caret-color: var(--white);
+                caret-color: var(--bs-white);
 
                 &::placeholder {
                     background-color: unset;
-                    color: var(--customgrey);
+                    color: var(--bs-custom-grey);
                     font-family: "Open Sans", sans-serif;
                     font-size: 14px;
                 }
@@ -173,11 +184,11 @@
             h3 {
                 font-family: "Open Sans", sans-serif;
                 font-size: 19px;
-                color: var(--white) !important;
+                color: var(--bs-white) !important;
 
                 span {
                     font-size: 14px;
-                    color: var(--customgrey);
+                    color: var(--bs-custom-grey);
                 }
             }
 
@@ -201,14 +212,14 @@
                     span {
                         font-family: "MyriadProSemiBold", sans-serif;
                         font-size: 17px;
-                        color: var(--white);
+                        color: var(--bs-white);
                     }
 
                     h6 {
                         margin-top: 16px;
                         font-family: "Open Sans", sans-serif;
                         font-size: 14px;
-                        color: var(--white);
+                        color: var(--bs-white);
                     }
 
                     div.box-color {
@@ -228,7 +239,7 @@
                         }
 
                         &:hover {
-                            border: 3px solid var(--custompink);
+                            border: 3px solid var(--bs-custom-pink);
                             transition: border 250ms ease-in-out;
                         }
                     }
@@ -240,42 +251,42 @@
 
                     &:nth-child(1) {
                         div.box-color {
-                            background-color: var(--customblue);
+                            background-color: var(--bs-blue);
                             @extend .customwidth;
                         }
                     }
 
                     &:nth-child(2) {
                         div.box-color {
-                            background-color: var(--custompink);
+                            background-color: var(--bs-custom-pink);
                             @extend .customwidth;
                         }
                     }
 
                     &:nth-child(3) {
                         div.box-color {
-                            background-color: var(--customeyellow);
+                            background-color: var(--bs-custom-yellow);
                             @extend .customwidth;
                         }
                     }
 
                     &:nth-child(4) {
                         div.box-color {
-                            background-color: var(--customgreen);
+                            background-color: var(--bs-custom-green);
                             @extend .customwidth;
                         }
                     }
 
                     &:nth-child(5) {
                         div.box-color {
-                            background-color: var(--custompurple);
+                            background-color: var(--bs-custom-purple);
                             @extend .customwidth;
                         }
                     }
 
                     &:nth-child(6) {
                         div.box-color {
-                            background-color: var(--customblue);
+                            background-color: var(--bs-blue);
                             @extend .customwidth;
                         }
                     }

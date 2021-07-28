@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
-use Validator;
+use App\Models\User;
 
 class TaskController extends Controller
 {
@@ -19,10 +18,11 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
         return TaskResource::collection(
-            Task::with('status:id,name,color,slug')
+            $request->user()->tasks()->with('status:id,name,color,slug')
                 ->orderBy('created_at', 'desc')
                 ->get()
         );
@@ -35,9 +35,8 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        $task = Task::with('status')->create($request->validated());
-
-
+        $task = Task::with('status')->make($request->validated());
+        $request->user()->tasks()->save($task);
         return TaskResource::make(
             $task->load('status:id,name,color,slug')
         );
@@ -47,9 +46,10 @@ class TaskController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show(User $user, Task $task)
     {
         return TaskResource::make($task->load('status'));
     }
@@ -59,6 +59,7 @@ class TaskController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $taskId
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTaskRequest $request, Task $task)
@@ -71,6 +72,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(Task $task)

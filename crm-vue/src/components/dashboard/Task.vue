@@ -15,20 +15,20 @@
                 <input
                     type="checkbox"
                     name="test"
-                    @change="toogleTaskCompleted()"
                     :checked="task.status?.slug === 'completed'"
+                    @change="toogleTaskCompleted()"
                 />
                 <span class="checkmark"></span>
             </label>
-            <h4 @dblclick="!showEditTask ? toogleTaskForm() : null" class="w-100">
-                <form @submit.prevent="updateTaskTitle()" class="w-100">
+            <h4 class="w-100" @dblclick="!showEditTask ? toogleTaskForm() : null">
+                <form class="w-100" @submit.prevent="updateTaskTitle()">
                     <!-- TODO: Add visual to see the character limit -->
                     <input
+                        v-model="newTaskTitle"
                         maxlength="26"
                         :disabled="!showEditTask"
-                        v-model="newTaskTitle"
                         class="bg-transparent border-0 p-2 w-100 overflow-auto outline-none h-100"
-                        v-bind:class="
+                        :class="
                             task.status?.slug === 'completed' && !showEditTask
                                 ? 'task-completed'
                                 : ''
@@ -42,7 +42,7 @@
             <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
             <img src="../../assets/images/del.png" @click="deleteTask()" />
             <!-- NOTE: there is a css class for every default task status -->
-            <button v-bind:class="task.status?.slug">
+            <button :class="task.status?.slug">
                 {{ task.status?.name }}
             </button>
         </div>
@@ -63,11 +63,12 @@
                 required: true
             },
             index: {
-                type: Number
+                type: Number,
+                required: true
             }
         },
         setup(props) {
-            // Intialize custom vuex-store
+            // Initialize custom vuex-store
             const store = useStore();
             // variables
 
@@ -158,7 +159,7 @@
                     display: inline-block;
                     position: relative;
                     border-radius: 50px;
-                    border: 2px solid var(--customgreen1);
+                    border: 2px solid var(--bs-success);
                 }
             }
 
@@ -167,7 +168,7 @@
                 margin-left: 15px;
                 font-family: "Open Sans", sans-serif;
                 font-size: 13px;
-                color: var(--primary2);
+                color: var(--bs-primary2);
                 font-weight: 600;
             }
         }

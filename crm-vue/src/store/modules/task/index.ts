@@ -8,10 +8,10 @@ import { TaskStateTypes } from "@/store/store_interfaces/task_store_interface";
 
 // Module
 const task: Module<TaskStateTypes, IRootState> = {
-  state,
-  getters,
-  mutations,
-  actions
+    state,
+    getters,
+    mutations,
+    actions
 };
 
 export default task;

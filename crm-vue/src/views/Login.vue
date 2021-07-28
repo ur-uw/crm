@@ -6,11 +6,11 @@
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Email Address</label>
                         <input
+                            id="exampleInputEmail1"
+                            v-model="formData.email"
                             type="email"
                             name="email"
-                            v-model="formData.email"
                             class="form-control"
-                            id="exampleInputEmail1"
                             aria-describedby="emailHelp"
                         />
                         <div id="emailHelp" class="form-text">
@@ -20,10 +20,10 @@
                     <div class="mb-3">
                         <label for="inputPassword5" class="form-label">Password</label>
                         <input
+                            id="inputPassword5"
+                            v-model="formData.password"
                             type="password"
                             name="password"
-                            v-model="formData.password"
-                            id="inputPassword5"
                             class="form-control"
                             aria-describedby="passwordHelpBlock"
                         />
@@ -32,7 +32,7 @@
                             and must not contain spaces, special characters, or emoji.
                         </div>
                     </div>
-                    <p class="text-danger" v-for="(error, index) in authErrors" :key="index">
+                    <p v-for="(error, index) in authErrors" :key="index" class="text-danger">
                         {{ error[0] }}
                     </p>
                     <button type="submit" class="btn btn-success text-white">Login</button>
@@ -69,7 +69,7 @@
             const authErrors = ref();
             // ? LOGIN FUNCTION
             const login = async () => {
-                const [data, error] = await handleActions(
+                const [, error] = await handleActions(
                     store.dispatch(ActionTypes.LOGIN, formData.value)
                 );
                 if (error) {

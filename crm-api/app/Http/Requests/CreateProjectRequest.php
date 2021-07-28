@@ -8,7 +8,7 @@ use \Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class CreateTaskRequest extends FormRequest
+class CreateProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,13 +28,11 @@ class CreateTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|unique:tasks,title',
+            'name' => 'required|string|unique:projects,name',
             // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
             'slug' => 'required|string|unique:tasks,title',
             'description' => 'string',
-            'start_date' => 'date',
-            'due_date' => 'date',
-            'status_id' => 'required|numeric|exists:statuses,id',
+            'user_id' => 'required|numeric|exists:statuses,id',
         ];
     }
 }

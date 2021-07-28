@@ -49,7 +49,7 @@ class TaskController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user, Task $task)
+    public function show(Task $task)
     {
         return TaskResource::make($task->load('status'));
     }

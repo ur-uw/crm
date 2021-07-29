@@ -98,12 +98,13 @@ class TaskController extends Controller
         return TaskResource::make($task);
     }
 
-    public function recently(Request $request)
+    public function recently(Request $request, $number = 3)
     {
         $tasks = $request->user()
             ->tasks()
             ->with('status')
             ->recent()
+            ->limit($number)
             ->get();
         return TaskResource::collection($tasks);
     }
@@ -118,6 +119,9 @@ class TaskController extends Controller
             $request->user()
                 ->tasks()
                 ->with('status')
+                ->where('status_id', '!=', '4')
+                // ?NOTE: Bellow line means that the task is not denied
+                ->where('status_id', '!=', '5')
                 ->whereDate('tasks.start_date', Date::make($date))
                 ->get(),
         );

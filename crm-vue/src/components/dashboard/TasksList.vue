@@ -7,18 +7,32 @@
             placeholder="New task"
         />
     </form> -->
-    <h3 class="text-primary">Recent Tasks</h3>
+    <h2 class="text-primary">Today Tasks</h2>
     <div v-if="isLoading" class="mt-1">
         <div class="alert alert-info">Loading....</div>
     </div>
     <div v-else>
-        <transition-group v-if="tasks.length > 0" tag="ul" name="list" class="tasks-list">
-            <li v-for="(task, index) in tasks" :key="task.id">
+        <transition-group v-if="todayTasks.length > 0" tag="ul" name="list" class="tasks-list">
+            <li v-for="(task, index) in todayTasks" :key="task.id">
                 <TodayTask :index="index" :task="task" />
             </li>
         </transition-group>
         <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
             <h6>No Tasks Today <strong>😴</strong></h6>
+        </div>
+    </div>
+    <h6 class="text-custom-dark-blue mt-3">Recent</h6>
+    <div v-if="isLoading" class="mt-1">
+        <div class="alert alert-info">Loading....</div>
+    </div>
+    <div v-else>
+        <transition-group v-if="recentTasks.length > 0" tag="ul" name="list" class="tasks-list">
+            <li v-for="(task, index) in recentTasks" :key="task.id">
+                <TodayTask :index="index" :task="task" />
+            </li>
+        </transition-group>
+        <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
+            <h6>Nothing to mention <strong>😴</strong></h6>
         </div>
     </div>
 </template>
@@ -38,11 +52,12 @@
             const store = useStore();
             // VARIABLES
             const newTaskTitle = ref<string>("");
-            const tasks = computed(() => store.getters.getAllTasks);
-            const isLoading = computed(() => store.getters.tasksLoadingState);
+            const recentTasks = computed(() => store.getters.getRecentTasks);
+            const todayTasks = computed(() => store.getters.getTodayTasks);
+            const isLoading = computed(() => store.getters.getTasksLoadingState);
             // Methods
             const addDailyTask = () => {
-                const task = tasks.value.find((t) => t.title === newTaskTitle.value) ?? null;
+                const task = recentTasks.value.find((t) => t.title === newTaskTitle.value) ?? null;
                 if (!task) {
                     const newTask: Task = {
                         title: newTaskTitle.value,
@@ -64,7 +79,7 @@
                     });
                 }
             };
-            return { tasks, isLoading, newTaskTitle, addDailyTask };
+            return { recentTasks, isLoading, newTaskTitle, addDailyTask, todayTasks };
         }
     });
 </script>

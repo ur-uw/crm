@@ -10,16 +10,19 @@ import { IRootState } from "../register";
 export interface TaskStateTypes {
     tasks: Task[] | null;
     todayTasks: Task[] | null;
+    recentTasks: Task[] | null;
     isLoading: boolean;
 }
 
 export interface TaskGettersTypes {
-    getAllTasks(state: TaskStateTypes): Task[];
-    tasksLoadingState(state: TaskStateTypes): boolean;
+    getRecentTasks(state: TaskStateTypes): Task[];
+    getTodayTasks(state: TaskStateTypes): Task[];
+    getTasksLoadingState(state: TaskStateTypes): boolean;
 }
 
 export type TaskMutationsTypes<S = TaskStateTypes> = {
-    [TaskMTypes.SET_ITEMS](state: S, data: Task[]): void;
+    [TaskMTypes.SET_PROJECT_TASKS](state: S, data: Task[]): void;
+    [TaskMTypes.SET_RECENT_TASKS](state: S, data: Task[]): void;
     [TaskMTypes.SET_TODAY_TASKS](state: S, data: Task[]): void;
     [TaskMTypes.ADD_ITEM](state: S, data: Task): void;
     [TaskMTypes.SET_ITEM](state: S, payload: { index: number; updatedTask: Task }): void;
@@ -40,7 +43,7 @@ export interface TaskActionsTypes {
     [TaskATypes.FETCH_RECENT_TASKS]({ commit }: AugmentedActionContextTask): Promise<unknown>;
     [TaskATypes.FETCH_TASKS_FOR_DATE](
         { commit }: AugmentedActionContextTask,
-        payload: Date
+        payload: string
     ): Promise<unknown>;
     [TaskATypes.CREATE_TASK](
         { commit }: AugmentedActionContextTask,

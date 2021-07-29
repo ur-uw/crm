@@ -5,11 +5,14 @@ import { TaskMutationsTypes, TaskStateTypes } from "@/store/store_interfaces/tas
 import { sortByUpdatedAt } from "@/utils/helpers";
 
 export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
-    [MutationTypes.SET_ITEMS](state: TaskStateTypes, data: Task[]): void {
-        state.tasks = data;
+    [MutationTypes.SET_PROJECT_TASKS](state: TaskStateTypes, data: Task[]): void {
+        state.tasks = data.sort((a, b) => b.status?.name?.length - a.status?.name?.length);
     },
     [MutationTypes.SET_TODAY_TASKS](state: TaskStateTypes, data: Task[]): void {
         state.todayTasks = data;
+    },
+    [MutationTypes.SET_RECENT_TASKS](state: TaskStateTypes, data: Task[]): void {
+        state.recentTasks = data;
     },
     [MutationTypes.SET_LOADING](state: TaskStateTypes, value: boolean): void {
         state.isLoading = value;

@@ -1,3 +1,4 @@
+import { Status } from "@/interfaces/Status";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosError } from "axios";
 
@@ -30,7 +31,7 @@ export const handleActions = async (
     }
 };
 
-export const sortByUpdatedAt = (a: any, b: any) => {
+export const sortByUpdatedAt = (a: any, b: any): number => {
     if (a.updated_at < b.updated_at) {
         return 1;
     }
@@ -39,13 +40,12 @@ export const sortByUpdatedAt = (a: any, b: any) => {
     }
     return 0;
 };
+export const today = (): string => {
+    const currentDate = new Date();
+    let dd: number | string = currentDate.getDate();
 
-const today = () => {
-    var currentDate = new Date();
-    var dd = currentDate.getDate().tos;
-
-    var mm = currentDate.getMonth() + 1;
-    var yyyy = currentDate.getFullYear();
+    let mm: number | string = currentDate.getMonth() + 1;
+    const yyyy = currentDate.getFullYear();
     if (dd < 10) {
         dd = "0" + dd;
     }
@@ -53,5 +53,5 @@ const today = () => {
     if (mm < 10) {
         mm = "0" + mm;
     }
-    currentDate = mm + "-" + dd + "-" + yyyy;
+    return `${yyyy}-${mm}-${dd}`;
 };

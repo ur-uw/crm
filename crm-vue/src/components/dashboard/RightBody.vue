@@ -22,16 +22,6 @@
             </div>
             <TaskList />
         </div>
-        <hr />
-
-        <div class="upcoming">
-            <div class="add-tasks">
-                <h2>Upcoming</h2>
-                <div class="add-action">
-                    <img src="../../assets/images/add.png" alt="add-action" />
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -52,7 +42,6 @@
         grid-area: Right;
         background-color: #fff;
         border-radius: 15px;
-        // min-height: 100vh;
 
         h1 {
             font-family: "MyriadProBold", sans-serif;

@@ -55,7 +55,6 @@ class Task extends Model
             'tasks.created_at'
         )
             // * NOTE: IN HAS MANY THROUGH RELATIONS WE MUST THE FULL PATH TO COLUMN
-            ->latest('tasks.updated_at')
-            ->limit(5);
+            ->latest('tasks.updated_at');
     }
 }

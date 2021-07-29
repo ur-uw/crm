@@ -21,7 +21,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
                 return;
             }
             commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_ITEMS, data.data["data"]);
+            commit(MutationTypes.SET_PROJECT_TASKS, data.data["data"]);
             resolve(data);
         });
     },
@@ -29,31 +29,30 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
     async [ActionTypes.FETCH_RECENT_TASKS]({ commit }) {
         return new Promise(async (resolve, reject) => {
             commit(MutationTypes.SET_LOADING, true);
-            const res = axios.get("/api/tasks/recently");
+            const res = axios.get("/api/tasks/recently/3");
             const [data, error] = await handleApi(res);
             if (error) {
                 reject(error);
                 return;
             }
             commit(MutationTypes.SET_LOADING, false);
-            commit(MutationTypes.SET_ITEMS, data.data["data"]);
+            commit(MutationTypes.SET_RECENT_TASKS, data.data["data"]);
             resolve(data);
         });
     },
     // FETCH TASKS BASED ON A DATE
-    async [ActionTypes.FETCH_TASKS_FOR_DATE]({ commit }, payload: Date) {
+    async [ActionTypes.FETCH_TASKS_FOR_DATE]({ commit }, payload: string) {
         return new Promise(async (resolve, reject) => {
-            console.log(Date.parse(Date.now().toLocaleString()));
-            // commit(MutationTypes.SET_LOADING, true);
-            // const res = axios.get(`/api/tasks/for/${payload}`);
-            // const [data, error] = await handleApi(res);
-            // if (error) {
-            //     reject(error);
-            //     return;
-            // }
-            // commit(MutationTypes.SET_LOADING, false);
-            // commit(MutationTypes.SET_TODAY_TASKS, data.data["data"]);
-            // resolve(data);
+            commit(MutationTypes.SET_LOADING, true);
+            const res = axios.get(`/api/tasks/for/${payload}`);
+            const [data, error] = await handleApi(res);
+            if (error) {
+                reject(error);
+                return;
+            }
+            commit(MutationTypes.SET_LOADING, false);
+            commit(MutationTypes.SET_TODAY_TASKS, data.data["data"]);
+            resolve(data);
         });
     },
     // CREATE TASK

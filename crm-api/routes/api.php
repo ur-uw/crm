@@ -48,7 +48,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/tasks/for/{date}', [TaskController::class, 'forTheDate'])
         ->where('date', '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])');
     // Get recently tasks
-    Route::get('/tasks/recently', [TaskController::class, 'recently']);
+    Route::get('/tasks/recently/{number}', [TaskController::class, 'recently'])
+        ->whereNumber('number');
     // Create new task
     Route::post('/task/create', [TaskController::class, 'store']);
     // Update task

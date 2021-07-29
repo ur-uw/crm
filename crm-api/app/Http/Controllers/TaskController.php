@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
+use Date;
 
 class TaskController extends Controller
 {
@@ -105,5 +106,20 @@ class TaskController extends Controller
             ->recent()
             ->get();
         return TaskResource::collection($tasks);
+    }
+
+    /*
+        * Get tasks for a specified period *
+    */
+    public function forTheDate(Request $request, $date)
+
+    {
+        return TaskResource::collection(
+            $request->user()
+                ->tasks()
+                ->with('status')
+                ->whereDate('tasks.start_date', Date::make($date))
+                ->get(),
+        );
     }
 }

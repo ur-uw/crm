@@ -44,6 +44,9 @@ Route::put('/task/changestatus/{task}', [TaskController::class, 'changeStatus'])
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get all tasks
     Route::get('/tasks', [TaskController::class, 'index']);
+    // Get all for the specified date
+    Route::get('/tasks/for/{date}', [TaskController::class, 'forTheDate'])
+        ->where('date', '[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])');
     // Get recently tasks
     Route::get('/tasks/recently', [TaskController::class, 'recently']);
     // Create new task

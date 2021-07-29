@@ -29,3 +29,13 @@ export const handleActions = async (
         return [null, err];
     }
 };
+
+export const sortByUpdatedAt = (a: any, b: any) => {
+    if (a.updated_at < b.updated_at) {
+        return 1;
+    }
+    if (a.updated_at > b.updated_at) {
+        return -1;
+    }
+    return 0;
+};

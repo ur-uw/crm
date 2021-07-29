@@ -2,6 +2,7 @@ import { MutationTree } from "vuex";
 import { MutationTypes } from "./mutation-types";
 import { Task } from "@/interfaces/Task";
 import { TaskMutationsTypes, TaskStateTypes } from "@/store/store_interfaces/task_store_interface";
+import { sortByUpdatedAt } from "@/utils/helpers";
 
 export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     [MutationTypes.SET_ITEMS](state: TaskStateTypes, data: Task[]): void {
@@ -16,6 +17,7 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     ): void {
         if (state.tasks) {
             state.tasks[payload.index] = payload.updatedTask;
+            state.tasks.sort(sortByUpdatedAt);
         }
     },
     [MutationTypes.DELETE_TASK](state: TaskStateTypes, id: number): void {
@@ -30,6 +32,7 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     ): void {
         if (state.tasks) {
             state.tasks[payload.index] = payload.updatedTask;
+            state.tasks.sort(sortByUpdatedAt);
         }
     }
 };

@@ -8,6 +8,9 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
     [MutationTypes.SET_ITEMS](state: TaskStateTypes, data: Task[]): void {
         state.tasks = data;
     },
+    [MutationTypes.SET_TODAY_TASKS](state: TaskStateTypes, data: Task[]): void {
+        state.todayTasks = data;
+    },
     [MutationTypes.SET_LOADING](state: TaskStateTypes, value: boolean): void {
         state.isLoading = value;
     },

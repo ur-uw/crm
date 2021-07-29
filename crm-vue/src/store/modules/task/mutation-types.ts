@@ -1,5 +1,6 @@
 export enum MutationTypes {
     SET_ITEMS = "SET_ITEMS",
+    SET_TODAY_TASKS = "SET_TODAY_TASKS",
     ADD_ITEM = "ADD_ITEM",
     SET_ITEM = "SET_TASK",
     SET_LOADING = "SET_LOADING",

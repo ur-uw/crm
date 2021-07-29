@@ -40,6 +40,22 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
             resolve(data);
         });
     },
+    // FETCH TASKS BASED ON A DATE
+    async [ActionTypes.FETCH_TASKS_FOR_DATE]({ commit }, payload: Date) {
+        return new Promise(async (resolve, reject) => {
+            console.log(Date.parse(Date.now().toLocaleString()));
+            // commit(MutationTypes.SET_LOADING, true);
+            // const res = axios.get(`/api/tasks/for/${payload}`);
+            // const [data, error] = await handleApi(res);
+            // if (error) {
+            //     reject(error);
+            //     return;
+            // }
+            // commit(MutationTypes.SET_LOADING, false);
+            // commit(MutationTypes.SET_TODAY_TASKS, data.data["data"]);
+            // resolve(data);
+        });
+    },
     // CREATE TASK
     async [ActionTypes.CREATE_TASK]({ commit }, task: Task) {
         return new Promise(async (resolve, reject) => {

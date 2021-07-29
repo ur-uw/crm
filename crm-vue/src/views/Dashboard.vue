@@ -16,6 +16,7 @@
             const store = useStore();
             onMounted(() => {
                 store.dispatch(TaskATypes.FETCH_RECENT_TASKS);
+                store.dispatch(TaskATypes.FETCH_TASKS_FOR_DATE);
             });
         }
     });

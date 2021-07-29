@@ -39,3 +39,19 @@ export const sortByUpdatedAt = (a: any, b: any) => {
     }
     return 0;
 };
+
+const today = () => {
+    var currentDate = new Date();
+    var dd = currentDate.getDate().tos;
+
+    var mm = currentDate.getMonth() + 1;
+    var yyyy = currentDate.getFullYear();
+    if (dd < 10) {
+        dd = "0" + dd;
+    }
+
+    if (mm < 10) {
+        mm = "0" + mm;
+    }
+    currentDate = mm + "-" + dd + "-" + yyyy;
+};

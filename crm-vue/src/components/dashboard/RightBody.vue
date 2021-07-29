@@ -1,10 +1,10 @@
 <template>
-    <div id="right" class="p-5">
+    <div id="right" class="p-lg-5 p-md-4 p-sm-2">
         <h1 class="text-primary2">Development Crm</h1>
         <div class="horizontal">
             <img src="../../assets/images/horizontal.png" alt="horizontal" />
         </div>
-        <p class="text-primary">
+        <p class="text-primary w-lg-50 w-sm-100">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
             has been the industry's standard dummy text ever since the 1500s
         </p>

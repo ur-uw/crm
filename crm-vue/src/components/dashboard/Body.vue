@@ -11,9 +11,7 @@
             >
                 <LeftBody />
             </div>
-            <div class="col-md-12 col-lg-8 col-sm-12">
-                <RightBody />
-            </div>
+            <div class="col-md-12 col-lg-8 col-sm-12"><RightBody /></div>
         </div>
         <div v-else class="alert alert-info">Loading user......</div>
     </div>

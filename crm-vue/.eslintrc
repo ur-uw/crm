@@ -5,11 +5,12 @@
         "browser": true
     },
     "extends": [
-        "plugin:vue/vue3-recommended",
-        "eslint:recommended",
         "@vue/typescript/recommended",
         "@vue/prettier",
-        "@vue/prettier/@typescript-eslint"
+        "@vue/prettier/@typescript-eslint",
+        "plugin:vue/vue3-recommended",
+        "eslint:recommended",
+        "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "ecmaVersion": 2021
@@ -21,10 +22,7 @@
     },
     "overrides": [
         {
-            "files": [
-                "**/__tests__/*.{j,t}s?(x)",
-                "**/tests/unit/**/*.spec.{j,t}s?(x)"
-            ],
+            "files": ["**/__tests__/*.{j,t}s?(x)", "**/tests/unit/**/*.spec.{j,t}s?(x)"],
             "env": {
                 "jest": true
             }

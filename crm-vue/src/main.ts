@@ -31,3 +31,10 @@ app.directive("focus", {
 });
 app.config.performance = true;
 app.mount("#app");
+const docWidth = document.documentElement.offsetWidth;
+
+[].forEach.call(document.querySelectorAll("*"), function (el: HTMLElement) {
+    if (el.offsetWidth > docWidth) {
+        console.error(el);
+    }
+});

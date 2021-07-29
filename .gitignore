@@ -1,1 +1,3 @@
 crm-api/_ide_helper_models.php
+/node_modules
+/.npm-packages

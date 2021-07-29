@@ -6,10 +6,12 @@ import { mutations } from "./mutations";
 import { state } from "./state";
 import task from "../task";
 import auth from "../auth";
+import project from "../project";
 
 // Modules
 const modules: ModuleTree<IRootState> = {
     auth,
+    project,
     task
 };
 

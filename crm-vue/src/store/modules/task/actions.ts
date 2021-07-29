@@ -69,7 +69,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
             resolve(data);
         });
     },
-    // EDIT TASK
+    // UPDATE TASK
     async [ActionTypes.EDIT_TASK](
         { commit },
         payload: { index: number; id: number; updatedTask: Task }

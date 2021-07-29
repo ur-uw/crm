@@ -18,7 +18,7 @@
             </li>
         </transition-group>
         <div v-else class="p-3 text-center text-custom-dark-blue bg-light mt-2">
-            <h6>No Tasks Today <strong>😴</strong></h6>
+            <h6>No tasks for today <strong>😴</strong></h6>
         </div>
     </div>
     <h6 class="text-custom-dark-blue mt-3">Recent</h6>

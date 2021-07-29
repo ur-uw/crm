@@ -20,7 +20,7 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'slug' => $this->slug,
+            'tasks' => $this->whenLoaded('tasks'),
         ];
     }
-    
 }

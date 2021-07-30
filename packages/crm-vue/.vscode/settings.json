@@ -1,0 +1,24 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "vetur.validation.template": false,
+  "eslint.validate": ["javascript", "vue", "typescript"],
+  "cSpell.words": [
+    "Fadhil",
+    "Managee",
+    "Swal",
+    "axios",
+    "fontawesome",
+    "fortawesome",
+    "inprogress",
+    "msapplication",
+    "scripthost",
+    "stylelint",
+    "sweetalert",
+    "userlists",
+    "vite",
+    "vitejs",
+    "vuex"
+  ]
+}

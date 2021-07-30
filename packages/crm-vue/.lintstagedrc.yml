@@ -1,0 +1,5 @@
+linters:
+  src/*.js:
+    - npm run lint:script
+    - npm run lint:markup
+    - git add

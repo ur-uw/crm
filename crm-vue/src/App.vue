@@ -1,6 +1,6 @@
 <template>
   <the-nav-bar></the-nav-bar>
-  <router-view />
+  <router-view :key="$route.path" />
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue'

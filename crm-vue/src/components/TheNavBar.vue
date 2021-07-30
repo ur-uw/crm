@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      <router-link class="navbar-brand" to="/">Mangee</router-link>
+      <router-link class="navbar-brand" :to="{ name: 'home' }">Managee</router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -16,15 +16,17 @@
       <div id="navbarSupportedContent" class="collapse navbar-collapse">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link" to="dashboard">Dashboard</router-link>
+            <router-link class="nav-link" :to="{ name: 'dashboard.show' }">Dashboard</router-link>
           </li>
         </ul>
         <div v-if="!isUserLoggedIn" class="navbar-nav text-white">
           <div class="nav-item">
-            <router-link class="nav-link me-2" to="login">Login</router-link>
+            <router-link class="nav-link me-2" :to="{ name: 'login.show' }">Login</router-link>
           </div>
           <div class="nav-item">
-            <router-link class="btn btn-outline-success" to="register"> Register </router-link>
+            <router-link class="btn btn-outline-success" :to="{ name: 'register.show' }">
+              Register
+            </router-link>
           </div>
         </div>
         <div v-if="isUserLoggedIn" class="navbar-nav text-white">

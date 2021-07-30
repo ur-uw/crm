@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <projects-list v-if="!isLoading" :projects="projects"></projects-list>
+    <projects-list v-if="!isLoading && projects !== null" :projects="projects"></projects-list>
     <div v-else>
       <div class="alert alert-info">Loading projects ....</div>
     </div>

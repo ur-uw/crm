@@ -52,7 +52,7 @@
   import { ActionTypes } from '@/store/modules/task/action-types'
   import Swal from 'sweetalert2'
   export default defineComponent({
-    name: 'TodayTask',
+    name: 'TaskCard',
     props: {
       task: {
         type: Object as PropType<Task>,

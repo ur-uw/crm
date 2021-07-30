@@ -40,7 +40,7 @@
 <script lang="ts">
   import { computed, defineComponent, ref } from 'vue'
   import { useStore } from '@/use/useStore'
-  import TodayTask from './Task.vue'
+  import TodayTask from './TaskCard.vue'
   import { ActionTypes } from '@/store/modules/task/action-types'
   import { Task } from '@/interfaces/Task'
   import Swal from 'sweetalert2'

@@ -4,7 +4,13 @@
       Projects <span>{{ projects?.length }}</span>
     </h3>
     <transition-group tag="div" name="projects-list" class="projects">
-      <Project v-for="project in projects" :key="project.id" index :project="project" />
+      <Project
+        v-for="project in projects"
+        :key="project.id"
+        index
+        :project="project"
+        @click="showProject(project.id, project.slug)"
+      />
       <div key="addProject" class="add-project">
         <div
           class="
@@ -25,6 +31,7 @@
 <script lang="ts">
   import { Project as project } from '@/interfaces/Project'
   import { defineComponent, PropType } from 'vue'
+  import { useRouter } from 'vue-router'
   import Project from './Project.vue'
   export default defineComponent({
     name: 'ProjectsList',
@@ -34,6 +41,13 @@
         type: Object as PropType<project[]>,
         required: true
       }
+    },
+    setup() {
+      const router = useRouter()
+      const showProject = (id: number, slug: string) => {
+        router.push({ name: 'project.show', params: { id: id, slug: slug } })
+      }
+      return { showProject }
     }
   })
 </script>

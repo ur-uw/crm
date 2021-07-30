@@ -5,11 +5,7 @@ import {
   RouteLocationNormalized,
   RouteRecordRaw
 } from 'vue-router'
-
-import Dashboard from '@/views/Dashboard.vue'
 import Home from '@/views/Home.vue'
-import Login from '@/views/Login.vue'
-import Register from '@/views/Register.vue'
 import { store as myStore } from '@/store'
 
 const routes: Array<RouteRecordRaw> = [
@@ -23,8 +19,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
+    name: 'dashboard.show',
+    component: () => import('@/views/Dashboard.vue'),
     meta: {
       title: 'Dashboard',
       auth: true
@@ -32,8 +28,9 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/login',
-    name: 'login',
-    component: Login,
+    name: 'login.show',
+    component: () => import('@/views/Login.vue'),
+
     meta: {
       title: 'Login',
       auth: false
@@ -41,11 +38,28 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/register',
-    name: 'register',
-    component: Register,
+    name: 'register.show',
+    component: () => import('@/views/Register.vue'),
     meta: {
       title: 'Register',
       auth: false
+    }
+  },
+  {
+    path: '/project/:id',
+    name: 'project.show',
+    component: () => import('@/views/ProjectShow.vue'),
+    meta: {
+      title: 'Project',
+      auth: true
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found.show',
+    component: () => import('@/views/NotFound.vue'),
+    meta: {
+      title: 'Not Found'
     }
   }
 ]
@@ -53,7 +67,8 @@ const routes: Array<RouteRecordRaw> = [
 const store = myStore
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
+  linkActiveClass: 'active'
 })
 router.beforeEach((to, from, next) => {
   authGuard(to, from, next)

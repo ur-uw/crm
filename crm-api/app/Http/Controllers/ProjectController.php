@@ -44,7 +44,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return ProjectResource::make($project);
+        return ProjectResource::make(
+            $project->load('tasks.status')
+        );
     }
 
     /**

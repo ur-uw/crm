@@ -2,7 +2,10 @@
     "name": "crm/api",
     "type": "project",
     "description": "CRM api build with laravel",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",

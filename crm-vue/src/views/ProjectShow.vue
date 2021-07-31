@@ -159,7 +159,7 @@
       })
       const drag = computed(() => false)
       const getProject = async () => {
-        const response = axios.get(`/api/project/show/${route.params.id}`)
+        const response = axios.get(`/api/projects/show/${route.params.id}`)
         const [data, error] = await handleApi(response)
         if (error) {
           return

@@ -16,7 +16,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   [ActionTypes.FETCH_PROJECTS]({ commit }): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.get('/api/projects')
+      const promise = axios.get('/api/projects/get')
       const [data, error] = await handleApi(promise)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)
@@ -32,7 +32,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   [ActionTypes.FETCH_SINGLE_PROJECT]({ commit }, payload: Project): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.get(`/api/project/show/${payload}`)
+      const promise = axios.get(`/api/projects/show/${payload}`)
       const [data, error] = await handleApi(promise)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)
@@ -47,7 +47,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   // CREATE PROJECT
   [ActionTypes.CREATE_PROJECT]({ commit }, project: Project): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      const promise = axios.post(`/api/project/create`, project)
+      const promise = axios.post(`/api/projects/create`, project)
       const [data, error] = await handleApi(promise)
       if (error) {
         reject(error)
@@ -64,7 +64,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   ): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
       const response = axios.put(
-        `/api/project/update/${payload.updatedProject.id}`,
+        `/api/projects/update/${payload.updatedProject.id}`,
         payload.updatedProject
       )
       const [data, error] = await handleApi(response)
@@ -82,7 +82,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   // UPDATE A PROJECT
   [ActionTypes.DELETE_PROJECT]({ commit }, id: number): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const response = axios.delete(`/api/project/delete/${id}`)
+      const response = axios.delete(`/api/projects/delete/${id}`)
       const [, error] = await handleApi(response)
       if (error) {
         reject(error)

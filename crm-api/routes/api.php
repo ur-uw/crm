@@ -20,19 +20,21 @@ Route::prefix('auth')->group(function () {
 });
 
 //** Projects *//
-// Get single project
-Route::get('/project/show/{project}', [ProjectController::class, 'show']);
-
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    // Get all projects
-    Route::get('/projects', [ProjectController::class, 'index']);
-    // Create new project
-    Route::post('/project/create', [ProjectController::class, 'store']);
-    // Update project
-    Route::put('/project/update/{project}', [ProjectController::class, 'update']);
-    // Delete project
-    Route::delete('/project/delete/{project}', [ProjectController::class, 'destroy']);
+Route::prefix('projects')->group(function () {
+    // Get single project
+    Route::get('/show/{project}', [ProjectController::class, 'show']);
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        // Get all projects
+        Route::get('/get', [ProjectController::class, 'index']);
+        // Create new project
+        Route::post('/create', [ProjectController::class, 'store']);
+        // Update project
+        Route::put('/update/{project}', [ProjectController::class, 'update']);
+        // Delete project
+        Route::delete('/delete/{project}', [ProjectController::class, 'destroy']);
+    });
 });
+
 
 
 //** Tasks *//

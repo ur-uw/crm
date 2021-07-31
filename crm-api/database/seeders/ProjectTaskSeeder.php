@@ -18,7 +18,7 @@ class ProjectTaskSeeder extends Seeder
     {
         $statuses = Status::all();
         Project::all()->each(function (Project $project) use ($statuses) {
-            $tasks = Task::factory(20)->make([
+            $tasks = Task::factory(rand(5,10))->make([
                 'status_id' => rand(1, count($statuses))
             ]);
             $project->tasks()->saveMany($tasks);

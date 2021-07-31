@@ -1,10 +1,10 @@
 <template>
   <div id="body" class="">
     <div v-if="!isAuthLoading" class="row">
-      <div class="col-md-12 col-lg-4 col-sm-12 d-flex justify-content-center align-items-center">
+      <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-center align-items-center">
         <LeftBody />
       </div>
-      <div class="col-md-12 col-lg-8 col-sm-12"><RightBody /></div>
+      <div class="col-lg-8 col-md-12 col-sm-12"><RightBody /></div>
     </div>
     <div v-else class="alert alert-info">Loading user......</div>
   </div>

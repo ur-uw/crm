@@ -35,8 +35,7 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        $task = Task::with('status')->make($request->validated());
-        $request->user()->tasks()->save($task);
+        $task = Task::create($request->validated());
         return TaskResource::make(
             $task->load('status:id,name,color,slug')
         );

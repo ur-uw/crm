@@ -82,8 +82,6 @@ class TaskController extends Controller
             Response::HTTP_NO_CONTENT
         ]);
     }
-
-
     public function changeStatus(Request $request, Task $task)
     {
         $request->validate(

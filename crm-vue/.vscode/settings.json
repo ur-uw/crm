@@ -9,6 +9,7 @@
     "Managee",
     "Swal",
     "axios",
+    "changestatus",
     "datetime",
     "draggable",
     "fontawesome",
@@ -18,9 +19,11 @@
     "scripthost",
     "stylelint",
     "sweetalert",
+    "unshift",
     "userlists",
     "vite",
     "vitejs",
     "vuex"
-  ]
+  ],
+  "prettier.configPath": "C:\\xampp\\htdocs\\crm\\crm-vue\\.prettierrc"
 }

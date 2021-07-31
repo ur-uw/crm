@@ -14,7 +14,8 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.40",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "santigarcor/laratrust": "^6.3"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.10",
@@ -53,7 +54,8 @@
     "extra": {
         "laravel": {
             "dont-discover": [
-                "barryvdh/laravel-ide-helper"
+                "barryvdh/laravel-ide-helper",
+                "laravel/telescope"
             ]
         }
     },

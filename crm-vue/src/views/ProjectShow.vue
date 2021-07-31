@@ -18,7 +18,14 @@
           </button>
         </div>
         <draggable
+          class="draggable-list"
           :list="tasks.waiting"
+          tag="transition-group"
+          :component-data="{
+            type: 'transition-group',
+            name: 'flip-list',
+            tag: 'div'
+          }"
           group="tasks"
           item-key="id"
           @add="changeTaskStatus($event, 'waiting')"
@@ -38,6 +45,13 @@
 
         <draggable
           :list="tasks.approved"
+          tag="transition-group"
+          :component-data="{
+            type: 'transition-group',
+            name: 'flip-list',
+            tag: 'div'
+          }"
+          class="draggable-list"
           group="tasks"
           item-key="id"
           @add="changeTaskStatus($event, 'approved')"
@@ -56,6 +70,13 @@
         </div>
 
         <draggable
+          class="draggable-list"
+          tag="transition-group"
+          :component-data="{
+            type: 'transition-group',
+            name: 'flip-list',
+            tag: 'div'
+          }"
           :list="tasks.inprogress"
           group="tasks"
           item-key="id"
@@ -74,6 +95,13 @@
           </button>
         </div>
         <draggable
+          class="draggable-list"
+          tag="transition-group"
+          :component-data="{
+            type: 'transition-group',
+            name: 'flip-list',
+            tag: 'div'
+          }"
           :list="tasks.completed"
           group="tasks"
           item-key="id"
@@ -283,6 +311,16 @@
         }
       }
     }
+    .draggable-list {
+      position: relative;
+      &::after {
+        position: absolute;
+        content: '';
+        height: 50px;
+        max-height: 200px;
+        width: 100%;
+      }
+    }
   }
   .task-hover {
     border: 3px dashed $light-grey !important;
@@ -399,6 +437,12 @@
       background-color: #7784ee;
     }
   }
+
+  // Transition animation
+  .flip-list-move {
+    transition: transform 0.3s;
+  }
+
   @media only screen and (max-width: 1300px) {
     .project {
       max-width: 100%;

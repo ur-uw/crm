@@ -23,6 +23,7 @@
     "userlists",
     "vite",
     "vitejs",
+    "vuedraggable",
     "vuex"
   ],
   "prettier.configPath": "C:\\xampp\\htdocs\\crm\\crm-vue\\.prettierrc"

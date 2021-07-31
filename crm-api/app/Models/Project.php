@@ -7,12 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Project extends Model
+class Project extends model implements \Laratrust\Contracts\Ownable
 {
     use HasFactory;
     protected $fillable = [
         'name', 'description', 'user_id', 'slug'
     ];
+
+    public function  ownerKey($owner)
+
+    {
+        return $this->user->id;
+    }
 
     /**
      * Get the user that owns the Project

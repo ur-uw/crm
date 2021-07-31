@@ -14,13 +14,16 @@ return [
     'roles_structure' => [
         'super-admin' => [
             'users' => 'c,r,u,d',
-            'projects' => 'c,r,u,d',
+            'project' => 'c,r,u,d',
+        ],
+        'owner' => [
+            'project' => 'c,r,u,d',
         ],
         'moderator' => [
-            'projects' => 'u,d',
+            'project' => 'r,u',
         ],
         'guest' => [
-            'projects' => 'r',
+            'project' => 'r',
         ],
     ],
 

@@ -196,7 +196,7 @@
         getProject()
       })
 
-      const changeTaskStatus = async (event: any, status: string) => {
+      const changeTaskStatus = async (event: Event, status: string) => {
         // Get the task id from the data-id attributes in li element
         const taskId = event.item.getAttribute('data-id')
         const promise = axios.put(`/api/task/changestatus/${taskId}`, { status_slug: status })

@@ -59,16 +59,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 });
 
 //** Addresses *//
-// TODO: INCLUDE AUTHENTICATION ON THESE ROUTES
-Route::prefix('address')->group(function () {
-    // Get all address
-    Route::get('/', [AddressController::class, 'index']);
+Route::prefix('addresses')->group(function () {
     // Get single address
-    Route::get('/{address}', [AddressController::class, 'show']);
-    // Create new address
-    Route::post('/', [AddressController::class, 'store']);
-    // Update address
-    Route::put('/{address}', [AddressController::class, 'update']);
-    // Delete address
-    Route::delete('/{address}', [AddressController::class, 'destroy']);
+    Route::get('/show/{address}', [AddressController::class, 'show']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        // Get all address
+        Route::get('/get', [AddressController::class, 'index']);
+        // Create new address
+        Route::post('/create', [AddressController::class, 'store']);
+        // Update address
+        Route::put('/update/{address}', [AddressController::class, 'update']);
+        // Delete address
+        Route::delete('/delete/{address}', [AddressController::class, 'destroy']);
+    });
 });

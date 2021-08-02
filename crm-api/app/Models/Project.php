@@ -6,12 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Project extends model implements \Laratrust\Contracts\Ownable
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'description', 'user_id', 'slug'
+        'name',
+        'description',
+        'slug',
+        'user_id',
     ];
 
     public function  ownerKey($owner)
@@ -37,5 +41,15 @@ class Project extends model implements \Laratrust\Contracts\Ownable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Get all of the teams for the Project
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function teams(): HasMany
+    {
+        return $this->hasMany(Team::class);
     }
 }

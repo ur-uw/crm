@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 /*
     ! NOTE: if you are on windows change the  slash: "/" to back-slash: "\" in routes paths*

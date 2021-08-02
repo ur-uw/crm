@@ -16,12 +16,12 @@ class ProjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->whenLoaded('user'),
             'name' => $this->name,
             'description' => $this->description,
             'slug' => $this->slug,
-            'tasks' => $this->whenLoaded('tasks'),
-            'teams' => TeamResource::collection($this->whenLoaded('teams'))
+            'owner' => $this->whenLoaded('user'),
+            'teams' => TeamResource::collection($this->whenLoaded('teams')),
+            'tasks' => $this->whenLoaded('tasks')
         ];
     }
 }

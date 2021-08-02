@@ -15,15 +15,19 @@ return [
         'super-admin' => [
             'users' => 'c,r,u,d',
             'project' => 'c,r,u,d',
+            'task' => 'c,r,u,d',
         ],
         'owner' => [
             'project' => 'c,r,u,d',
+            'task' => 'c,r,u,d',
         ],
         'moderator' => [
             'project' => 'r,u',
+            'task' => 'r,u',
         ],
         'guest' => [
             'project' => 'r',
+            'task' => 'r',
         ],
     ],
 

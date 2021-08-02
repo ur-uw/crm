@@ -25,6 +25,7 @@
                 color: rgb(22, 22, 22);
                 border: 0.4px solid black;
                 transition: 0.4s ;
+                margin-right: 5rem;
             }
             a:hover{
                 background: rgba(22, 22, 22, 1);
@@ -36,6 +37,9 @@
     <body>
         <a href="/laratrust" class="text-white">
             Laratrust
+        </a>
+        <a href="http://localhost:8080" class="text-white">
+            CRM App
         </a>
     </body>
 </html>

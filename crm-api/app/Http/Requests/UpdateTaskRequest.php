@@ -28,7 +28,6 @@ class UpdateTaskRequest extends FormRequest
             'description' => 'string',
             'start_date' => 'date',
             'due_date' => 'date',
-            'project_id' => 'numeric',
             'status_id' => 'numeric',
         ];
     }

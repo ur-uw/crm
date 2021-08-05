@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     {
         $super_admin = User::factory()->super_admin()->create();
         $super_admin->attachRole('super-admin');
-        User::factory(100)->create()->each(function (User $user) {
+        User::factory(15)->create()->each(function (User $user) {
             $user->attachRole('guest');
         });
     }

@@ -18,10 +18,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AddressSeeder::class,
             StatusSeeder::class,
+            TasksSeeder::class,
+            UsersTasksSeeder::class,
             ProjectUserSeeder::class,
             ProjectTeamsSeeder::class,
             TeamsUsersSeeder::class,
-            ProjectTasksSeeder::class,
         ]);
     }
 }

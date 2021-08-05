@@ -6,8 +6,10 @@ use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laratrust\Contracts\Ownable;
 
-class Task extends Model
+class Task extends Model implements Ownable
 {
     use HasFactory;
     protected $fillable = [
@@ -17,9 +19,12 @@ class Task extends Model
         'start_date',
         'due_date',
         'status_id',
-        'user_id',
-        'project_id',
     ];
+
+    public function ownerKey($owner)
+    {
+        return $this->users()->getParent()->id();
+    }
 
     /**
      * Get the status that owns the Task
@@ -56,5 +61,17 @@ class Task extends Model
         )
             // * NOTE: IN HAS MANY THROUGH RELATIONS WE MUST THE FULL PATH TO COLUMN
             ->latest('tasks.updated_at');
+    }
+
+
+    /**
+     * The users that belong to the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withTimestamps();
     }
 }

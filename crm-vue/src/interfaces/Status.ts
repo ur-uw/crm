@@ -1,6 +1,6 @@
 export interface Status {
-    id?: number;
-    name?: string;
-    color?: string;
-    slug?: string;
+  id?: number
+  name?: string
+  color?: string
+  slug?: string
 }

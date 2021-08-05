@@ -49,7 +49,7 @@ class UserFactory extends Factory
 
 
 
-    public function defaultUser()
+    public function super_admin()
     {
         return $this->state(function (array $attributes) {
             return [

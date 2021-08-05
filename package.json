@@ -1,0 +1,41 @@
+{
+  "name": "crm",
+  "description": "![Managee Dashboard](https://user-images.githubusercontent.com/16156658/125831177-f2b9f2fa-ea1d-48fd-aec9-587b264c1b55.png)",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "vue-staged": "cd crm-vue && npm run lint:script"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,vue}": "npm run vue-staged",
+    "*": "npx prettier -w -u"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ur-uw/crm.git"
+  },
+  "author": "Mohammed Fadhil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ur-uw/crm/issues"
+  },
+  "homepage": "https://github.com/ur-uw/crm#readme",
+  "devDependencies": {
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.2.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^11.1.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

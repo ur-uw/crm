@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, LaratrustUserTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -66,12 +67,24 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the tasks for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * Get all of the tasks for the user.
      */
-    public function tasks(): HasManyThrough
+    public function tasks()
     {
-        return $this->hasManyThrough(Task::class, Project::class);
+        return $this->morphToMany(Task::class, 'taskkable');
+    }
+
+
+
+
+    /**
+     * The teams that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class)
+            ->withTimestamps();
     }
 }

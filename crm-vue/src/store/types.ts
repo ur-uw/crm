@@ -1,16 +1,16 @@
-import { DispatchOptions } from "vuex/types";
-import { StoreActions, StoreGetters } from "./register";
+import { DispatchOptions } from 'vuex/types'
+import { StoreActions, StoreGetters } from './register'
 
 export type CustomDispatch = {
-    dispatch<K extends keyof StoreActions>(
-        key: K,
-        payload?: Parameters<StoreActions[K]>[1],
-        options?: DispatchOptions
-    ): ReturnType<StoreActions[K]>;
-};
+  dispatch<K extends keyof StoreActions>(
+    key: K,
+    payload?: Parameters<StoreActions[K]>[1],
+    options?: DispatchOptions
+  ): ReturnType<StoreActions[K]>
+}
 
 export type CustomRootGetter = {
-    rootGetters: {
-        [K in keyof StoreGetters]: ReturnType<StoreGetters[K]>;
-    };
-};
+  rootGetters: {
+    [K in keyof StoreGetters]: ReturnType<StoreGetters[K]>
+  }
+}

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
-use App\Models\User;
+use Date;
 
 class TaskController extends Controller
 {
@@ -35,8 +35,7 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        $task = Task::with('status')->make($request->validated());
-        $request->user()->tasks()->save($task);
+        $task = Task::create($request->validated());
         return TaskResource::make(
             $task->load('status:id,name,color,slug')
         );
@@ -49,7 +48,7 @@ class TaskController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user, Task $task)
+    public function show(Task $task)
     {
         return TaskResource::make($task->load('status'));
     }
@@ -83,8 +82,6 @@ class TaskController extends Controller
             Response::HTTP_NO_CONTENT
         ]);
     }
-
-
     public function changeStatus(Request $request, Task $task)
     {
         $request->validate(
@@ -96,5 +93,34 @@ class TaskController extends Controller
         $task->status()->associate($status);
         $task->save();
         return TaskResource::make($task);
+    }
+
+    public function recently(Request $request, $number = 3)
+    {
+        $tasks = $request->user()
+            ->tasks()
+            ->with('status')
+            ->recent()
+            ->limit($number)
+            ->get();
+        return TaskResource::collection($tasks);
+    }
+
+    /*
+        * Get tasks for a specified period *
+    */
+    public function forTheDate(Request $request, $date)
+
+    {
+        return TaskResource::collection(
+            $request->user()
+                ->tasks()
+                ->with('status')
+                ->where('status_id', '!=', '4')
+                // ?NOTE: Bellow line means that the task is not denied
+                ->where('status_id', '!=', '5')
+                ->whereDate('tasks.start_date', Date::make($date))
+                ->get(),
+        );
     }
 }

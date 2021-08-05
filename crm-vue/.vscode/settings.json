@@ -1,20 +1,30 @@
 {
-    "editor.codeActionsOnSave": {
-        "source.fixAll": true
-    },
-    "cSpell.words": [
-        "Swal",
-        "axios",
-        "fontawesome",
-        "fortawesome",
-        "inprogress",
-        "msapplication",
-        "scripthost",
-        "stylelint",
-        "sweetalert",
-        "userlists",
-        "vite",
-        "vitejs",
-        "vuex"
-    ]
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "vetur.validation.template": false,
+  "eslint.validate": ["javascript", "vue", "typescript"],
+  "cSpell.words": [
+    "Fadhil",
+    "Managee",
+    "Swal",
+    "axios",
+    "changestatus",
+    "datetime",
+    "draggable",
+    "fontawesome",
+    "fortawesome",
+    "inprogress",
+    "msapplication",
+    "scripthost",
+    "stylelint",
+    "sweetalert",
+    "unshift",
+    "userlists",
+    "vite",
+    "vitejs",
+    "vuedraggable",
+    "vuex"
+  ],
+  "prettier.configPath": "C:\\xampp\\htdocs\\crm\\crm-vue\\.prettierrc"
 }

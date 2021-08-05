@@ -14,11 +14,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            LaratrustSeeder::class,
             UserSeeder::class,
             AddressSeeder::class,
             StatusSeeder::class,
+            TasksSeeder::class,
             ProjectUserSeeder::class,
-            ProjectTaskSeeder::class,
+            ProjectTeamsSeeder::class,
+            TeamsUsersSeeder::class,
+            ProjectTeamUserTaskSeeder::class,
         ]);
     }
 }

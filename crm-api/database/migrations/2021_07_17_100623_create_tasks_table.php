@@ -23,8 +23,7 @@ class CreateTasksTable extends Migration
             $table->date('start_date')->default(Date::now());
             $table->date('due_date')->nullable();
             $table->foreignId('status_id')
-                // TODO:  make default value for task status waiting and the status should be implemented using factory
-                //? ->default(1)
+                ->default(1)
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');

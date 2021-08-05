@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddProjectToTasksTable extends Migration
+class AddProjectToTeamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddProjectToTasksTable extends Migration
      */
     public function up()
     {
-        Schema::table('tasks', function (Blueprint $table) {
+        Schema::table('teams', function (Blueprint $table) {
             $table->foreignId('project_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->constrained();
         });
     }
 
@@ -28,8 +26,8 @@ class AddProjectToTasksTable extends Migration
      */
     public function down()
     {
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->dropColumn('project_id');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('project_id');
         });
     }
 }

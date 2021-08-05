@@ -7,12 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Project extends Model
+class Project extends model implements \Laratrust\Contracts\Ownable
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'description', 'user_id', 'slug'
+        'name',
+        'description',
+        'slug',
+        'user_id',
     ];
+
+    public function  ownerKey($owner)
+
+    {
+        return $this->user->id;
+    }
 
     /**
      * Get the user that owns the Project
@@ -21,15 +30,23 @@ class Project extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     /**
-     * Get all of the tasks for the Project
+     * Get all of the tasks for the project.
+     */
+    public function tasks()
+    {
+        return $this->morphToMany(Task::class, 'taskkable');
+    }
+
+    /**
+     * Get all of the teams for the Project
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function tasks(): HasMany
+    public function teams(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Team::class);
     }
 }

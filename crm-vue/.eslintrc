@@ -1,33 +1,33 @@
 {
-    "root": true,
-    "env": {
-        "node": true,
-        "browser": true
-    },
-    "extends": [
-        "plugin:vue/vue3-recommended",
-        "eslint:recommended",
-        "@vue/typescript/recommended",
-        "@vue/prettier",
-        "@vue/prettier/@typescript-eslint"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 2021
-    },
-    "rules": {
-        // TODO: see how to implement this without .js file
-        // "no-console": import.meta.env.PROD ? "warn": "off",
-        // "no-debugger": import.meta.env.PROD ? "warn": "off",
-    },
-    "overrides": [
-        {
-            "files": [
-                "**/__tests__/*.{j,t}s?(x)",
-                "**/tests/unit/**/*.spec.{j,t}s?(x)"
-            ],
-            "env": {
-                "jest": true
-            }
-        }
-    ]
+  "root": true,
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "extends": [
+    "@vue/typescript/recommended",
+    "@vue/prettier",
+    "@vue/prettier/@typescript-eslint",
+    "plugin:vue/vue3-recommended",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:jest/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
+  "rules": {},
+  "overrides": [
+    {
+      "files": ["**/__tests__/*.{j,t}s?(x)", "**/tests/unit/**/*.spec.{j,t}s?(x)"],
+      "env": {
+        "jest": true
+      }
+    }
+  ],
+  "settings": {
+    "jest": {
+      "version": 27
+    }
+  }
 }

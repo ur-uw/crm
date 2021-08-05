@@ -47,8 +47,7 @@ class ProjectController extends Controller
     {
         return ProjectResource::make(
             $project->load('tasks.status')
-                ->load('teams')
-
+                ->load('teams.users')
         );
     }
 

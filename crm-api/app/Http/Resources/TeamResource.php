@@ -14,13 +14,12 @@ class TeamResource extends JsonResource
      */
     public function toArray($request)
     {
-        $users = $this->users;
 
         return [
             'name' => $this->name,
             'display_name' => $this->display_name,
             'description' => $this->description,
-            'users' => $this->users,
+            'users' => $this->whenLoaded('users'),
         ];
     }
 }

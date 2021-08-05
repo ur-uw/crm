@@ -25,10 +25,12 @@ class ProjectTeamUserTaskSeeder extends Seeder
             // create project tasks
 
             $project_tasks = Task::factory(20)->create(['status_id' => rand(1, $statuses_count)]);
-            // Seeding project with tasks
-            $project->teams->each(function (Team $team) use ($project_tasks) {
-                // Seeding Project
 
+            // Seeding project with tasks
+            $project->tasks()->saveMany($project_tasks);
+
+            $project->teams->each(function (Team $team) use ($project_tasks) {
+                // Seeding Project's team
                 $team->tasks()->saveMany($project_tasks);
 
                 //Seeding Project's Team Users

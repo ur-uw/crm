@@ -15,11 +15,9 @@ class TeamsUsersSeeder extends Seeder
      */
     public function run()
     {
-        $teams = Team::all();
-
-        User::all()->each(function (User $user) use ($teams) {
-            $user->teams()->sync(
-                $teams->random(rand(1, 3))->pluck('id')->toArray(),
+        Team::all()->each(function (Team $team) {
+            $team->users()->sync(
+                User::inRandomOrder()->limit(rand(1, 3))->pluck('id')->toArray()
             );
         });
     }

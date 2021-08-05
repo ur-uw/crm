@@ -66,6 +66,14 @@ class User extends Authenticatable
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * Get all of the tasks for the user.
+     */
+    public function tasks()
+    {
+        return $this->morphToMany(Task::class, 'taskkable');
+    }
+
 
 
 

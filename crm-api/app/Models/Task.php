@@ -65,13 +65,27 @@ class Task extends Model implements Ownable
 
 
     /**
-     * The users that belong to the Task
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * Get all of the users that are assigned this task.
      */
-    public function users(): BelongsToMany
+    public function users()
     {
-        return $this->belongsToMany(User::class)
-            ->withTimestamps();
+        return $this->morphedByMany(User::class, 'taskkable');
+    }
+
+
+    /**
+     * Get all of the projects that are assigned this task.
+     */
+    public function projects()
+    {
+        return $this->morphedByMany(Project::class, 'taskkable');
+    }
+
+    /**
+     * Get all of the teams that are assigned this task.
+     */
+    public function teams()
+    {
+        return $this->morphedByMany(Team::class, 'taskkable');
     }
 }

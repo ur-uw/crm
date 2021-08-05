@@ -33,13 +33,11 @@ class Project extends model implements \Laratrust\Contracts\Ownable
         return $this->belongsTo(User::class, 'user_id');
     }
     /**
-     * Get all of the tasks for the Project
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * Get all of the tasks for the project.
      */
-    public function tasks(): HasMany
+    public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->morphToMany(Task::class, 'taskkable');
     }
 
     /**

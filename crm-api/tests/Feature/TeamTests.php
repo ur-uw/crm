@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-
+use App\Models\Team;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -21,6 +21,6 @@ class TeamTests extends TestCase
     {
         $this->seed(DatabaseSeeder::class);
         $team = Team::find(1);
-        $this->assertNotEmpty($team->tasks());
+        $this->assertNotEmpty($team->tasks);
     }
 }

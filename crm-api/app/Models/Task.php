@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 use Laratrust\Contracts\Ownable;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
-use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Task extends Model implements Ownable
 {
+
+
     use HasFactory;
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
     use \Znck\Eloquent\Traits\BelongsToThrough;
@@ -29,7 +31,17 @@ class Task extends Model implements Ownable
 
     public function ownerKey($owner)
     {
-        return $this->users()->getParent()->id();
+        return $this->created_by ?? $this->users()->getParent()->id;
+    }
+
+    /**
+     * Get the user that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -49,7 +61,8 @@ class Task extends Model implements Ownable
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)
+            ->withTimestamps();
     }
 
     /**
@@ -80,5 +93,19 @@ class Task extends Model implements Ownable
         return $this->hasManyDeep(Team::class, [
             'task_user', User::class, 'team_user'
         ]);
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::creating(function (Task $task) {
+            if (Auth::user()) {
+                $task->created_by = Auth::user()->id;
+            }
+        });
     }
 }

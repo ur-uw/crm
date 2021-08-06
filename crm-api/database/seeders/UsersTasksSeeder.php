@@ -15,9 +15,10 @@ class UsersTasksSeeder extends Seeder
      */
     public function run()
     {
-        $tasks = Task::all();
-        User::all()->each(function (User $user) use ($tasks) {
-            $user->tasks()->sync($tasks->random(rand(1, 3)));
+        Task::all()->each(function (Task $task) {
+            $task->users()->sync(
+                User::inRandomOrder()->limit(rand(1, 3))->pluck('id')
+            );
         });
     }
 }

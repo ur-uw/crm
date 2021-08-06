@@ -1,6 +1,6 @@
-
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Date;
@@ -27,6 +27,13 @@ class CreateTasksTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->foreignIdFor(User::class, 'created_by')
+                ->nullable()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+
             $table->timestamps();
         });
     }

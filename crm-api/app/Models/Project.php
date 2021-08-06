@@ -61,13 +61,10 @@ class Project extends model implements \Laratrust\Contracts\Ownable
     /**
      * Get all of the tasks for the Project
      *
-     * @return HasManyDeep
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function tasks(): HasManyDeep
+    public function tasks(): HasMany
     {
-        return $this->hasManyDeep(Task::class, [
-            Team::class, 'team_user', User::class, 'task_user'
-
-        ]);
+        return $this->hasMany(Task::class);
     }
 }

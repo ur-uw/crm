@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
+use App\Models\Team;
 use Date;
 
 class TaskController extends Controller
@@ -22,7 +23,8 @@ class TaskController extends Controller
     {
 
         return TaskResource::collection(
-            $request->user()->tasks()->with('status:id,name,color,slug')
+            $request->user()->tasks()
+                ->with('status:id,name,color,slug')
                 ->orderBy('created_at', 'desc')
                 ->get()
         );
@@ -64,8 +66,17 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->validated());
-        return TaskResource::make($task->load('status:id,name,color,slug'));
+        $user = $request->user();
+
+        $team = Team::firstWhere('project_id', $task->project->id);
+        if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
+            $task->update($request->validated());
+            return TaskResource::make($task->load('status:id,name,color,slug'));
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
 
     /**
@@ -75,13 +86,21 @@ class TaskController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(Request $request, Task $task)
     {
-        $task->delete();
-        return response()->json([
-            'message' => 'Task Deleted',
-            Response::HTTP_NO_CONTENT
-        ]);
+        $user = $request->user();
+        $team = Team::firstWhere('project_id', $task->project->id);
+        if ($user->owns($task) || $user->isAbleTo('task-delete', $team)) {
+            $task->delete();
+            return response()->json([
+                'message' => 'Task Deleted',
+                Response::HTTP_NO_CONTENT
+            ]);
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
     public function changeStatus(Request $request, Task $task)
     {
@@ -90,10 +109,21 @@ class TaskController extends Controller
                 'status_slug' => 'required',
             ]
         );
-        $status = Status::where('slug', $request->status_slug)->first();
-        $task->status()->associate($status);
-        $task->save();
-        return TaskResource::make($task);
+
+        $user = $request->user();
+        $team = Team::firstWhere('project_id', $task->project->id);
+        if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
+            $status = Status::where('slug', $request->status_slug)
+                ->first();
+            $task->update([
+                'status_id' => $status->id
+            ]);
+            return TaskResource::make($task);
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
 
     public function recently(Request $request, $number = 3)

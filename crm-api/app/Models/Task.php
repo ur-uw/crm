@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laratrust\Contracts\Ownable;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Task extends Model implements Ownable
 {
@@ -93,6 +96,17 @@ class Task extends Model implements Ownable
         return $this->hasManyDeep(Team::class, [
             'task_user', User::class, 'team_user'
         ]);
+    }
+
+
+    /**
+     * Get the project that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 
     /**

@@ -33,6 +33,11 @@ class CreateTasksTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
+            $table->foreignId('project_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
 
             $table->timestamps();
         });

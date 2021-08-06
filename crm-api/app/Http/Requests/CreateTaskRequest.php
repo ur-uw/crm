@@ -29,6 +29,7 @@ class CreateTaskRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
+            'project_id' => 'required|numeric',
             // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
             'slug' => 'required|string|unique:tasks,title',
             'description' => 'string',

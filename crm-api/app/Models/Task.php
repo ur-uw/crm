@@ -6,7 +6,6 @@ use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laratrust\Contracts\Ownable;
 
 class Task extends Model implements Ownable
@@ -61,31 +60,5 @@ class Task extends Model implements Ownable
         )
             // * NOTE: IN HAS MANY THROUGH RELATIONS WE MUST THE FULL PATH TO COLUMN
             ->latest('tasks.updated_at');
-    }
-
-
-    /**
-     * Get all of the users that are assigned this task.
-     */
-    public function users()
-    {
-        return $this->morphedByMany(User::class, 'taskkable');
-    }
-
-
-    /**
-     * Get all of the projects that are assigned this task.
-     */
-    public function projects()
-    {
-        return $this->morphedByMany(Project::class, 'taskkable');
-    }
-
-    /**
-     * Get all of the teams that are assigned this task.
-     */
-    public function teams()
-    {
-        return $this->morphedByMany(Team::class, 'taskkable');
     }
 }

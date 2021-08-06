@@ -32,12 +32,4 @@ class Team extends LaratrustTeam
         return $this->belongsToMany(User::class)
             ->withTimestamps();
     }
-
-    /**
-     * Get all of the tasks for the team.
-     */
-    public function tasks()
-    {
-        return $this->morphToMany(Task::class, 'taskkable');
-    }
 }

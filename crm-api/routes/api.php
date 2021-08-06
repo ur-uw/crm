@@ -17,3 +17,6 @@ Route::prefix('tasks')->group(__DIR__ . '/api_routes/v1/task_routes.php');
 
 //** Addresses *//
 Route::prefix('addresses')->group(__DIR__ . '/api_routes/v1/address_routes.php');
+
+//** Teams *//
+Route::prefix('teams')->group(__DIR__ . '/api_routes/v1/team_routes.php');

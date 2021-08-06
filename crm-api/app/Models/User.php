@@ -67,15 +67,15 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the tasks for the user.
+     * The tasks that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function tasks()
+    public function tasks(): BelongsToMany
     {
-        return $this->morphToMany(Task::class, 'taskkable');
+        return $this->belongsToMany(Task::class)
+            ->withTimestamps();
     }
-
-
-
 
     /**
      * The teams that belong to the User

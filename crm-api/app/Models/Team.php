@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laratrust\Models\LaratrustTeam;
+use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 class Team extends LaratrustTeam
 {
-    use HasFactory;
+
+    use HasFactory, HasRelationships;
     public $guarded = [];
 
     /**
@@ -31,5 +34,18 @@ class Team extends LaratrustTeam
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps();
+    }
+
+    /**
+     * Get all of the tasks for the Team
+     *
+     * @return HasManyDeep
+     */
+    public function tasks(): HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Task::class,
+            ['team_user', User::class, 'task_user']
+        );
     }
 }

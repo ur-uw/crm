@@ -10,6 +10,7 @@ use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Status;
 use App\Models\Team;
+use Auth;
 use Date;
 
 class TaskController extends Controller
@@ -109,8 +110,7 @@ class TaskController extends Controller
                 'status_slug' => 'required',
             ]
         );
-
-        $user = $request->user();
+        $user = Auth::user();
         $team = Team::firstWhere('project_id', $task->project->id);
         if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
             $status = Status::where('slug', $request->status_slug)

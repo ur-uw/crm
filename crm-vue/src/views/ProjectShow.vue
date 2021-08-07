@@ -1,6 +1,6 @@
 <template>
-  <div v-if="!isLoading">
-    <main class="project">
+  <div v-if="!isLoading" class="row">
+    <div class="project col-md-8">
       <div class="project-info">
         <h1>{{ project?.name }}</h1>
         <div class="project-participants">
@@ -114,8 +114,8 @@
           </draggable>
         </div>
       </div>
-    </main>
-    <aside class="task-details">
+    </div>
+    <div class="task-details col-md-4">
       <div class="tag-progress">
         <h2>Task Progress</h2>
         <div class="tag-progress">
@@ -161,7 +161,7 @@
           </li>
         </ul>
       </div>
-    </aside>
+    </div>
   </div>
 
   <div v-else>
@@ -465,6 +465,7 @@
     .tag-progress,
     .task-activity {
       flex-basis: 50%;
+      color: black;
       background: white;
       padding: 1rem;
       border-radius: 8px;
@@ -473,10 +474,6 @@
   }
 
   @media only screen and (max-width: 1000px) {
-    .project-column:nth-child(2),
-    .project-column:nth-child(3) {
-      display: none;
-    }
     .project-tasks {
       grid-template-columns: 1fr 1fr;
     }

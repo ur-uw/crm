@@ -4,7 +4,9 @@
       <img src="../../assets/images/overlay.png" alt="overlay" />
       <span>{{ getLetters(project.name) }}</span>
     </div>
-    <h6 class="text-white mt-2 text-center">{{ project.name }}</h6>
+    <h6 class="text-white mt-2 text-center">
+      {{ project.name.substring(0, 15) }}
+    </h6>
   </div>
 </template>
 

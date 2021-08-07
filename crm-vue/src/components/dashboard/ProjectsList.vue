@@ -22,20 +22,24 @@
             flex-column
           "
         >
-          <fa icon="plus" class="display-4" />
+          <Icon>
+            <Add28Filled />
+          </Icon>
         </div>
       </div>
     </transition-group>
   </div>
 </template>
 <script lang="ts">
+  import { Icon } from '@vicons/utils'
+  import { Add28Filled } from '@vicons/fluent'
   import { Project } from '@/interfaces/Project'
   import { defineComponent, PropType } from 'vue'
   import { useRouter } from 'vue-router'
   import ProjectComponent from './ProjectComponent.vue'
   export default defineComponent({
     name: 'ProjectsList',
-    components: { ProjectComponent },
+    components: { ProjectComponent, Icon, Add28Filled },
     props: {
       projects: {
         type: Object as PropType<Project[]>,

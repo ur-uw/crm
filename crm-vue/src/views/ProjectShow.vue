@@ -15,7 +15,9 @@
           <div class="project-column-heading">
             <h2 class="project-column-heading__title">Waiting</h2>
             <button class="project-column-heading__options">
-              <fa icon="ellipsis-h" />
+              <Icon>
+                <MoreHorizontal28Regular />
+              </Icon>
             </button>
           </div>
           <draggable
@@ -40,7 +42,9 @@
           <div class="project-column-heading">
             <h2 class="project-column-heading__title">Approved</h2>
             <button class="project-column-heading__options">
-              <fa icon="ellipsis-h" />
+              <Icon>
+                <MoreHorizontal28Regular />
+              </Icon>
             </button>
           </div>
 
@@ -66,7 +70,9 @@
           <div class="project-column-heading">
             <h2 class="project-column-heading__title">In Progress</h2>
             <button class="project-column-heading__options">
-              <fa icon="ellipsis-h" />
+              <Icon>
+                <MoreHorizontal28Regular />
+              </Icon>
             </button>
           </div>
 
@@ -92,7 +98,9 @@
           <div class="project-column-heading">
             <h2 class="project-column-heading__title">Completed</h2>
             <button class="project-column-heading__options">
-              <fa icon="ellipsis-h" />
+              <Icon>
+                <MoreHorizontal28Regular />
+              </Icon>
             </button>
           </div>
           <draggable
@@ -135,27 +143,39 @@
         <h2>Recent Activity</h2>
         <ul>
           <li>
-            <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
+            <span class="task-icon task-icon--attachment">
+              <Icon><Attach20Regular /> </Icon>
+            </span>
             <b>Andrea </b>uploaded 3 documents
             <time datetime="2021-11-24T20:00:00">Aug 10</time>
           </li>
           <li>
-            <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
+            <span class="task-icon task-icon--comment">
+              <Icon> <Comment28Regular /> </Icon>
+            </span>
             <b>Karen </b> left a comment
             <time datetime="2021-11-24T20:00:00">Aug 10</time>
           </li>
           <li>
-            <span class="task-icon task-icon--edit"><i class="fas fa-pencil-alt"></i></span>
+            <span class="task-icon task-icon--edit">
+              <Icon>
+                <Edit24Regular />
+              </Icon>
+            </span>
             <b>Karen </b>uploaded 3 documents
             <time datetime="2021-11-24T20:00:00">Aug 11</time>
           </li>
           <li>
-            <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
+            <span class="task-icon task-icon--attachment">
+              <Icon><Attach20Regular /> </Icon
+            ></span>
             <b>Andrea </b>uploaded 3 documents
             <time datetime="2021-11-24T20:00:00">Aug 11</time>
           </li>
           <li>
-            <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
+            <span class="task-icon task-icon--comment">
+              <Icon> <Comment28Regular /> </Icon
+            ></span>
             <b>Karen </b> left a comment
             <time datetime="2021-11-24T20:00:00">Aug 12</time>
           </li>
@@ -178,9 +198,26 @@
   import ProjectTaskCard from '@/components/project/ProjectTaskCard.vue'
   import draggable from 'vuedraggable'
   import { useRoute } from 'vue-router'
+  import { Icon } from '@vicons/utils'
+  import {
+    Attach20Regular,
+    MoreHorizontal28Regular,
+    Comment28Regular,
+    Edit24Regular
+  } from '@vicons/fluent'
   export default defineComponent({
     name: 'Project',
-    components: { ProjectTaskCard, draggable },
+    components: {
+      ProjectTaskCard,
+      draggable,
+
+      // ICONS
+      Icon,
+      Attach20Regular,
+      MoreHorizontal28Regular,
+      Edit24Regular,
+      Comment28Regular
+    },
     setup() {
       const route = useRoute()
       const project = ref<Project | null>(null)
@@ -480,14 +517,14 @@
   }
 
   @media only screen and (max-width: 600px) {
-    .project-column:nth-child(4) {
-      display: none;
-    }
     .project-tasks {
+      padding: 1rem;
       grid-template-columns: 1fr;
     }
 
     .task-details {
+      padding: 1rem;
+      border: none;
       flex-wrap: wrap;
       padding: 3rem 1rem;
     }

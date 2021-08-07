@@ -1,29 +1,81 @@
 <template>
   <div class="task bg-dark">
     <div class="task__tags">
-      <span class="task__tag task__tag--copyright">Copywriting</span
-      ><button class="task__options"><fa icon="ellipsis-h" /></button>
+      <span class="task__tag task__tag--copyright">Copywriting</span>
+      <n-dropdown trigger="click" :options="options" @select="handleSelect">
+        <button class="task__options">
+          <Icon> <MoreHorizontal28Regular /> </Icon>
+        </button>
+      </n-dropdown>
     </div>
     <p>{{ task.title }}</p>
     <div class="task__stats">
       <span>
-        <time :datetime="task.created_at"><fa icon="flag" />{{ task.due_date }}</time>
+        <time :datetime="task.created_at">
+          <Icon> <Flag28Regular /></Icon>
+          {{ task.due_date }}
+        </time>
       </span>
-      <span><fa icon="comment" />{{ Math.floor(Math.random() * 100) }}</span>
-      <span> <fa icon="paperclip" />{{ Math.floor(Math.random() * 100) }} </span>
+      <span>
+        <Icon>
+          <CommentMultiple24Regular />
+        </Icon>
+        {{ Math.floor(Math.random() * 100) }}
+      </span>
+      <span>
+        <Icon>
+          <Attach20Regular />
+        </Icon>
+        {{ Math.floor(Math.random() * 100) }}
+      </span>
       <span class="task__owner"></span>
     </div>
   </div>
 </template>
 <script lang="ts">
   import { Task } from '@/interfaces/Task'
+  import { Icon } from '@vicons/utils'
+  import {
+    MoreHorizontal28Regular,
+    CommentMultiple24Regular,
+    Flag28Regular,
+    Attach20Regular
+  } from '@vicons/fluent'
   import { defineComponent, PropType } from 'vue'
+  import { NDropdown } from 'naive-ui'
   export default defineComponent({
     name: 'ProjectTaskCard',
+    components: {
+      NDropdown,
+      Icon,
+      Attach20Regular,
+      MoreHorizontal28Regular,
+      CommentMultiple24Regular,
+      Flag28Regular
+    },
     props: {
       task: {
         type: Object as PropType<Task>,
         required: true
+      }
+    },
+    setup() {
+      const options = [
+        {
+          label: 'Edit',
+          key: 'edit'
+        },
+        {
+          label: 'Delete',
+          key: 'delete'
+        }
+      ]
+      const handleSelect = (key: string) => {
+        console.log(key)
+      }
+      return {
+        options,
+        handleSelect
       }
     }
   })

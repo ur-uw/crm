@@ -1,16 +1,19 @@
 <template>
-  <the-nav-bar></the-nav-bar>
-  <router-view :key="$route.path" />
+  <IconConfigProvider size="20">
+    <the-nav-bar></the-nav-bar>
+    <router-view :key="$route.path" />
+  </IconConfigProvider>
 </template>
 <script lang="ts">
   import { defineComponent } from 'vue'
+  import { IconConfigProvider } from '@vicons/utils'
   import TheNavBar from '@/components/TheNavBar.vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from './store/modules/auth/action-types'
   import axios from 'axios'
   export default defineComponent({
     name: 'App',
-    components: { TheNavBar },
+    components: { TheNavBar, IconConfigProvider },
     setup() {
       const store = useStore()
       const getUser = () => {

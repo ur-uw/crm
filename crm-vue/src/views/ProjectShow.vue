@@ -1,183 +1,190 @@
 <template>
-  <main class="project">
-    <div class="project-info">
-      <h1>{{ project?.name }}</h1>
-      <div class="project-participants">
-        <span></span>
-        <span></span>
-        <span></span>
-        <button class="project-participants__add">Add Participant</button>
-      </div>
-    </div>
-    <div class="project-tasks">
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">Waiting</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+  <div v-if="!isLoading">
+    <main class="project">
+      <div class="project-info">
+        <h1>{{ project?.name }}</h1>
+        <div class="project-participants">
+          <span></span>
+          <span></span>
+          <span></span>
+          <button class="project-participants__add">Add Participant</button>
         </div>
-        <draggable
-          class="draggable-list"
-          :list="tasks.waiting"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'waiting')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
       </div>
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">Approved</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+      <div class="project-tasks">
+        <div class="project-column">
+          <div class="project-column-heading">
+            <h2 class="project-column-heading__title">Waiting</h2>
+            <button class="project-column-heading__options">
+              <fa icon="ellipsis-h" />
+            </button>
+          </div>
+          <draggable
+            class="draggable-list"
+            :list="tasks.waiting"
+            tag="transition-group"
+            :component-data="{
+              type: 'transition-group',
+              name: 'flip-list',
+              tag: 'div'
+            }"
+            group="tasks"
+            item-key="id"
+            @add="changeTaskStatus($event, 'waiting')"
+          >
+            <template #item="{ element }">
+              <ProjectTaskCard :task="element" :data-id="element.id" />
+            </template>
+          </draggable>
         </div>
+        <div class="project-column">
+          <div class="project-column-heading">
+            <h2 class="project-column-heading__title">Approved</h2>
+            <button class="project-column-heading__options">
+              <fa icon="ellipsis-h" />
+            </button>
+          </div>
 
-        <draggable
-          :list="tasks.approved"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          class="draggable-list"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'approved')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
-      </div>
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">In Progress</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+          <draggable
+            :list="tasks.approved"
+            tag="transition-group"
+            :component-data="{
+              type: 'transition-group',
+              name: 'flip-list',
+              tag: 'div'
+            }"
+            class="draggable-list"
+            group="tasks"
+            item-key="id"
+            @add="changeTaskStatus($event, 'approved')"
+          >
+            <template #item="{ element }">
+              <ProjectTaskCard :task="element" :data-id="element.id" />
+            </template>
+          </draggable>
         </div>
+        <div class="project-column">
+          <div class="project-column-heading">
+            <h2 class="project-column-heading__title">In Progress</h2>
+            <button class="project-column-heading__options">
+              <fa icon="ellipsis-h" />
+            </button>
+          </div>
 
-        <draggable
-          class="draggable-list"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          :list="tasks.inprogress"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'inprogress')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
-      </div>
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">Completed</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+          <draggable
+            class="draggable-list"
+            tag="transition-group"
+            :component-data="{
+              type: 'transition-group',
+              name: 'flip-list',
+              tag: 'div'
+            }"
+            :list="tasks.inprogress"
+            group="tasks"
+            item-key="id"
+            @add="changeTaskStatus($event, 'inprogress')"
+          >
+            <template #item="{ element }">
+              <ProjectTaskCard :task="element" :data-id="element.id" />
+            </template>
+          </draggable>
         </div>
-        <draggable
-          class="draggable-list"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          :list="tasks.completed"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'completed')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
+        <div class="project-column">
+          <div class="project-column-heading">
+            <h2 class="project-column-heading__title">Completed</h2>
+            <button class="project-column-heading__options">
+              <fa icon="ellipsis-h" />
+            </button>
+          </div>
+          <draggable
+            class="draggable-list"
+            tag="transition-group"
+            :component-data="{
+              type: 'transition-group',
+              name: 'flip-list',
+              tag: 'div'
+            }"
+            :list="tasks.completed"
+            group="tasks"
+            item-key="id"
+            @add="changeTaskStatus($event, 'completed')"
+          >
+            <template #item="{ element }">
+              <ProjectTaskCard :task="element" :data-id="element.id" />
+            </template>
+          </draggable>
+        </div>
       </div>
-    </div>
-  </main>
-  <aside class="task-details">
-    <div class="tag-progress">
-      <h2>Task Progress</h2>
+    </main>
+    <aside class="task-details">
       <div class="tag-progress">
-        <p>Copywriting <span>3/8</span></p>
-        <progress class="progress progress--copyright" max="8" value="3">3</progress>
+        <h2>Task Progress</h2>
+        <div class="tag-progress">
+          <p>Copywriting <span>3/8</span></p>
+          <progress class="progress progress--copyright" max="8" value="3">3</progress>
+        </div>
+        <div class="tag-progress">
+          <p>Illustration <span>6/10</span></p>
+          <progress class="progress progress--illustration" max="10" value="6">6</progress>
+        </div>
+        <div class="tag-progress">
+          <p>UI Design <span>2/7</span></p>
+          <progress class="progress progress--design" max="7" value="2">2</progress>
+        </div>
       </div>
-      <div class="tag-progress">
-        <p>Illustration <span>6/10</span></p>
-        <progress class="progress progress--illustration" max="10" value="6">6</progress>
+      <div class="task-activity">
+        <h2>Recent Activity</h2>
+        <ul>
+          <li>
+            <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
+            <b>Andrea </b>uploaded 3 documents
+            <time datetime="2021-11-24T20:00:00">Aug 10</time>
+          </li>
+          <li>
+            <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
+            <b>Karen </b> left a comment
+            <time datetime="2021-11-24T20:00:00">Aug 10</time>
+          </li>
+          <li>
+            <span class="task-icon task-icon--edit"><i class="fas fa-pencil-alt"></i></span>
+            <b>Karen </b>uploaded 3 documents
+            <time datetime="2021-11-24T20:00:00">Aug 11</time>
+          </li>
+          <li>
+            <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
+            <b>Andrea </b>uploaded 3 documents
+            <time datetime="2021-11-24T20:00:00">Aug 11</time>
+          </li>
+          <li>
+            <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
+            <b>Karen </b> left a comment
+            <time datetime="2021-11-24T20:00:00">Aug 12</time>
+          </li>
+        </ul>
       </div>
-      <div class="tag-progress">
-        <p>UI Design <span>2/7</span></p>
-        <progress class="progress progress--design" max="7" value="2">2</progress>
-      </div>
-    </div>
-    <div class="task-activity">
-      <h2>Recent Activity</h2>
-      <ul>
-        <li>
-          <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
-          <b>Andrea </b>uploaded 3 documents
-          <time datetime="2021-11-24T20:00:00">Aug 10</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
-          <b>Karen </b> left a comment
-          <time datetime="2021-11-24T20:00:00">Aug 10</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--edit"><i class="fas fa-pencil-alt"></i></span>
-          <b>Karen </b>uploaded 3 documents
-          <time datetime="2021-11-24T20:00:00">Aug 11</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
-          <b>Andrea </b>uploaded 3 documents
-          <time datetime="2021-11-24T20:00:00">Aug 11</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
-          <b>Karen </b> left a comment
-          <time datetime="2021-11-24T20:00:00">Aug 12</time>
-        </li>
-      </ul>
-    </div>
-  </aside>
+    </aside>
+  </div>
+
+  <div v-else>
+    <div class="alert-alert-info">Loading Project ....</div>
+  </div>
 </template>
 
 <script lang="ts">
   import { handleApi } from '@/utils/helpers'
-  import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core'
+  import { computed, defineComponent, onMounted, ref } from 'vue'
   import { Project } from '@/interfaces/Project'
-  import { useRoute } from 'vue-router'
   import { Task } from '@/interfaces/Task'
   import axios from 'axios'
   import ProjectTaskCard from '@/components/project/ProjectTaskCard.vue'
   import draggable from 'vuedraggable'
+  import { useRoute } from 'vue-router'
   export default defineComponent({
     name: 'Project',
     components: { ProjectTaskCard, draggable },
     setup() {
       const route = useRoute()
       const project = ref<Project | null>(null)
+      const isLoading = ref(false)
       const tasks = ref({
         waiting: [] as Task[],
         approved: [] as Task[],
@@ -187,12 +194,15 @@
       })
       const drag = computed(() => false)
       const getProject = async () => {
+        isLoading.value = true
         const response = axios.get(`/api/projects/show/${route.params.id}`)
         const [data, error] = await handleApi(response)
         if (error) {
+          isLoading.value = false
           return
         }
         project.value = data.data['data']
+        isLoading.value = false
         if (project.value?.tasks) {
           const checkTaskStatus = (task: Task) => {
             switch (task.status?.slug) {
@@ -224,7 +234,8 @@
         getProject()
       })
 
-      const changeTaskStatus = async (event: Event, status: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const changeTaskStatus = async (event: any, status: string) => {
         // Get the task id from the data-id attributes in li element
         const taskId = event.item.getAttribute('data-id')
         const promise = axios.put(`/api/tasks/changestatus/${taskId}`, { status_slug: status })
@@ -235,7 +246,7 @@
         }
       }
 
-      return { project, drag, tasks, changeTaskStatus }
+      return { project, drag, tasks, changeTaskStatus, isLoading }
     }
   })
 </script>

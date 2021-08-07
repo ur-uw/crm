@@ -4,7 +4,7 @@
       Projects <span>{{ projects?.length }}</span>
     </h3>
     <transition-group tag="div" name="projects-list" class="projects">
-      <Project
+      <ProjectComponent
         v-for="project in projects"
         :key="project.id"
         index
@@ -29,16 +29,16 @@
   </div>
 </template>
 <script lang="ts">
-  import { Project as project } from '@/interfaces/Project'
+  import { Project } from '@/interfaces/Project'
   import { defineComponent, PropType } from 'vue'
   import { useRouter } from 'vue-router'
-  import Project from './Project.vue'
+  import ProjectComponent from './ProjectComponent.vue'
   export default defineComponent({
     name: 'ProjectsList',
-    components: { Project },
+    components: { ProjectComponent },
     props: {
       projects: {
-        type: Object as PropType<project[]>,
+        type: Object as PropType<Project[]>,
         required: true
       }
     },

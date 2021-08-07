@@ -14,11 +14,30 @@ library.add(fas)
 axios.defaults.baseURL = 'http://127.0.0.1:8000'
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
+
 const app = createApp(App)
   .use(store)
   .use(router)
   .use(VueSweetalert2)
   .component('fa', FontAwesomeIcon)
+
+axios.interceptors.response.use(undefined, (error) => {
+  let route = { name: 'error', path: 'error' }
+  switch (error.response.status) {
+    case 401:
+      route = { name: 'login', path: '/login' }
+      break
+    case 404:
+      route = {
+        name: 'not-found.show',
+        path: '/:pathMatch(.*)*'
+      }
+      break
+  }
+  // TODO: make sure that url stay the same when it redirects to NotFound page
+  router.replace(route)
+  return Promise.reject(error)
+})
 
 // ? GLOBAL DIRECTIVES
 app.directive('focus', {
@@ -31,10 +50,3 @@ app.directive('focus', {
 })
 app.config.performance = true
 app.mount('#app')
-const docWidth = document.documentElement.offsetWidth
-
-;[].forEach.call(document.querySelectorAll('*'), function (el: HTMLElement) {
-  if (el.offsetWidth > docWidth) {
-    console.error(el)
-  }
-})

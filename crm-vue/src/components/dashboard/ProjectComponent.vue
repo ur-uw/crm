@@ -12,7 +12,7 @@
   import { Project } from '@/interfaces/Project'
   import { defineComponent, PropType } from 'vue'
   export default defineComponent({
-    name: 'Project',
+    name: 'ProjectComponent',
     props: {
       project: {
         type: Object as PropType<Project>,

@@ -1,6 +1,5 @@
 <template>
   <div id="left" class="p-lg-5 p-md-3">
-    <img src="../../assets/images/hamburger.png" class="hamburger" alt="hamburger" />
     <div class="profile text-sm-center">
       <h1>Hi {{ currentUser?.name }}</h1>
       <h2>Let's make projects more amazing</h2>
@@ -43,13 +42,6 @@
 <style lang="scss">
   #left {
     position: relative;
-
-    .hamburger {
-      position: absolute;
-      top: 0%;
-      left: 2%;
-      cursor: pointer;
-    }
 
     .profile {
       margin-top: 5px;

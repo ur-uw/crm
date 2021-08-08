@@ -1,11 +1,11 @@
 <template>
-  <div id="body" class="">
-    <div v-if="!isAuthLoading" class="row">
-      <div class="col-lg-4 col-md-12 col-sm-12 d-flex justify-content-center align-items-center">
+  <div id="body">
+    <n-grid v-if="!isAuthLoading" cols="2 xs:1 s:1" responsive="screen">
+      <n-grid-item>
         <LeftBody />
-      </div>
-      <div class="col-lg-8 col-md-12 col-sm-12"><RightBody /></div>
-    </div>
+      </n-grid-item>
+      <n-grid-item><RightBody /></n-grid-item>
+    </n-grid>
     <div v-else class="alert alert-info">Loading user......</div>
   </div>
 </template>

@@ -9,6 +9,7 @@
   import { ActionTypes as TaskATypes } from '@/store/modules/task/action-types'
   import { ActionTypes as ProjectATypes } from '@/store/modules/project/action-types'
   import { today } from '@/utils/helpers'
+
   export default defineComponent({
     name: 'Dashboard',
     components: {

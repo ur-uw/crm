@@ -1,12 +1,4 @@
 <template>
-  <!-- <form @submit.prevent="addDailyTask()">
-        <input
-            v-model="newTaskTitle"
-            class="form-control form-control-lg bg-primary2 text-white"
-            type="text"
-            placeholder="New task"
-        />
-    </form> -->
   <h2 class="text-primary">Today Tasks</h2>
   <div v-if="isLoading" class="mt-1">
     <div class="alert alert-info">Loading....</div>

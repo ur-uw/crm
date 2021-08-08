@@ -49,9 +49,17 @@ const routes: Array<RouteRecordRaw> = [
     path: '/project/:id',
     name: 'project.show',
     component: () => import('@/views/ProjectShow.vue'),
-    props: true,
     meta: {
       title: 'Project',
+      auth: true
+    }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/views/Test.vue'),
+    meta: {
+      title: 'Testing',
       auth: true
     }
   },

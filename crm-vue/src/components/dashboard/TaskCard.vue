@@ -16,11 +16,11 @@
           type="checkbox"
           name="test"
           :checked="task.status?.slug === 'completed'"
-          @change="toogleTaskCompleted()"
+          @change="toggleTaskCompleted()"
         />
         <span class="checkmark"></span>
       </label>
-      <h4 class="w-100" @dblclick="!showEditTask ? toogleTaskForm() : null">
+      <h4 class="w-100" @dblclick="!showEditTask ? toggleTaskForm() : null">
         <form class="w-100" @submit.prevent="updateTaskTitle()">
           <!-- TODO: Add visual to see the character limit -->
           <input
@@ -35,8 +35,8 @@
       </h4>
     </div>
     <div class="right">
-      <img src="../../assets/images/edit.png" @click="toogleTaskForm()" />
-      <img src="../../assets/images/del.png" @click="deleteTask()" />
+      <img v-if="type != 'xs'" src="../../assets/images/edit.png" @click="toggleTaskForm()" />
+      <img v-if="type != 'xs'" src="../../assets/images/del.png" @click="deleteTask()" />
       <!-- NOTE: there is a css class for every default task status -->
       <button :class="task.status?.slug">
         {{ task.status?.name }}
@@ -51,6 +51,8 @@
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from '@/store/modules/task/action-types'
   import Swal from 'sweetalert2'
+
+  import { useBreakPoints } from '@/use/useBreakpoints'
   export default defineComponent({
     name: 'TaskCard',
     props: {
@@ -67,11 +69,10 @@
       // Initialize custom vuex-store
       const store = useStore()
       // variables
-
       let showEditTask = ref<boolean>(false)
       let newTaskTitle = ref<string>(props.task.title ?? 'No title')
-      /* TOGGLE TASK COMPLETED PROPERY */
-      const toogleTaskCompleted = async () => {
+      /* TOGGLE TASK COMPLETED PROPERTY */
+      const toggleTaskCompleted = async () => {
         store.dispatch(ActionTypes.CHANGE_STATUS, {
           id: props.task.id!,
           status_slug: props.task.status?.slug === 'completed' ? 'inprogress' : 'completed',
@@ -79,7 +80,7 @@
         })
       }
       // Edit task
-      const toogleTaskForm = () => {
+      const toggleTaskForm = () => {
         showEditTask.value = !showEditTask.value
       }
       const updateTaskTitle = () => {
@@ -92,7 +93,7 @@
             updatedTask: newTask,
             index: props.index!
           })
-          toogleTaskForm()
+          toggleTaskForm()
         } else {
           Swal.fire({
             icon: 'warning',
@@ -109,13 +110,17 @@
         store.dispatch(ActionTypes.DELETE_TASK, props.task.id)
       }
 
+      const { width, type } = useBreakPoints()
+
       return {
-        toogleTaskCompleted,
+        toggleTaskCompleted,
         deleteTask,
         showEditTask,
-        toogleTaskForm,
+        toggleTaskForm,
         newTaskTitle,
-        updateTaskTitle
+        updateTaskTitle,
+        width,
+        type
       }
     }
   })

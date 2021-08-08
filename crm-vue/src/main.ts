@@ -3,7 +3,15 @@ import App from './App.vue'
 import router from './router'
 import { store } from './store'
 import axios from 'axios'
-
+import {
+  // create naive ui
+  create,
+  // component
+  NButton,
+  NGrid,
+  NGridItem,
+  NResult
+} from 'naive-ui'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 // Custom css
@@ -12,7 +20,10 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000'
 axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
-const app = createApp(App).use(store).use(router).use(VueSweetalert2)
+const naive = create({
+  components: [NButton, NGrid, NGridItem, NResult]
+})
+const app = createApp(App).use(store).use(router).use(VueSweetalert2).use(naive)
 
 axios.interceptors.response.use(undefined, (error) => {
   let route = { name: 'error', path: 'error' }

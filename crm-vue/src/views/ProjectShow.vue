@@ -1,188 +1,192 @@
 <template>
-  <div v-if="!isLoading" class="row">
-    <div class="project col-md-8">
-      <div class="project-info">
-        <h1>{{ project?.name }}</h1>
-        <div class="project-participants">
-          <span></span>
-          <span></span>
-          <span></span>
-          <button class="project-participants__add">Add Participant</button>
-        </div>
-      </div>
-      <div class="project-tasks">
-        <div class="project-column">
-          <div class="project-column-heading">
-            <h2 class="project-column-heading__title">Waiting</h2>
-            <button class="project-column-heading__options">
-              <Icon>
-                <MoreHorizontal28Regular />
-              </Icon>
-            </button>
+  <n-grid v-if="!isLoading" cols="4 s:1 xs:1" responsive="screen">
+    <n-grid-item span="3 s:1">
+      <div class="project">
+        <div class="project-info">
+          <h1>{{ project?.name }}</h1>
+          <div class="project-participants">
+            <span></span>
+            <span></span>
+            <span></span>
+            <button class="project-participants__add">Add Participant</button>
           </div>
-          <draggable
-            class="draggable-list"
-            :list="tasks.waiting"
-            tag="transition-group"
-            :component-data="{
-              type: 'transition-group',
-              name: 'flip-list',
-              tag: 'div'
-            }"
-            group="tasks"
-            item-key="id"
-            @add="changeTaskStatus($event, 'waiting')"
-          >
-            <template #item="{ element }">
-              <ProjectTaskCard :task="element" :data-id="element.id" />
-            </template>
-          </draggable>
         </div>
-        <div class="project-column">
-          <div class="project-column-heading">
-            <h2 class="project-column-heading__title">Approved</h2>
-            <button class="project-column-heading__options">
-              <Icon>
-                <MoreHorizontal28Regular />
-              </Icon>
-            </button>
+        <div class="project-tasks">
+          <div class="project-column">
+            <div class="project-column-heading">
+              <h2 class="project-column-heading__title">Waiting</h2>
+              <button class="project-column-heading__options">
+                <Icon>
+                  <MoreHorizontal28Regular />
+                </Icon>
+              </button>
+            </div>
+            <draggable
+              class="draggable-list"
+              :list="tasks.waiting"
+              tag="transition-group"
+              :component-data="{
+                type: 'transition-group',
+                name: 'flip-list',
+                tag: 'div'
+              }"
+              group="tasks"
+              item-key="id"
+              @add="changeTaskStatus($event, 'waiting')"
+            >
+              <template #item="{ element }">
+                <ProjectTaskCard :task="element" :data-id="element.id" />
+              </template>
+            </draggable>
           </div>
+          <div class="project-column">
+            <div class="project-column-heading">
+              <h2 class="project-column-heading__title">Approved</h2>
+              <button class="project-column-heading__options">
+                <Icon>
+                  <MoreHorizontal28Regular />
+                </Icon>
+              </button>
+            </div>
 
-          <draggable
-            :list="tasks.approved"
-            tag="transition-group"
-            :component-data="{
-              type: 'transition-group',
-              name: 'flip-list',
-              tag: 'div'
-            }"
-            class="draggable-list"
-            group="tasks"
-            item-key="id"
-            @add="changeTaskStatus($event, 'approved')"
-          >
-            <template #item="{ element }">
-              <ProjectTaskCard :task="element" :data-id="element.id" />
-            </template>
-          </draggable>
-        </div>
-        <div class="project-column">
-          <div class="project-column-heading">
-            <h2 class="project-column-heading__title">In Progress</h2>
-            <button class="project-column-heading__options">
-              <Icon>
-                <MoreHorizontal28Regular />
-              </Icon>
-            </button>
+            <draggable
+              :list="tasks.approved"
+              tag="transition-group"
+              :component-data="{
+                type: 'transition-group',
+                name: 'flip-list',
+                tag: 'div'
+              }"
+              class="draggable-list"
+              group="tasks"
+              item-key="id"
+              @add="changeTaskStatus($event, 'approved')"
+            >
+              <template #item="{ element }">
+                <ProjectTaskCard :task="element" :data-id="element.id" />
+              </template>
+            </draggable>
           </div>
+          <div class="project-column">
+            <div class="project-column-heading">
+              <h2 class="project-column-heading__title">In Progress</h2>
+              <button class="project-column-heading__options">
+                <Icon>
+                  <MoreHorizontal28Regular />
+                </Icon>
+              </button>
+            </div>
 
-          <draggable
-            class="draggable-list"
-            tag="transition-group"
-            :component-data="{
-              type: 'transition-group',
-              name: 'flip-list',
-              tag: 'div'
-            }"
-            :list="tasks.inprogress"
-            group="tasks"
-            item-key="id"
-            @add="changeTaskStatus($event, 'inprogress')"
-          >
-            <template #item="{ element }">
-              <ProjectTaskCard :task="element" :data-id="element.id" />
-            </template>
-          </draggable>
-        </div>
-        <div class="project-column">
-          <div class="project-column-heading">
-            <h2 class="project-column-heading__title">Completed</h2>
-            <button class="project-column-heading__options">
-              <Icon>
-                <MoreHorizontal28Regular />
-              </Icon>
-            </button>
+            <draggable
+              class="draggable-list"
+              tag="transition-group"
+              :component-data="{
+                type: 'transition-group',
+                name: 'flip-list',
+                tag: 'div'
+              }"
+              :list="tasks.inprogress"
+              group="tasks"
+              item-key="id"
+              @add="changeTaskStatus($event, 'inprogress')"
+            >
+              <template #item="{ element }">
+                <ProjectTaskCard :task="element" :data-id="element.id" />
+              </template>
+            </draggable>
           </div>
-          <draggable
-            class="draggable-list"
-            tag="transition-group"
-            :component-data="{
-              type: 'transition-group',
-              name: 'flip-list',
-              tag: 'div'
-            }"
-            :list="tasks.completed"
-            group="tasks"
-            item-key="id"
-            @add="changeTaskStatus($event, 'completed')"
-          >
-            <template #item="{ element }">
-              <ProjectTaskCard :task="element" :data-id="element.id" />
-            </template>
-          </draggable>
+          <div class="project-column">
+            <div class="project-column-heading">
+              <h2 class="project-column-heading__title">Completed</h2>
+              <button class="project-column-heading__options">
+                <Icon>
+                  <MoreHorizontal28Regular />
+                </Icon>
+              </button>
+            </div>
+            <draggable
+              class="draggable-list"
+              tag="transition-group"
+              :component-data="{
+                type: 'transition-group',
+                name: 'flip-list',
+                tag: 'div'
+              }"
+              :list="tasks.completed"
+              group="tasks"
+              item-key="id"
+              @add="changeTaskStatus($event, 'completed')"
+            >
+              <template #item="{ element }">
+                <ProjectTaskCard :task="element" :data-id="element.id" />
+              </template>
+            </draggable>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="task-details col-md-4">
-      <div class="tag-progress">
-        <h2>Task Progress</h2>
+    </n-grid-item>
+    <n-grid-item>
+      <div class="task-details">
         <div class="tag-progress">
-          <p>Copywriting <span>3/8</span></p>
-          <progress class="progress progress--copyright" max="8" value="3">3</progress>
+          <h2>Task Progress</h2>
+          <div class="tag-progress">
+            <p>Copywriting <span>3/8</span></p>
+            <progress class="progress progress--copyright" max="8" value="3">3</progress>
+          </div>
+          <div class="tag-progress">
+            <p>Illustration <span>6/10</span></p>
+            <progress class="progress progress--illustration" max="10" value="6">6</progress>
+          </div>
+          <div class="tag-progress">
+            <p>UI Design <span>2/7</span></p>
+            <progress class="progress progress--design" max="7" value="2">2</progress>
+          </div>
         </div>
-        <div class="tag-progress">
-          <p>Illustration <span>6/10</span></p>
-          <progress class="progress progress--illustration" max="10" value="6">6</progress>
-        </div>
-        <div class="tag-progress">
-          <p>UI Design <span>2/7</span></p>
-          <progress class="progress progress--design" max="7" value="2">2</progress>
+        <div class="task-activity">
+          <h2>Recent Activity</h2>
+          <ul>
+            <li>
+              <span class="task-icon task-icon--attachment">
+                <Icon><Attach20Regular /> </Icon>
+              </span>
+              <b>Andrea </b>uploaded 3 documents
+              <time datetime="2021-11-24T20:00:00">Aug 10</time>
+            </li>
+            <li>
+              <span class="task-icon task-icon--comment">
+                <Icon> <Comment28Regular /> </Icon>
+              </span>
+              <b>Karen </b> left a comment
+              <time datetime="2021-11-24T20:00:00">Aug 10</time>
+            </li>
+            <li>
+              <span class="task-icon task-icon--edit">
+                <Icon>
+                  <Edit24Regular />
+                </Icon>
+              </span>
+              <b>Karen </b>uploaded 3 documents
+              <time datetime="2021-11-24T20:00:00">Aug 11</time>
+            </li>
+            <li>
+              <span class="task-icon task-icon--attachment">
+                <Icon><Attach20Regular /> </Icon
+              ></span>
+              <b>Andrea </b>uploaded 3 documents
+              <time datetime="2021-11-24T20:00:00">Aug 11</time>
+            </li>
+            <li>
+              <span class="task-icon task-icon--comment">
+                <Icon> <Comment28Regular /> </Icon
+              ></span>
+              <b>Karen </b> left a comment
+              <time datetime="2021-11-24T20:00:00">Aug 12</time>
+            </li>
+          </ul>
         </div>
       </div>
-      <div class="task-activity">
-        <h2>Recent Activity</h2>
-        <ul>
-          <li>
-            <span class="task-icon task-icon--attachment">
-              <Icon><Attach20Regular /> </Icon>
-            </span>
-            <b>Andrea </b>uploaded 3 documents
-            <time datetime="2021-11-24T20:00:00">Aug 10</time>
-          </li>
-          <li>
-            <span class="task-icon task-icon--comment">
-              <Icon> <Comment28Regular /> </Icon>
-            </span>
-            <b>Karen </b> left a comment
-            <time datetime="2021-11-24T20:00:00">Aug 10</time>
-          </li>
-          <li>
-            <span class="task-icon task-icon--edit">
-              <Icon>
-                <Edit24Regular />
-              </Icon>
-            </span>
-            <b>Karen </b>uploaded 3 documents
-            <time datetime="2021-11-24T20:00:00">Aug 11</time>
-          </li>
-          <li>
-            <span class="task-icon task-icon--attachment">
-              <Icon><Attach20Regular /> </Icon
-            ></span>
-            <b>Andrea </b>uploaded 3 documents
-            <time datetime="2021-11-24T20:00:00">Aug 11</time>
-          </li>
-          <li>
-            <span class="task-icon task-icon--comment">
-              <Icon> <Comment28Regular /> </Icon
-            ></span>
-            <b>Karen </b> left a comment
-            <time datetime="2021-11-24T20:00:00">Aug 12</time>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+    </n-grid-item>
+  </n-grid>
 
   <div v-else>
     <div class="alert-alert-info">Loading Project ....</div>
@@ -299,7 +303,6 @@
 
   .project {
     padding: 2rem;
-    max-width: 75%;
     width: 100%;
     display: inline-block;
 
@@ -374,7 +377,6 @@
     border: 3px dashed $light-grey !important;
   }
   .task-details {
-    width: 24%;
     border-left: 1px solid #d9e0e9;
     display: inline-block;
     height: 100%;

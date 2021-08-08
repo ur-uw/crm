@@ -31,7 +31,7 @@
         </div>
         <div v-if="isUserLoggedIn" class="navbar-nav text-white">
           <div class="nav-item">
-            <button class="btn btn-custom-purple" @click="logOut()">Sign out</button>
+            <n-button ghost color="#894fc6" @click="logOut()">Sign out</n-button>
           </div>
         </div>
       </div>

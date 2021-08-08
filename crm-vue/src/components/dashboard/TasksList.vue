@@ -1,7 +1,26 @@
 <template>
   <h2 class="text-primary">Today Tasks</h2>
   <div v-if="isLoading" class="mt-1">
-    <div class="alert alert-info">Loading....</div>
+    <n-space vertical>
+      <n-space>
+        <n-skeleton :width="300" size="medium" />
+        <n-skeleton circle size="small" />
+        <n-skeleton circle size="small" />
+        <n-skeleton :width="95" round size="medium" />
+      </n-space>
+      <n-space>
+        <n-skeleton :width="300" size="medium" />
+        <n-skeleton circle size="small" />
+        <n-skeleton circle size="small" />
+        <n-skeleton :width="95" round size="medium" />
+      </n-space>
+      <n-space>
+        <n-skeleton :width="300" size="medium" />
+        <n-skeleton circle size="small" />
+        <n-skeleton circle size="small" />
+        <n-skeleton :width="95" round size="medium" />
+      </n-space>
+    </n-space>
   </div>
   <div v-else>
     <transition-group v-if="todayTasks.length > 0" tag="ul" name="list" class="tasks-list">
@@ -15,7 +34,26 @@
   </div>
   <h6 class="text-custom-dark-blue mt-3">Recent</h6>
   <div v-if="isLoading" class="mt-1">
-    <div class="alert alert-info">Loading....</div>
+    <n-space vertical>
+      <n-space>
+        <n-skeleton :width="300" size="medium" />
+        <n-skeleton circle size="small" />
+        <n-skeleton circle size="small" />
+        <n-skeleton :width="95" round size="medium" />
+      </n-space>
+      <n-space>
+        <n-skeleton :width="300" size="medium" />
+        <n-skeleton circle size="small" />
+        <n-skeleton circle size="small" />
+        <n-skeleton :width="95" round size="medium" />
+      </n-space>
+      <n-space>
+        <n-skeleton :width="300" size="medium" />
+        <n-skeleton circle size="small" />
+        <n-skeleton circle size="small" />
+        <n-skeleton :width="95" round size="medium" />
+      </n-space>
+    </n-space>
   </div>
   <div v-else>
     <transition-group v-if="recentTasks.length > 0" tag="ul" name="list" class="tasks-list">

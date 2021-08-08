@@ -6,7 +6,23 @@
       </n-grid-item>
       <n-grid-item><RightBody /></n-grid-item>
     </n-grid>
-    <div v-else class="alert alert-info">Loading user......</div>
+    <div
+      v-else
+      class="
+        loader
+        container
+        min-vh-100
+        d-flex
+        flex-column
+        align-items-center
+        justify-content-center
+      "
+    >
+      <n-space>
+        <n-spin size="large" />
+        <h4>Getting user info</h4>
+      </n-space>
+    </div>
   </div>
 </template>
 

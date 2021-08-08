@@ -189,7 +189,10 @@
   </n-grid>
 
   <div v-else>
-    <div class="alert-alert-info">Loading Project ....</div>
+    <n-space justify="center">
+      <n-spin size="large" />
+      Getting project info
+    </n-space>
   </div>
 </template>
 

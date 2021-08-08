@@ -9,9 +9,26 @@
       </div>
     </div>
 
-    <projects-list v-if="!isLoading && projects !== null" :projects="projects"></projects-list>
+    <projects-list v-if="!isLoading && projects !== null" :projects="projects"> </projects-list>
     <div v-else>
-      <div class="alert alert-info">Loading projects ....</div>
+      <n-space vertical>
+        <n-skeleton text :width="100" size="small" />
+        <n-space>
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+        </n-space>
+        <n-space>
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+        </n-space>
+        <n-space>
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+        </n-space>
+      </n-space>
     </div>
   </div>
 </template>

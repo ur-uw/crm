@@ -10,7 +10,11 @@ import {
   NButton,
   NGrid,
   NGridItem,
-  NResult
+  NResult,
+  NSkeleton,
+  NSpace,
+  NSpin,
+  NSwitch
 } from 'naive-ui'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -21,7 +25,7 @@ axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 const naive = create({
-  components: [NButton, NGrid, NGridItem, NResult]
+  components: [NButton, NGrid, NGridItem, NResult, NSpace, NSpin, NSkeleton, NSwitch]
 })
 const app = createApp(App).use(store).use(router).use(VueSweetalert2).use(naive)
 

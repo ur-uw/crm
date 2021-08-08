@@ -8,8 +8,13 @@ import {
   create,
   // component
   NButton,
+  NDatePicker,
+  NForm,
+  NFormItem,
   NGrid,
   NGridItem,
+  NInput,
+  NModal,
   NResult,
   NSkeleton,
   NSpace,
@@ -25,7 +30,21 @@ axios.defaults.headers.common['Accept'] = 'application/json'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 const naive = create({
-  components: [NButton, NGrid, NGridItem, NResult, NSpace, NSpin, NSkeleton, NSwitch]
+  components: [
+    NButton,
+    NGrid,
+    NGridItem,
+    NResult,
+    NSpace,
+    NSpin,
+    NSkeleton,
+    NSwitch,
+    NModal,
+    NForm,
+    NFormItem,
+    NInput,
+    NDatePicker
+  ]
 })
 const app = createApp(App).use(store).use(router).use(VueSweetalert2).use(naive)
 

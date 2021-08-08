@@ -28,8 +28,21 @@
         </Icon>
         {{ Math.floor(Math.random() * 100) }}
       </span>
-      <span class="task__owner"></span>
     </div>
+    <n-modal
+      v-model:show="showModal"
+      class="custom-card"
+      preset="card"
+      :style="bodyStyle"
+      title="Edit"
+      :bordered="false"
+      size="huge"
+      :segmented="{
+        content: 'soft'
+      }"
+    >
+      <edit-project-task-form :task="task" @hide-modal="hideModal" />
+    </n-modal>
   </div>
 </template>
 <script lang="ts">
@@ -41,8 +54,9 @@
     Flag28Regular,
     Attach20Regular
   } from '@vicons/fluent'
-  import { defineComponent, PropType } from 'vue'
+  import { defineComponent, PropType, ref } from 'vue'
   import { NDropdown } from 'naive-ui'
+  import EditProjectTaskForm from './EditProjectTaskForm.vue'
   export default defineComponent({
     name: 'ProjectTaskCard',
     components: {
@@ -51,7 +65,8 @@
       Attach20Regular,
       MoreHorizontal28Regular,
       CommentMultiple24Regular,
-      Flag28Regular
+      Flag28Regular,
+      EditProjectTaskForm
     },
     props: {
       task: {
@@ -60,6 +75,7 @@
       }
     },
     setup() {
+      const showModal = ref(false)
       const options = [
         {
           label: 'Edit',
@@ -70,12 +86,30 @@
           key: 'delete'
         }
       ]
-      const handleSelect = (key: string) => {
-        console.log(key)
+      const handleSelect = (key: 'edit' | 'delete') => {
+        switch (key) {
+          case 'edit':
+            showModal.value = true
+            break
+          case 'delete':
+            console.log('delete')
+            break
+        }
       }
       return {
         options,
-        handleSelect
+        handleSelect,
+        showModal,
+        bodyStyle: {
+          width: '600px'
+        },
+        hideModal: (task: Task | null) => {
+          if (task != null) {
+            console.log(task)
+            // TODO: UPDATE CURRENT TASK WITH THE RECEIVED DATA
+          }
+          showModal.value = false
+        }
       }
     }
   })

@@ -201,7 +201,7 @@
   import { computed, defineComponent, onMounted, ref } from 'vue'
   import { Project } from '@/interfaces/Project'
   import { Task } from '@/interfaces/Task'
-  import axios from 'axios'
+  import api from '@/utils/api'
   import ProjectTaskCard from '@/components/project/ProjectTaskCard.vue'
   import draggable from 'vuedraggable'
   import { useRoute } from 'vue-router'
@@ -239,7 +239,7 @@
       const drag = computed(() => false)
       const getProject = async () => {
         isLoading.value = true
-        const response = axios.get(`/api/projects/show/${route.params.id}`)
+        const response = api.get(`/api/projects/show/${route.params.id}`)
         const [data, error] = await handleApi(response)
         if (error) {
           isLoading.value = false
@@ -282,7 +282,7 @@
       const changeTaskStatus = async (event: any, status: string) => {
         // Get the task id from the data-id attributes in li element
         const taskId = event.item.getAttribute('data-id')
-        const promise = axios.put(`/api/tasks/changestatus/${taskId}`, { status_slug: status })
+        const promise = api.put(`/api/tasks/changestatus/${taskId}`, { status_slug: status })
         const [, error] = await handleApi(promise)
         if (error) {
           // TODO: HANDLE ERROR

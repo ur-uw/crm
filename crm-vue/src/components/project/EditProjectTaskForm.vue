@@ -47,7 +47,7 @@
   import { Task } from '@/interfaces/Task'
   import { TimeStamp } from '@/utils/date_to_timestamp'
   import { handleApi } from '@/utils/helpers'
-  import axios from 'axios'
+  import api from '@/utils/api'
   import { ref, defineComponent, PropType } from 'vue'
   export default defineComponent({
     props: {
@@ -72,7 +72,7 @@
         formRef.value.validate(async (errors: unknown) => {
           if (!errors) {
             // TODO: make api call only when the data of task is changed
-            const promise = axios.put(`/api/tasks/update/${props.task.id}`, {
+            const promise = api.put(`/api/tasks/update/${props.task.id}`, {
               title: modelRef.value.taskTitle,
               description: modelRef.value.taskDescription,
               // FIX: MONTH AND DAY ARE WRONG

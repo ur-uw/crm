@@ -13,7 +13,7 @@
   import TheNavBar from '@/components/TheNavBar.vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from './store/modules/auth/action-types'
-  import axios from 'axios'
+  import api from '@/utils/api'
   export default defineComponent({
     name: 'App',
     components: { TheNavBar, IconConfigProvider, NConfigProvider },
@@ -21,7 +21,7 @@
       const store = useStore()
       const getUser = () => {
         if (store.getters.getToken) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getToken}`
+          api.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getToken}`
           store.dispatch(ActionTypes.GET_USER)
         }
       }

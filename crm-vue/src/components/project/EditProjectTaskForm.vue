@@ -80,7 +80,6 @@
               return
             }
             emit('hide-modal', data.data['data'])
-            emit('hide-modal')
           }
         })
       }

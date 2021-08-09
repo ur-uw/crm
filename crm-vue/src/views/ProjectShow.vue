@@ -35,7 +35,11 @@
               @add="changeTaskStatus($event, 'waiting')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task-info="element" :data-id="element.id" />
+                <ProjectTaskCard
+                  :task-info="element"
+                  :data-id="element.id"
+                  @task-delete="deleteTask"
+                />
               </template>
             </draggable>
           </div>
@@ -63,7 +67,11 @@
               @add="changeTaskStatus($event, 'approved')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task-info="element" :data-id="element.id" />
+                <ProjectTaskCard
+                  :task-info="element"
+                  :data-id="element.id"
+                  @task-delete="deleteTask"
+                />
               </template>
             </draggable>
           </div>
@@ -91,7 +99,11 @@
               @add="changeTaskStatus($event, 'inprogress')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task-info="element" :data-id="element.id" />
+                <ProjectTaskCard
+                  :task-info="element"
+                  :data-id="element.id"
+                  @task-delete="deleteTask"
+                />
               </template>
             </draggable>
           </div>
@@ -118,7 +130,11 @@
               @add="changeTaskStatus($event, 'completed')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task-info="element" :data-id="element.id" />
+                <ProjectTaskCard
+                  :task-info="element"
+                  :data-id="element.id"
+                  @task-delete="deleteTask"
+                />
               </template>
             </draggable>
           </div>
@@ -217,7 +233,6 @@
     components: {
       ProjectTaskCard,
       draggable,
-
       // ICONS
       Icon,
       Attach20Regular,
@@ -226,7 +241,9 @@
       Comment28Regular
     },
     setup() {
+      // INITIALIZE ROUTE
       const route = useRoute()
+      // VARIABLES
       const project = ref<Project | null>(null)
       const isLoading = ref(false)
       const tasks = ref({
@@ -237,6 +254,18 @@
         rejected: [] as Task[]
       })
       const drag = computed(() => false)
+      // FUNCTIONS
+      const deleteTask = (task: Task) => {
+        const taskStatus = task.status?.slug as
+          | 'waiting'
+          | 'approved'
+          | 'rejected'
+          | 'completed'
+          | 'inprogress'
+        if (taskStatus != null) {
+          tasks.value[taskStatus] = tasks.value[taskStatus].filter((el) => el.id !== task.id)
+        }
+      }
       const getProject = async () => {
         isLoading.value = true
         const response = api.get(`/api/projects/show/${route.params.id}`)
@@ -290,7 +319,7 @@
         }
       }
 
-      return { project, drag, tasks, changeTaskStatus, isLoading }
+      return { project, drag, tasks, changeTaskStatus, isLoading, deleteTask }
     }
   })
 </script>

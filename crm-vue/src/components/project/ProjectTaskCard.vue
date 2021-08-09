@@ -55,8 +55,10 @@
     Attach20Regular
   } from '@vicons/fluent'
   import { defineComponent, PropType, ref } from 'vue'
-  import { NDropdown } from 'naive-ui'
+  import { NDropdown, useNotification } from 'naive-ui'
   import EditProjectTaskForm from './EditProjectTaskForm.vue'
+  import api from '@/utils/api'
+  import { handleApi } from '@/utils/helpers'
   export default defineComponent({
     name: 'ProjectTaskCard',
     components: {
@@ -74,9 +76,12 @@
         required: true
       }
     },
-    setup(props) {
+    emits: ['task-delete'],
+    setup(props, { emit }) {
+      // VARIABLES
       const showModal = ref(false)
       const task = ref(props.taskInfo)
+      const notification = useNotification()
       const hideModal = (t: Task | null) => {
         if (t != null) {
           task.value = t
@@ -93,13 +98,26 @@
           key: 'delete'
         }
       ]
+      const deleteTask = async () => {
+        const promise = api.delete(`/api/tasks/delete/${props.taskInfo.id}`)
+        const [, error] = await handleApi(promise)
+        if (error) {
+          notification.error({
+            title: 'Error',
+            content: 'Something went wrong, please try again later',
+            duration: 2500
+          })
+          return
+        }
+      }
       const handleSelect = (key: 'edit' | 'delete') => {
         switch (key) {
           case 'edit':
             showModal.value = true
             break
           case 'delete':
-            console.log('delete')
+            deleteTask()
+            emit('task-delete', props.taskInfo)
             break
         }
       }

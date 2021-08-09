@@ -69,13 +69,20 @@
       EditProjectTaskForm
     },
     props: {
-      task: {
+      taskInfo: {
         type: Object as PropType<Task>,
         required: true
       }
     },
-    setup() {
+    setup(props) {
       const showModal = ref(false)
+      const task = ref(props.taskInfo)
+      const hideModal = (t: Task | null) => {
+        if (t != null) {
+          task.value = t
+        }
+        showModal.value = false
+      }
       const options = [
         {
           label: 'Edit',
@@ -100,16 +107,11 @@
         options,
         handleSelect,
         showModal,
+        task,
         bodyStyle: {
           width: '600px'
         },
-        hideModal: (task: Task | null) => {
-          if (task != null) {
-            console.log(task)
-            // TODO: UPDATE CURRENT TASK WITH THE RECEIVED DATA
-          }
-          showModal.value = false
-        }
+        hideModal
       }
     }
   })

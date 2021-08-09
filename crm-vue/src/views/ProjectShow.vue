@@ -35,7 +35,7 @@
               @add="changeTaskStatus($event, 'waiting')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task="element" :data-id="element.id" />
+                <ProjectTaskCard :task-info="element" :data-id="element.id" />
               </template>
             </draggable>
           </div>
@@ -63,7 +63,7 @@
               @add="changeTaskStatus($event, 'approved')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task="element" :data-id="element.id" />
+                <ProjectTaskCard :task-info="element" :data-id="element.id" />
               </template>
             </draggable>
           </div>
@@ -91,7 +91,7 @@
               @add="changeTaskStatus($event, 'inprogress')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task="element" :data-id="element.id" />
+                <ProjectTaskCard :task-info="element" :data-id="element.id" />
               </template>
             </draggable>
           </div>
@@ -118,7 +118,7 @@
               @add="changeTaskStatus($event, 'completed')"
             >
               <template #item="{ element }">
-                <ProjectTaskCard :task="element" :data-id="element.id" />
+                <ProjectTaskCard :task-info="element" :data-id="element.id" />
               </template>
             </draggable>
           </div>

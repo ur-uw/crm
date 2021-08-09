@@ -45,7 +45,7 @@
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
   import { Task } from '@/interfaces/Task'
-  import { TimeStamp } from '@/utils/date_to_timestamp'
+  import { TimeStamp } from '@/utils/Timestamp'
   import { handleApi } from '@/utils/helpers'
   import api from '@/utils/api'
   import { ref, defineComponent, PropType } from 'vue'
@@ -63,20 +63,16 @@
       const modelRef = ref({
         taskTitle: props.task.title,
         taskDescription: props.task.description,
-        dueDate: taskDueDate.getTimeStamp()
+        dueDate: taskDueDate.getTimeStamp() * 1000.0
       })
-      // TODO: MAKE CLASS TO CONVERT TIMESTAMP TO DATE FORMAT
-
-      const newDueDate = new Date(modelRef.value.dueDate)
       const handleSubmit = () => {
-        formRef.value.validate(async (errors: unknown) => {
+        formRef.value?.validate(async (errors: unknown) => {
           if (!errors) {
             // TODO: make api call only when the data of task is changed
             const promise = api.put(`/api/tasks/update/${props.task.id}`, {
               title: modelRef.value.taskTitle,
               description: modelRef.value.taskDescription,
-              // FIX: MONTH AND DAY ARE WRONG
-              due_date: `${newDueDate.getFullYear()}-${newDueDate.getMonth()}-${newDueDate.getDay()}`
+              due_date: taskDueDate.getDateFromTimestamp(modelRef.value.dueDate / 1000.0)
             })
             const [data, error] = await handleApi(promise)
             if (error) {
@@ -84,6 +80,7 @@
               return
             }
             emit('hide-modal', data.data['data'])
+            emit('hide-modal')
           }
         })
       }

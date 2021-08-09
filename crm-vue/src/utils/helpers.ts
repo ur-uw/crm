@@ -13,7 +13,7 @@ export const handleApi = async (
     const data = await promise
     return [data, null]
   } catch (err: AxiosError | any | Error) {
-    console.error(err.response.data)
+    console.error(err.response?.data)
     return [null, err]
   }
 }

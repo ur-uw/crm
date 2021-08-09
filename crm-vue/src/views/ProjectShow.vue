@@ -1,6 +1,10 @@
 <template>
-  <n-grid v-if="!isLoading" cols="4 s:1 xs:1" responsive="screen">
-    <n-grid-item span="3 s:1">
+  <n-grid
+    v-if="!isLoading"
+    :cols="tasksLength > 4 ? '6 xs:1 s:1' : '4 s:1 xs:1'"
+    responsive="screen"
+  >
+    <n-grid-item :span="tasksLength > 4 ? '5 xs:1 s:1' : '3 xs:1 s:1'">
       <div class="project">
         <div class="project-info">
           <h1>{{ project?.name }}</h1>
@@ -12,132 +16,13 @@
           </div>
         </div>
         <div class="project-tasks">
-          <div class="project-column">
-            <div class="project-column-heading">
-              <h2 class="project-column-heading__title">Waiting</h2>
-              <button class="project-column-heading__options">
-                <Icon>
-                  <MoreHorizontal28Regular />
-                </Icon>
-              </button>
-            </div>
-            <draggable
-              class="draggable-list"
-              :list="tasks.waiting"
-              tag="transition-group"
-              :component-data="{
-                type: 'transition-group',
-                name: 'flip-list',
-                tag: 'div'
-              }"
-              group="tasks"
-              item-key="id"
-              @add="changeTaskStatus($event, 'waiting')"
-            >
-              <template #item="{ element }">
-                <ProjectTaskCard
-                  :task-info="element"
-                  :data-id="element.id"
-                  @task-delete="deleteTask"
-                />
-              </template>
-            </draggable>
-          </div>
-          <div class="project-column">
-            <div class="project-column-heading">
-              <h2 class="project-column-heading__title">Approved</h2>
-              <button class="project-column-heading__options">
-                <Icon>
-                  <MoreHorizontal28Regular />
-                </Icon>
-              </button>
-            </div>
-
-            <draggable
-              :list="tasks.approved"
-              tag="transition-group"
-              :component-data="{
-                type: 'transition-group',
-                name: 'flip-list',
-                tag: 'div'
-              }"
-              class="draggable-list"
-              group="tasks"
-              item-key="id"
-              @add="changeTaskStatus($event, 'approved')"
-            >
-              <template #item="{ element }">
-                <ProjectTaskCard
-                  :task-info="element"
-                  :data-id="element.id"
-                  @task-delete="deleteTask"
-                />
-              </template>
-            </draggable>
-          </div>
-          <div class="project-column">
-            <div class="project-column-heading">
-              <h2 class="project-column-heading__title">In Progress</h2>
-              <button class="project-column-heading__options">
-                <Icon>
-                  <MoreHorizontal28Regular />
-                </Icon>
-              </button>
-            </div>
-
-            <draggable
-              class="draggable-list"
-              tag="transition-group"
-              :component-data="{
-                type: 'transition-group',
-                name: 'flip-list',
-                tag: 'div'
-              }"
-              :list="tasks.inprogress"
-              group="tasks"
-              item-key="id"
-              @add="changeTaskStatus($event, 'inprogress')"
-            >
-              <template #item="{ element }">
-                <ProjectTaskCard
-                  :task-info="element"
-                  :data-id="element.id"
-                  @task-delete="deleteTask"
-                />
-              </template>
-            </draggable>
-          </div>
-          <div class="project-column">
-            <div class="project-column-heading">
-              <h2 class="project-column-heading__title">Completed</h2>
-              <button class="project-column-heading__options">
-                <Icon>
-                  <MoreHorizontal28Regular />
-                </Icon>
-              </button>
-            </div>
-            <draggable
-              class="draggable-list"
-              tag="transition-group"
-              :component-data="{
-                type: 'transition-group',
-                name: 'flip-list',
-                tag: 'div'
-              }"
-              :list="tasks.completed"
-              group="tasks"
-              item-key="id"
-              @add="changeTaskStatus($event, 'completed')"
-            >
-              <template #item="{ element }">
-                <ProjectTaskCard
-                  :task-info="element"
-                  :data-id="element.id"
-                  @task-delete="deleteTask"
-                />
-              </template>
-            </draggable>
-          </div>
+          <project-column
+            v-for="(tasksValue, taskName) in tasks"
+            :key="taskName"
+            :column-heading="taskName"
+            :list-type="taskName"
+            :tasks-list="tasksValue"
+          />
         </div>
       </div>
     </n-grid-item>
@@ -213,113 +98,45 @@
 </template>
 
 <script lang="ts">
-  import { handleApi } from '@/utils/helpers'
+  import { handleActions } from '@/utils/helpers'
   import { computed, defineComponent, onMounted, ref } from 'vue'
-  import { Project } from '@/interfaces/Project'
-  import { Task } from '@/interfaces/Task'
-  import api from '@/utils/api'
-  import ProjectTaskCard from '@/components/project/ProjectTaskCard.vue'
-  import draggable from 'vuedraggable'
+  import { Project, SelectedProjectTasksTypes } from '@/interfaces/Project'
   import { useRoute } from 'vue-router'
   import { Icon } from '@vicons/utils'
-  import {
-    Attach20Regular,
-    MoreHorizontal28Regular,
-    Comment28Regular,
-    Edit24Regular
-  } from '@vicons/fluent'
+  import { Attach20Regular, Comment28Regular, Edit24Regular } from '@vicons/fluent'
+  import { useStore } from '@/use/useStore'
+  import { ActionTypes as ProjectActions } from '@/store/modules/project/action-types'
+  import ProjectColumn from '@/components/project/ProjectColumn.vue'
   export default defineComponent({
     name: 'Project',
     components: {
-      ProjectTaskCard,
-      draggable,
       // ICONS
       Icon,
       Attach20Regular,
-      MoreHorizontal28Regular,
       Edit24Regular,
-      Comment28Regular
+      Comment28Regular,
+      ProjectColumn
     },
     setup() {
-      // INITIALIZE ROUTE
+      // INITIALIZE ROUTES and STORE
+      const store = useStore()
       const route = useRoute()
       // VARIABLES
       const project = ref<Project | null>(null)
-      const isLoading = ref(false)
-      const tasks = ref({
-        waiting: [] as Task[],
-        approved: [] as Task[],
-        inprogress: [] as Task[],
-        completed: [] as Task[],
-        rejected: [] as Task[]
-      })
-      const drag = computed(() => false)
-      // FUNCTIONS
-      const deleteTask = (task: Task) => {
-        const taskStatus = task.status?.slug as
-          | 'waiting'
-          | 'approved'
-          | 'rejected'
-          | 'completed'
-          | 'inprogress'
-        if (taskStatus != null) {
-          tasks.value[taskStatus] = tasks.value[taskStatus].filter((el) => el.id !== task.id)
-        }
-      }
-      const getProject = async () => {
-        isLoading.value = true
-        const response = api.get(`/api/projects/show/${route.params.id}`)
-        const [data, error] = await handleApi(response)
+      const isLoading = computed(() => store.getters.isProjectsLoading)
+      const tasks = computed<SelectedProjectTasksTypes>(() => store.getters.getSelectedProjectTasks)
+      const tasksLength: number = Object.keys(tasks).length
+      onMounted(async () => {
+        const [data, error] = await handleActions(
+          store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.id.toString())
+        )
         if (error) {
-          isLoading.value = false
           return
         }
         project.value = data.data['data']
-        isLoading.value = false
-        if (project.value?.tasks) {
-          const checkTaskStatus = (task: Task) => {
-            switch (task.status?.slug) {
-              case 'waiting':
-                tasks.value.waiting.unshift(task)
-                break
-              case 'approved':
-                tasks.value.approved.unshift(task)
-                break
-              case 'inprogress':
-                tasks.value.inprogress.unshift(task)
-                break
-              case 'completed':
-                tasks.value.completed.unshift(task)
-                break
-              case 'rejected':
-                tasks.value.rejected.unshift(task)
-                break
-              default:
-                // TODO: IMPLEMENT DEFAULT CASE
-                console.log(task.status?.name)
-                break
-            }
-          }
-          project.value.tasks.forEach(checkTaskStatus)
-        }
-      }
-      onMounted(() => {
-        getProject()
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const changeTaskStatus = async (event: any, status: string) => {
-        // Get the task id from the data-id attributes in li element
-        const taskId = event.item.getAttribute('data-id')
-        const promise = api.put(`/api/tasks/changestatus/${taskId}`, { status_slug: status })
-        const [, error] = await handleApi(promise)
-        if (error) {
-          // TODO: HANDLE ERROR
-          return
-        }
-      }
-
-      return { project, drag, tasks, changeTaskStatus, isLoading, deleteTask }
+      return { project, tasks, isLoading, tasksLength }
     }
   })
 </script>
@@ -373,36 +190,9 @@
 
     &-tasks {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       width: 100%;
       grid-column-gap: 1.5rem;
-    }
-    &-column {
-      &-heading {
-        margin-bottom: 1rem;
-        @include display;
-        justify-content: space-between;
-        &__title {
-          font-size: 20px;
-        }
-        &__options {
-          background: transparent;
-          color: $light-grey;
-          font-size: 18px;
-          border: 0;
-          cursor: pointer;
-        }
-      }
-    }
-    .draggable-list {
-      position: relative;
-      &::after {
-        position: absolute;
-        content: '';
-        height: 50px;
-        max-height: 200px;
-        width: 100%;
-      }
     }
   }
   .task-hover {
@@ -518,11 +308,6 @@
     &--edit {
       background-color: #7784ee;
     }
-  }
-
-  // Transition animation
-  .flip-list-move {
-    transition: transform 0.3s;
   }
 
   @media only screen and (max-width: 1300px) {

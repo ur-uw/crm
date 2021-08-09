@@ -18,11 +18,9 @@ export default defineConfig({
         refSugar: true
       }
     }),
-    eslintPlugin({
-      include: ['src/**/*.vue', 'src/**/*.js'],
-      exclude: ['./src/store/*.ts', './src/store/*.js']
-    })
+    eslintPlugin()
   ],
+
   server: {
     port: 8080
   }

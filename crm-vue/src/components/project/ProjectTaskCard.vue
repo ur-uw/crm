@@ -59,6 +59,8 @@
   import EditProjectTaskForm from './EditProjectTaskForm.vue'
   import api from '@/utils/api'
   import { handleApi } from '@/utils/helpers'
+  import { useStore } from '@/use/useStore'
+  import { MutationTypes } from '@/store/modules/project/mutation-types'
   export default defineComponent({
     name: 'ProjectTaskCard',
     components: {
@@ -78,6 +80,8 @@
     },
     emits: ['task-delete'],
     setup(props, { emit }) {
+      // INITIALIZE STORE
+      const store = useStore()
       // VARIABLES
       const showModal = ref(false)
       const task = ref(props.taskInfo)
@@ -85,6 +89,7 @@
       const hideModal = (t: Task | null) => {
         if (t != null) {
           task.value = t
+          store.commit(MutationTypes.EDIT_PROJECT_TASK, t)
         }
         showModal.value = false
       }

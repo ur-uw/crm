@@ -29,7 +29,10 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     })
   },
   // FETCH SINGLE PROJECT
-  [ActionTypes.FETCH_SINGLE_PROJECT]({ commit }, payload: Project): Promise<unknown> {
+  [ActionTypes.FETCH_SINGLE_PROJECT](
+    { commit },
+    payload: Project | string | number
+  ): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
       commit(MutationTypes.SET_LOADING, true)
       const promise = api.get(`/api/projects/show/${payload}`)
@@ -39,8 +42,11 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
         reject(error)
         return
       }
+      const project: Project = data.data['data']
       commit(MutationTypes.SET_LOADING, false)
-      // TODO: Make use of the fetched project
+      if (project.tasks != null) {
+        commit(MutationTypes.CAST_PROJECT_TASKS, project.tasks)
+      }
       resolve(data)
     })
   },
@@ -90,6 +96,28 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
       }
       commit(MutationTypes.DELETE_PROJECT, id)
       resolve(null)
+    })
+  },
+  // CHANGE A PROJECT TASK STATUS
+  [ActionTypes.CHANGE_PROJECT_TASK_STATUS](
+    { commit },
+    payload: {
+      id: number
+      status: string
+    }
+  ): Promise<unknown> {
+    return new Promise(async (resolve, reject) => {
+      const promise = api.put(`/api/tasks/changestatus/${payload.id}`, {
+        status_slug: payload.status
+      })
+      const [data, error] = await handleApi(promise)
+      if (error) {
+        // TODO: HANDLE ERROR IN THE CALL LOCATION
+        reject(error)
+        return
+      }
+
+      resolve(data)
     })
   }
 }

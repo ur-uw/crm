@@ -4,7 +4,6 @@ import { Task } from '@/interfaces/Task'
 import { ActionTree } from 'vuex'
 import { ActionTypes } from './action-types'
 import { MutationTypes } from './mutation-types'
-import Swal from 'sweetalert2'
 import { IRootState } from '@/store/register'
 import api from '@/utils/api'
 import { TaskActionsTypes, TaskStateTypes } from '@/store/store_interfaces/task_store_interface'
@@ -111,30 +110,15 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   },
   // DELETE TASK
   async [ActionTypes.DELETE_TASK]({ commit }, id: number) {
-    const confirmResult = await Swal.fire({
-      titleText: 'Delete Task',
-      text: 'Are you sure you want to delete this task?',
-      allowOutsideClick: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No'
+    return new Promise(async (resolve, reject) => {
+      const response = api.delete(`/api/tasks/delete/${id}`)
+      const [data, error] = await handleApi(response)
+      if (error) {
+        reject(error)
+        return
+      }
+      commit(MutationTypes.DELETE_TASK, id)
+      resolve(data)
     })
-    if (confirmResult.isConfirmed) {
-      return new Promise(async (resolve, reject) => {
-        const response = api.delete(`/api/tasks/delete/${id}`)
-        const [data, error] = await handleApi(response)
-        if (error) {
-          Swal.fire({
-            icon: 'error',
-            toast: true,
-            titleText: 'Some went thing wrong',
-            showConfirmButton: false
-          })
-          reject(error)
-        }
-        commit(MutationTypes.DELETE_TASK, id)
-        resolve(data)
-      })
-    }
   }
 }

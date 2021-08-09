@@ -73,7 +73,7 @@
   import TodayTask from './TaskCard.vue'
   import { ActionTypes } from '@/store/modules/task/action-types'
   import { Task } from '@/interfaces/Task'
-  import Swal from 'sweetalert2'
+  import { useNotification } from 'naive-ui'
   export default defineComponent({
     components: {
       TodayTask
@@ -85,6 +85,7 @@
       const recentTasks = computed(() => store.getters.getRecentTasks)
       const todayTasks = computed(() => store.getters.getTodayTasks)
       const isLoading = computed(() => store.getters.getTasksLoadingState)
+      const notification = useNotification()
       // Methods
       const addDailyTask = () => {
         const task = recentTasks.value.find((t) => t.title === newTaskTitle.value) ?? null
@@ -98,14 +99,10 @@
           store.dispatch(ActionTypes.CREATE_TASK, newTask)
           newTaskTitle.value = ''
         } else {
-          console.log('Task exists')
-          Swal.fire({
-            icon: 'warning',
-            toast: true,
-            showConfirmButton: false,
-            text: 'Task already exists!',
-            timer: 2000,
-            position: 'top-end'
+          notification.warning({
+            title: 'Warning',
+            content: 'Task already exists!',
+            duration: 2500
           })
         }
       }

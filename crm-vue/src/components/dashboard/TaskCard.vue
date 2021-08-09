@@ -46,13 +46,13 @@
 </template>
 
 <script lang="ts">
+  /* eslint-disable @typescript-eslint/no-non-null-assertion */
   import { Task } from '@/interfaces/Task'
   import { defineComponent, PropType, ref } from 'vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from '@/store/modules/task/action-types'
-  import Swal from 'sweetalert2'
-
   import { useBreakPoints } from '@/use/useBreakpoints'
+  import { useNotification } from 'naive-ui'
   export default defineComponent({
     name: 'TaskCard',
     props: {
@@ -69,8 +69,10 @@
       // Initialize custom vuex-store
       const store = useStore()
       // variables
-      let showEditTask = ref<boolean>(false)
-      let newTaskTitle = ref<string>(props.task.title ?? 'No title')
+      const showEditTask = ref<boolean>(false)
+      const newTaskTitle = ref<string>(props.task.title ?? 'No title')
+      const notification = useNotification()
+
       /* TOGGLE TASK COMPLETED PROPERTY */
       const toggleTaskCompleted = async () => {
         store.dispatch(ActionTypes.CHANGE_STATUS, {
@@ -95,13 +97,10 @@
           })
           toggleTaskForm()
         } else {
-          Swal.fire({
-            icon: 'warning',
-            toast: true,
-            showConfirmButton: false,
-            text: 'Titles are the same',
-            timer: 2000,
-            position: 'top-end'
+          notification.warning({
+            title: 'Warning',
+            content: 'Task exists with same title',
+            duration: 3000
           })
         }
       }

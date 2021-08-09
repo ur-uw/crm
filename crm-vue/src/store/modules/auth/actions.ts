@@ -4,7 +4,6 @@ import { ActionTypes } from './action-types'
 import { MutationTypes } from './mutation-types'
 import { IRootState } from '@/store/register'
 import { AuthActionsTypes, AuthStateTypes } from '@/store/store_interfaces/auth_store_interface'
-import Swal from 'sweetalert2'
 import api from '@/utils/api'
 import { handleApi } from '@/utils/helpers'
 
@@ -76,14 +75,6 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
       const response = api.get('/api/auth/logout')
       const [data, error] = await handleApi(response)
       if (error) {
-        Swal.fire({
-          icon: 'error',
-          text: 'Some thing went wrong, please try again later',
-          showConfirmButton: false,
-          toast: true,
-          timer: 1500,
-          position: 'top-end'
-        })
         reject(error)
         return
       }

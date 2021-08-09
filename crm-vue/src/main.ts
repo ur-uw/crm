@@ -18,10 +18,10 @@ import {
   NSkeleton,
   NSpace,
   NSpin,
-  NSwitch
+  NSwitch,
+  NDialog,
+  NAlert
 } from 'naive-ui'
-import VueSweetalert2 from 'vue-sweetalert2'
-import 'sweetalert2/dist/sweetalert2.min.css'
 // Custom css
 import './assets/css/app.min.css'
 
@@ -39,10 +39,12 @@ const naive = create({
     NForm,
     NFormItem,
     NInput,
-    NDatePicker
+    NDatePicker,
+    NDialog,
+    NAlert
   ]
 })
-const app = createApp(App).use(store).use(router).use(VueSweetalert2).use(naive)
+const app = createApp(App).use(store).use(router).use(naive)
 
 // ? GLOBAL DIRECTIVES
 app.directive('focus', {

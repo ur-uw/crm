@@ -2,11 +2,11 @@
   <div class="project-column">
     <div class="project-column-heading">
       <h2 class="project-column-heading__title">{{ columnHeading }}</h2>
-      <button class="project-column-heading__options">
+      <router-link class="project-column-heading__options" :to="{ name: 'project.task.add' }">
         <Icon>
-          <MoreHorizontal28Regular />
+          <Add28Filled />
         </Icon>
-      </button>
+      </router-link>
     </div>
     <draggable
       class="draggable-list"
@@ -32,7 +32,7 @@
   import { defineComponent, PropType } from 'vue'
   import ProjectTaskCard from './ProjectTaskCard.vue'
   import { Icon } from '@vicons/utils'
-  import { MoreHorizontal28Regular } from '@vicons/fluent'
+  import { Add28Filled } from '@vicons/fluent'
   import { useStore } from '@/use/useStore'
   import { handleActions } from '@/utils/helpers'
   import { ActionTypes } from '@/store/modules/project/action-types'
@@ -43,7 +43,7 @@
     components: {
       ProjectTaskCard,
       Icon,
-      MoreHorizontal28Regular,
+      Add28Filled,
       draggable
     },
     props: {
@@ -63,6 +63,7 @@
     setup() {
       // INITIALIZE STORE
       const store = useStore()
+      // VARIABLES
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const changeTaskStatus = async (event: any, status: string) => {
         // Get the task id from the data-id attributes in li element

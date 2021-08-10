@@ -7,6 +7,7 @@ import {
   create,
   // component
   NButton,
+  NInputGroup,
   NDatePicker,
   NForm,
   NFormItem,
@@ -20,7 +21,14 @@ import {
   NSpin,
   NSwitch,
   NDialog,
-  NAlert
+  NAlert,
+  NIcon,
+  NDropdown,
+  NRadioButton,
+  NRadioGroup,
+  NSelect,
+  NDynamicTags,
+  NLayout
 } from 'naive-ui'
 // Custom css
 import './assets/css/app.min.css'
@@ -31,6 +39,7 @@ const naive = create({
     NGrid,
     NGridItem,
     NResult,
+    NInputGroup,
     NSpace,
     NSpin,
     NSkeleton,
@@ -41,7 +50,14 @@ const naive = create({
     NInput,
     NDatePicker,
     NDialog,
-    NAlert
+    NAlert,
+    NIcon,
+    NDropdown,
+    NLayout,
+    NRadioButton,
+    NRadioGroup,
+    NSelect,
+    NDynamicTags
   ]
 })
 const app = createApp(App).use(store).use(router).use(naive)

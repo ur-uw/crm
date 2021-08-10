@@ -55,6 +55,15 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/project/:id/add-task',
+    name: 'project.task.add',
+    component: () => import('@/views/AddProjectTask.vue'),
+    meta: {
+      title: 'Add Task',
+      auth: true
+    }
+  },
+  {
     path: '/test',
     name: 'test',
     component: () => import('@/views/Test.vue'),

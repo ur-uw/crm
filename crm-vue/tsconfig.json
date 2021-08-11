@@ -16,7 +16,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["jest", "vite/client", "node", "vue-sweetalert2"]
+    "types": ["jest", "vite/client", "node"]
   },
   "include": [
     "src/**/*.ts",

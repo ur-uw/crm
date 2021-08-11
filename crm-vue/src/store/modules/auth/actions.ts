@@ -4,15 +4,14 @@ import { ActionTypes } from './action-types'
 import { MutationTypes } from './mutation-types'
 import { IRootState } from '@/store/register'
 import { AuthActionsTypes, AuthStateTypes } from '@/store/store_interfaces/auth_store_interface'
-import Swal from 'sweetalert2'
-import axios from 'axios'
+import api from '@/utils/api'
 import { handleApi } from '@/utils/helpers'
 
 export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes = {
   [ActionTypes.LOGIN]({ commit }, payload: { email: string; password: string }): Promise<any> {
     return new Promise(async (resolve, reject): Promise<void> => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.post('/api/auth/login', {
+      const promise = api.post('/api/auth/login', {
         ...payload,
         device_name: navigator.userAgent
       })
@@ -31,7 +30,7 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
       commit(MutationTypes.SET_USER, data.data['user'])
       commit(MutationTypes.SET_TOKEN, token)
       commit(MutationTypes.SET_LOGIN_STATE, true)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
       resolve(data)
     })
   },
@@ -47,7 +46,7 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
   ) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.post('/api/auth/register', {
+      const promise = api.post('/api/auth/register', {
         ...payload,
         device_name: navigator.userAgent
       })
@@ -66,24 +65,16 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
       commit(MutationTypes.SET_USER, data.data['user'])
       commit(MutationTypes.SET_TOKEN, token)
       commit(MutationTypes.SET_LOGIN_STATE, true)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
       resolve(data)
     })
   },
   async [ActionTypes.LOGOUT]({ commit }) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const response = axios.get('/api/auth/logout')
+      const response = api.get('/api/auth/logout')
       const [data, error] = await handleApi(response)
       if (error) {
-        Swal.fire({
-          icon: 'error',
-          text: 'Some thing went wrong, please try again later',
-          showConfirmButton: false,
-          toast: true,
-          timer: 1500,
-          position: 'top-end'
-        })
         reject(error)
         return
       }
@@ -99,7 +90,7 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
   [ActionTypes.GET_USER]({ commit }): Promise<any> {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const response = axios.get('/api/auth/user')
+      const response = api.get('/api/auth/user')
       const [data, error] = await handleApi(response)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)

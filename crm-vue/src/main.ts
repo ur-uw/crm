@@ -2,42 +2,65 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { store } from './store'
-import axios from 'axios'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import VueSweetalert2 from 'vue-sweetalert2'
-import 'sweetalert2/dist/sweetalert2.min.css'
+import {
+  // create naive ui
+  create,
+  // component
+  NButton,
+  NInputGroup,
+  NDatePicker,
+  NForm,
+  NFormItem,
+  NGrid,
+  NGridItem,
+  NInput,
+  NModal,
+  NResult,
+  NSkeleton,
+  NSpace,
+  NSpin,
+  NSwitch,
+  NDialog,
+  NAlert,
+  NIcon,
+  NDropdown,
+  NRadioButton,
+  NRadioGroup,
+  NSelect,
+  NDynamicTags,
+  NLayout
+} from 'naive-ui'
 // Custom css
 import './assets/css/app.min.css'
-library.add(fas)
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
-axios.defaults.headers.common['Accept'] = 'application/json'
-axios.defaults.headers.common['Content-Type'] = 'application/json'
 
-const app = createApp(App)
-  .use(store)
-  .use(router)
-  .use(VueSweetalert2)
-  .component('fa', FontAwesomeIcon)
-
-axios.interceptors.response.use(undefined, (error) => {
-  let route = { name: 'error', path: 'error' }
-  switch (error.response.status) {
-    case 401:
-      route = { name: 'login', path: '/login' }
-      break
-    case 404:
-      route = {
-        name: 'not-found.show',
-        path: '/:pathMatch(.*)*'
-      }
-      break
-  }
-  // TODO: make sure that url stay the same when it redirects to NotFound page
-  router.replace(route)
-  return Promise.reject(error)
+const naive = create({
+  components: [
+    NButton,
+    NGrid,
+    NGridItem,
+    NResult,
+    NInputGroup,
+    NSpace,
+    NSpin,
+    NSkeleton,
+    NSwitch,
+    NModal,
+    NForm,
+    NFormItem,
+    NInput,
+    NDatePicker,
+    NDialog,
+    NAlert,
+    NIcon,
+    NDropdown,
+    NLayout,
+    NRadioButton,
+    NRadioGroup,
+    NSelect,
+    NDynamicTags
+  ]
 })
+const app = createApp(App).use(store).use(router).use(naive)
 
 // ? GLOBAL DIRECTIVES
 app.directive('focus', {

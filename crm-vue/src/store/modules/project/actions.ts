@@ -7,7 +7,7 @@ import {
   ProjectActionsTypes,
   ProjectStateTypes
 } from '@/store/store_interfaces/project_store_interface'
-import axios from 'axios'
+import api from '@/utils/api'
 import { handleApi } from '@/utils/helpers'
 import { Project } from '@/interfaces/Project'
 
@@ -16,7 +16,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   [ActionTypes.FETCH_PROJECTS]({ commit }): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.get('/api/projects/get')
+      const promise = api.get('/api/projects/get')
       const [data, error] = await handleApi(promise)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)
@@ -29,25 +29,31 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     })
   },
   // FETCH SINGLE PROJECT
-  [ActionTypes.FETCH_SINGLE_PROJECT]({ commit }, payload: Project): Promise<unknown> {
+  [ActionTypes.FETCH_SINGLE_PROJECT](
+    { commit },
+    payload: Project | string | number
+  ): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.get(`/api/projects/show/${payload}`)
+      const promise = api.get(`/api/projects/show/${payload}`)
       const [data, error] = await handleApi(promise)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)
         reject(error)
         return
       }
+      const project: Project = data.data['data']
       commit(MutationTypes.SET_LOADING, false)
-      // TODO: Make use of the fetched project
+      if (project.tasks != null) {
+        commit(MutationTypes.CAST_PROJECT_TASKS, project.tasks)
+      }
       resolve(data)
     })
   },
   // CREATE PROJECT
   [ActionTypes.CREATE_PROJECT]({ commit }, project: Project): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      const promise = axios.post(`/api/projects/create`, project)
+      const promise = api.post(`/api/projects/create`, project)
       const [data, error] = await handleApi(promise)
       if (error) {
         reject(error)
@@ -63,7 +69,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     payload: { index: number; updatedProject: Project }
   ): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const response = axios.put(
+      const response = api.put(
         `/api/projects/update/${payload.updatedProject.id}`,
         payload.updatedProject
       )
@@ -82,7 +88,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   // UPDATE A PROJECT
   [ActionTypes.DELETE_PROJECT]({ commit }, id: number): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const response = axios.delete(`/api/projects/delete/${id}`)
+      const response = api.delete(`/api/projects/delete/${id}`)
       const [, error] = await handleApi(response)
       if (error) {
         reject(error)
@@ -90,6 +96,28 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
       }
       commit(MutationTypes.DELETE_PROJECT, id)
       resolve(null)
+    })
+  },
+  // CHANGE A PROJECT TASK STATUS
+  [ActionTypes.CHANGE_PROJECT_TASK_STATUS](
+    { commit },
+    payload: {
+      id: number
+      status: string
+    }
+  ): Promise<unknown> {
+    return new Promise(async (resolve, reject) => {
+      const promise = api.put(`/api/tasks/changestatus/${payload.id}`, {
+        status_slug: payload.status
+      })
+      const [data, error] = await handleApi(promise)
+      if (error) {
+        // TODO: HANDLE ERROR IN THE CALL LOCATION
+        reject(error)
+        return
+      }
+
+      resolve(data)
     })
   }
 }

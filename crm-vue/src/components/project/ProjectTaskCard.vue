@@ -1,29 +1,140 @@
 <template>
   <div class="task bg-dark">
     <div class="task__tags">
-      <span class="task__tag task__tag--copyright">Copywriting</span
-      ><button class="task__options"><fa icon="ellipsis-h" /></button>
+      <span class="task__tag task__tag--copyright">Copywriting</span>
+      <n-dropdown trigger="click" :options="options" @select="handleSelect">
+        <button class="task__options">
+          <Icon> <MoreHorizontal28Regular /> </Icon>
+        </button>
+      </n-dropdown>
     </div>
     <p>{{ task.title }}</p>
     <div class="task__stats">
       <span>
-        <time :datetime="task.created_at"><fa icon="flag" />{{ task.due_date }}</time>
+        <time :datetime="task.created_at">
+          <Icon> <Flag28Regular /></Icon>
+          {{ task.due_date }}
+        </time>
       </span>
-      <span><fa icon="comment" />{{ Math.floor(Math.random() * 100) }}</span>
-      <span> <fa icon="paperclip" />{{ Math.floor(Math.random() * 100) }} </span>
-      <span class="task__owner"></span>
+      <span>
+        <Icon>
+          <CommentMultiple24Regular />
+        </Icon>
+        {{ Math.floor(Math.random() * 100) }}
+      </span>
+      <span>
+        <Icon>
+          <Attach20Regular />
+        </Icon>
+        {{ Math.floor(Math.random() * 100) }}
+      </span>
     </div>
+    <n-modal
+      v-model:show="showModal"
+      class="custom-card"
+      preset="card"
+      :style="bodyStyle"
+      title="Edit"
+      :bordered="false"
+      size="huge"
+      :segmented="{
+        content: 'soft'
+      }"
+    >
+      <edit-project-task-form :task="task" @hide-modal="hideModal" />
+    </n-modal>
   </div>
 </template>
 <script lang="ts">
   import { Task } from '@/interfaces/Task'
-  import { defineComponent, PropType } from 'vue'
+  import { Icon } from '@vicons/utils'
+  import {
+    MoreHorizontal28Regular,
+    CommentMultiple24Regular,
+    Flag28Regular,
+    Attach20Regular
+  } from '@vicons/fluent'
+  import { defineComponent, PropType, ref } from 'vue'
+  import { NDropdown, useNotification } from 'naive-ui'
+  import EditProjectTaskForm from './EditProjectTaskForm.vue'
+  import api from '@/utils/api'
+  import { handleApi } from '@/utils/helpers'
+  import { useStore } from '@/use/useStore'
+  import { MutationTypes } from '@/store/modules/project/mutation-types'
   export default defineComponent({
     name: 'ProjectTaskCard',
+    components: {
+      NDropdown,
+      Icon,
+      Attach20Regular,
+      MoreHorizontal28Regular,
+      CommentMultiple24Regular,
+      Flag28Regular,
+      EditProjectTaskForm
+    },
     props: {
-      task: {
+      taskInfo: {
         type: Object as PropType<Task>,
         required: true
+      }
+    },
+    emits: ['task-delete'],
+    setup(props, { emit }) {
+      // INITIALIZE STORE
+      const store = useStore()
+      // VARIABLES
+      const showModal = ref(false)
+      const task = ref(props.taskInfo)
+      const notification = useNotification()
+      const hideModal = (t: Task | null) => {
+        if (t != null) {
+          task.value = t
+          store.commit(MutationTypes.EDIT_PROJECT_TASK, t)
+        }
+        showModal.value = false
+      }
+      const options = [
+        {
+          label: 'Edit',
+          key: 'edit'
+        },
+        {
+          label: 'Delete',
+          key: 'delete'
+        }
+      ]
+      const deleteTask = async () => {
+        const promise = api.delete(`/api/tasks/delete/${props.taskInfo.id}`)
+        const [, error] = await handleApi(promise)
+        if (error) {
+          notification.error({
+            title: 'Error',
+            content: 'Something went wrong, please try again later',
+            duration: 2500
+          })
+          return
+        }
+      }
+      const handleSelect = (key: 'edit' | 'delete') => {
+        switch (key) {
+          case 'edit':
+            showModal.value = true
+            break
+          case 'delete':
+            deleteTask()
+            emit('task-delete', props.taskInfo)
+            break
+        }
+      }
+      return {
+        options,
+        handleSelect,
+        showModal,
+        task,
+        bodyStyle: {
+          width: '600px'
+        },
+        hideModal
       }
     }
   })

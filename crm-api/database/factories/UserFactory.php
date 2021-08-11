@@ -23,8 +23,10 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $name =   $this->faker->name();
         return [
-            'name' => $this->faker->name(),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' =>   $this->faker->unique()->phoneNumber(),
             'email_verified_at' => now(),
@@ -54,6 +56,7 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'name' => "Mohammed Fadhil",
+                'slug' => 'mohammed-fadhil',
                 'email' => 'test@test.com',
                 'phone' => '+9647800183076'
             ];

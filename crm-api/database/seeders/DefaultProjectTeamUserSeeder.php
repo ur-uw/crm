@@ -37,15 +37,31 @@ class DefaultProjectTeamUserSeeder extends Seeder
         $user->tasks()->sync($tasks);
 
         $team_name = "Mohammed Team";
-
-        $team = Team::factory()->create([
+        $mohammedTeam = Team::factory()->create([
             'display_name' => $team_name,
             'project_id' => $project->id,
             'name' => Str::slug($team_name)
         ]);
+        $mohammedTeam->users()->sync(
+            collect([$user, $user2, $user3])->pluck('id')->toArray()
+        );
 
-        $user->attachPermissions(Permission::all(), $team);
-        $user->attachRole(Role::firstWhere('name', 'owner'), $team);
+        $otherTeams = Team::factory(4)->create([
+            'project_id' => $project->id
+        ]);
+        $project->teams()->saveMany($otherTeams);
+        $otherTeams->each(function (Team $team) {
+            $users = User::factory(rand(2, 4))->create();
+            $team->users()->sync($users->pluck('id')->toArray());
+            $users->each(function (User $user) use ($team) {
+                $user->attachPermissions(
+                    ['project-update', 'task-read', 'project-read'],
+                    $team
+                );
+            });
+        });
+        $user->attachPermissions(Permission::all(), $mohammedTeam);
+        $user->attachRole(Role::firstWhere('name', 'owner'), $mohammedTeam);
         $user2->attachPermissions(['project-update', 'project-read', 'task-read', 'task-update']);
         $user3->attachPermissions(['project-read', 'task-read']);
     }

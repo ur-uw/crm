@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Http\Resources\TeamResource;
+use App\Http\Resources\UserResource;
 use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -93,5 +95,23 @@ class ProjectController extends Controller
             Response::HTTP_FORBIDDEN,
             "You don't have the correct permissions for this action"
         );
+    }
+    /**
+     * Get project's users.
+     *
+     * @param  \App\Models\Project  $project
+     * @return \Illuminate\Http\Response
+     */
+    public function getUsers(Request $request, Project $project)
+    {
+        $withTeams = $request->withTeams;
+        if ($withTeams) {
+            return TeamResource::collection(
+                $project->teams()
+                    ->with('users')
+                    ->get()
+            );
+        }
+        return UserResource::collection($project->users);
     }
 }

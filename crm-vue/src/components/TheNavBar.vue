@@ -31,7 +31,7 @@
         </div>
         <div v-if="isUserLoggedIn" class="navbar-nav text-white">
           <div class="nav-item">
-            <button class="btn btn-custom-purple" @click="logOut()">Sign out</button>
+            <n-button ghost type="warning" @click="logOut()">Sign out</n-button>
           </div>
         </div>
       </div>
@@ -42,28 +42,43 @@
   import { computed, defineComponent } from 'vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes as AuthActions } from '@/store/modules/auth/action-types'
-  import Swal from 'sweetalert2'
   import { useRouter } from 'vue-router'
+  import { useDialog, useNotification } from 'naive-ui'
+  import { handleActions } from '@/utils/helpers'
   export default defineComponent({
     setup() {
       // Create store & router instances
       const store = useStore()
       const router = useRouter()
       // Variables
+      const notification = useNotification()
       const isUserLoggedIn = computed(() => store.getters.isUserLoggedIn)
       // functions
-      const logOut = async () => {
-        const confirmChoice = await Swal.fire({
-          icon: 'question',
-          text: 'Are you sure you want to sign out ?',
-          showCancelButton: true,
-          confirmButtonText: 'Yes',
-          cancelButtonText: 'No'
+      const dialog = useDialog()
+      const logOut = () => {
+        dialog.warning({
+          title: 'Sign out',
+          showIcon: false,
+          content: 'Are you sure you want to sign out?',
+          closable: false,
+          positiveText: 'Confirm',
+          negativeText: 'Cancel',
+          maskClosable: false,
+          onPositiveClick: async () => {
+            const promise = store.dispatch(AuthActions.LOGOUT)
+            const [, error] = await handleActions(promise)
+            if (error) {
+              notification.error({
+                title: 'Sign out failed',
+                content: 'Something went wrong, please try again later'
+              })
+            }
+            router.push('/login')
+          },
+          onNegativeClick: () => {
+            dialog.destroyAll()
+          }
         })
-        if (confirmChoice.isConfirmed) {
-          await store.dispatch(AuthActions.LOGOUT)
-          router.push('/login')
-        }
       }
       return {
         isUserLoggedIn,

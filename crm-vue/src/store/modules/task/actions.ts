@@ -4,9 +4,8 @@ import { Task } from '@/interfaces/Task'
 import { ActionTree } from 'vuex'
 import { ActionTypes } from './action-types'
 import { MutationTypes } from './mutation-types'
-import Swal from 'sweetalert2'
 import { IRootState } from '@/store/register'
-import axios from 'axios'
+import api from '@/utils/api'
 import { TaskActionsTypes, TaskStateTypes } from '@/store/store_interfaces/task_store_interface'
 
 export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes = {
@@ -14,7 +13,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   async [ActionTypes.FETCH_TASKS]({ commit }) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const res = axios.get('/api/tasks/get')
+      const res = api.get('/api/tasks/get')
       const [data, error] = await handleApi(res)
       if (error) {
         reject(error)
@@ -29,7 +28,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   async [ActionTypes.FETCH_RECENT_TASKS]({ commit }) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const res = axios.get('/api/tasks/recently/3')
+      const res = api.get('/api/tasks/recently/3')
       const [data, error] = await handleApi(res)
       if (error) {
         reject(error)
@@ -44,7 +43,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   async [ActionTypes.FETCH_TASKS_FOR_DATE]({ commit }, payload: string) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const res = axios.get(`/api/tasks/for/${payload}`)
+      const res = api.get(`/api/tasks/for/${payload}`)
       const [data, error] = await handleApi(res)
       if (error) {
         reject(error)
@@ -58,7 +57,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   // CREATE TASK
   async [ActionTypes.CREATE_TASK]({ commit }, task: Task) {
     return new Promise(async (resolve, reject) => {
-      const response = axios.post('/api/tasks/create', task)
+      const response = api.post('/api/tasks/create', task)
       const [data, error] = await handleApi(response)
       if (error) {
         reject(error)
@@ -75,7 +74,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
     payload: { index: number; id: number; updatedTask: Task }
   ) {
     return new Promise(async (resolve, reject) => {
-      const response = axios.put(`/api/tasks/update/${payload.id}`, payload.updatedTask)
+      const response = api.put(`/api/tasks/update/${payload.id}`, payload.updatedTask)
       const [data, error] = await handleApi(response)
       if (error) {
         reject(error)
@@ -94,7 +93,7 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
     payload: { id: number; index: number; status_slug: string }
   ) {
     return new Promise(async (resolve, reject) => {
-      const response = axios.put(`/api/tasks/changestatus/${payload.id}`, {
+      const response = api.put(`/api/tasks/changestatus/${payload.id}`, {
         status_slug: payload.status_slug
       })
       const [data, error] = await handleApi(response)
@@ -111,30 +110,15 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   },
   // DELETE TASK
   async [ActionTypes.DELETE_TASK]({ commit }, id: number) {
-    const confirmResult = await Swal.fire({
-      titleText: 'Delete Task',
-      text: 'Are you sure you want to delete this task?',
-      allowOutsideClick: false,
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No'
+    return new Promise(async (resolve, reject) => {
+      const response = api.delete(`/api/tasks/delete/${id}`)
+      const [data, error] = await handleApi(response)
+      if (error) {
+        reject(error)
+        return
+      }
+      commit(MutationTypes.DELETE_TASK, id)
+      resolve(data)
     })
-    if (confirmResult.isConfirmed) {
-      return new Promise(async (resolve, reject) => {
-        const response = axios.delete(`/api/tasks/delete/${id}`)
-        const [data, error] = await handleApi(response)
-        if (error) {
-          Swal.fire({
-            icon: 'error',
-            toast: true,
-            titleText: 'Some went thing wrong',
-            showConfirmButton: false
-          })
-          reject(error)
-        }
-        commit(MutationTypes.DELETE_TASK, id)
-        resolve(data)
-      })
-    }
   }
 }

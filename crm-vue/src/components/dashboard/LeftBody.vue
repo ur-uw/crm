@@ -1,6 +1,5 @@
 <template>
   <div id="left" class="p-lg-5 p-md-3">
-    <img src="../../assets/images/hamburger.png" class="hamburger" alt="hamburger" />
     <div class="profile text-sm-center">
       <h1>Hi {{ currentUser?.name }}</h1>
       <h2>Let's make projects more amazing</h2>
@@ -10,9 +9,26 @@
       </div>
     </div>
 
-    <projects-list v-if="!isLoading && projects !== null" :projects="projects"></projects-list>
+    <projects-list v-if="!isLoading && projects !== null" :projects="projects"> </projects-list>
     <div v-else>
-      <div class="alert alert-info">Loading projects ....</div>
+      <n-space vertical>
+        <n-skeleton text :width="100" size="small" />
+        <n-space>
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+        </n-space>
+        <n-space>
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+        </n-space>
+        <n-space>
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+          <n-skeleton :width="100" :height="100" size="medium" />
+        </n-space>
+      </n-space>
     </div>
   </div>
 </template>
@@ -43,13 +59,6 @@
 <style lang="scss">
   #left {
     position: relative;
-
-    .hamburger {
-      position: absolute;
-      top: 0%;
-      left: 2%;
-      cursor: pointer;
-    }
 
     .profile {
       margin-top: 5px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="btn btn-success" @click="$router.replace({ name: 'home' })">Home</div>
+  <n-button @click="$router.replace({ name: 'home' })">Home</n-button>
 </template>
 
 <script lang="ts">

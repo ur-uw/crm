@@ -1,13 +1,15 @@
 <template>
   <n-config-provider :theme="theme">
-    <IconConfigProvider size="20">
-      <n-dialog-provider>
-        <n-notification-provider>
-          <the-nav-bar />
-          <router-view :key="$route.path" />
-        </n-notification-provider>
-      </n-dialog-provider>
-    </IconConfigProvider>
+    <n-theme-editor>
+      <IconConfigProvider size="20">
+        <n-dialog-provider>
+          <n-notification-provider>
+            <the-nav-bar />
+            <router-view :key="$route.path" />
+          </n-notification-provider>
+        </n-dialog-provider>
+      </IconConfigProvider>
+    </n-theme-editor>
   </n-config-provider>
 </template>
 <script lang="ts">
@@ -17,6 +19,8 @@
   import TheNavBar from '@/components/TheNavBar.vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from './store/modules/auth/action-types'
+  import { NThemeEditor } from 'naive-ui'
+
   import api from '@/utils/api'
   export default defineComponent({
     name: 'App',
@@ -25,7 +29,8 @@
       IconConfigProvider,
       NConfigProvider,
       NDialogProvider,
-      NNotificationProvider
+      NNotificationProvider,
+      NThemeEditor
     },
     setup() {
       const store = useStore()

@@ -16,7 +16,7 @@
     "./src/store/*.js"
   ],
   "dependencies": {
-    "vue": "^3.1.5",
+    "vue": "^3.2.0",
     "vue-router": "^4.0.11",
     "vuedraggable": "^4.0.3",
     "vuex": "^4.0.2"
@@ -41,7 +41,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-vue": "^7.14.0",
     "jest": "^27.0.6",
-    "naive-ui": "^2.16.1",
+    "naive-ui": "^2.16.2",
     "prettier": "^2.3.2",
     "sass": "^1.35.2",
     "stylelint": "^13.13.1",

@@ -1,18 +1,20 @@
 <template>
-  <div class="container">
-    <n-grid cols="2 s:1 xs:1">
-      <n-grid-item>
-        <div class="container">
+  <n-grid cols="2 s:1 xs:1" :x-gap="15" :y-gap="10" responsive="screen">
+    <n-grid-item>
+      <div
+        class="container min-vh-100 d-flex flex-column justify-content-center align-items-center"
+      >
+        <n-card class="h-100">
           <n-form ref="formRef" :model="model" :rules="rules" @submit.prevent="handleSubmit">
-            <n-space vertical>
+            <n-space vertical size="large" justify="space-around">
               <!-- TASK TITLE -->
               <n-form-item path="taskTitle" label="Task Title">
                 <n-input
                   v-model:value="model.taskTitle"
-                  show-count
                   maxlength="25"
+                  size="large"
                   type="text"
-                  placeholder="Title"
+                  placeholder=""
                   clearable
                   @keydown.enter.prevent
                 >
@@ -33,46 +35,44 @@
               </n-form-item>
 
               <!-- TASK STATUS -->
-              <n-form-item path="status" label="Status">
-                <n-radio-group
-                  v-model:value="model.taskStatus"
-                  :on-update:value="onStatusSelected"
-                  name="task-statuses-group"
-                >
-                  <n-radio-button v-for="status in statues" :key="status.slug" :value="status.slug">
+              <n-form-item v-if="taskStatus" path="taskStatus" label="Status">
+                <n-radio-group v-model:value="model.taskStatus" name="task-statuses-group">
+                  <n-radio v-for="status in statues" :key="status.slug" :value="status.slug">
                     {{ status.name }}
-                  </n-radio-button>
+                  </n-radio>
                 </n-radio-group>
               </n-form-item>
               <!-- TASK PRIORITY -->
               <n-form-item path="taskPriority" label="Priority">
-                <n-radio-group
-                  v-model:value="model.taskStatus"
-                  :on-update:value="onStatusSelected"
-                  name="task-statuses-group"
-                >
-                  <n-radio-button v-for="status in statues" :key="status.slug" :value="status.slug">
-                    {{ status.name }}
-                  </n-radio-button>
+                <n-radio-group v-model:value="model.taskPriority" name="task-statuses-group">
+                  <n-radio v-for="priority in priorities" :key="priority" :value="priority">
+                    {{ priority }}
+                  </n-radio>
                 </n-radio-group>
               </n-form-item>
+              <n-grid cols="2 xs:1 s:1" responsive="screen">
+                <n-grid-item>
+                  <!-- TASK DUE DATE -->
+                  <n-form-item path="dueDate" label="Due Date">
+                    <n-input-group>
+                      <n-date-picker
+                        v-model:value="model.dueDate"
+                        :format="'yyyy-MM-dd'"
+                        :default-value="model.dueDate"
+                        type="date"
+                        :actions="['clear']"
+                      />
+                    </n-input-group>
+                  </n-form-item>
+                </n-grid-item>
+                <n-grid-item>
+                  <!-- TASK TAGS -->
+                  <n-form-item path="tags" label="Tags">
+                    <n-dynamic-tags v-model:value="model.tags" :max="4" />
+                  </n-form-item>
+                </n-grid-item>
+              </n-grid>
 
-              <n-space>
-                <!-- TASK DUE DATE -->
-                <n-form-item path="dueDate" label="Due Date">
-                  <n-date-picker
-                    v-model:value="model.dueDate"
-                    :format="'yyyy-MM-dd'"
-                    :default-value="model.dueDate"
-                    type="date"
-                    :actions="['confirm']"
-                  />
-                </n-form-item>
-                <!-- TASK TAGS -->
-                <n-form-item path="tags" label="Tags">
-                  <n-dynamic-tags v-model:value="model.tags" :max="4" />
-                </n-form-item>
-              </n-space>
               <!-- TASK DESCRIPTION -->
               <n-form-item path="taskDescription" label="Task Description">
                 <n-input
@@ -80,23 +80,23 @@
                   show-count
                   maxlength="150"
                   type="textarea"
-                  placeholder="Description"
+                  placeholder=""
                   @keydown.prevent.enter
                 />
               </n-form-item>
 
-              <n-button type="primary" @click.prevent="handleSubmit">Save</n-button>
+              <n-button type="primary" save="large" @click.prevent="handleSubmit">Save</n-button>
             </n-space>
           </n-form>
-        </div>
-      </n-grid-item>
-      <n-grid-item>
-        <div class="d-flex justify-content-center align-items-center flex-column h-100 w-100">
-          <img class="w-75 h-100" src="@/assets/images/add_task.svg" alt="" />
-        </div>
-      </n-grid-item>
-    </n-grid>
-  </div>
+        </n-card>
+      </div>
+    </n-grid-item>
+    <n-grid-item>
+      <div class="d-flex justify-content-center align-items-center flex-column h-100 w-100">
+        <img class="w-75 h-100" src="@/assets/images/add_task.svg" alt="" />
+      </div>
+    </n-grid-item>
+  </n-grid>
 </template>
 
 <script lang="ts">
@@ -110,7 +110,14 @@
   import { useRoute } from 'vue-router'
   // import { PersonAdd28Regular } from '@vicons/fluent'
   export default defineComponent({
-    setup() {
+    props: {
+      taskStatus: {
+        type: String,
+        required: false,
+        default: ''
+      }
+    },
+    setup(props) {
       // INITIALIZE ROUTE
       const route = useRoute()
       // VARIABLES
@@ -118,6 +125,7 @@
       const areUserOptionsLoading = ref(false)
       const userOptions = ref<SelectGroupOption[]>([])
       const statues = ref<Status[]>([])
+      const priorities = ref<string[]>(['High', 'Medium', 'Low'])
       const modelRef = ref({
         taskTitle: null,
         taskDescription: null,
@@ -165,7 +173,13 @@
       }
       // FUNCTIONS
       const handleSubmit = () => {
-        formRef.value?.validate()
+        formRef.value?.validate((errors) => {
+          if (!errors) {
+            console.log(modelRef.value)
+          } else {
+            console.log('invalid')
+          }
+        })
       }
       const fetchProjectUsers = async () => {
         if (userOptions.value.length === 0 && modelRef.value.assignTo.length === 0) {
@@ -203,13 +217,10 @@
         statues.value = data.data['data']
       }
 
-      // Set task status
-      const onStatusSelected = (value: string | null) => {
-        modelRef.value.taskStatus = value
-      }
-
       onMounted(() => {
-        fetchTasStatues()
+        if (props.taskStatus) {
+          fetchTasStatues()
+        }
       })
 
       return {
@@ -221,7 +232,7 @@
         options: userOptions,
         statues,
         onFocus: fetchProjectUsers,
-        onStatusSelected
+        priorities
       }
     }
   })

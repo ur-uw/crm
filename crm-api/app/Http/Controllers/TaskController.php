@@ -43,9 +43,10 @@ class TaskController extends Controller
         $info = $request->validated();
         $users = User::whereIn('slug', $info['assigned_to'])
             ->get();
+        // TODO: HANDLE TASK STATUS WITH SLUGABLE PACKAGE
         $status = Status::firstWhere('slug', $info['status_slug']);
-        $task = Task::create($request->validated());
-        $task->status()->associate($status);
+        $task = Task::make($request->validated());
+        $status->tasks()->save($task);
         $request->user()->tasks()->sync($task);
         $users->each(function (User $user) use ($task) {
             $user->tasks()->sync($task);

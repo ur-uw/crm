@@ -25,11 +25,13 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            'description' => 'string',
+            'description' => 'string|nullable',
             'start_date' => 'date',
             'due_date' => 'date',
-            'project_id' => 'numeric',
+            // TODO:CHANGE status_id to status_slug
             'status_id' => 'numeric',
+            'assigned_to' => 'required|array',
+            'assigned_to.*' => 'required|exists:users,slug',
         ];
     }
 }

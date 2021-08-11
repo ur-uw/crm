@@ -10,24 +10,27 @@
     </div>
     <p>{{ task.title }}</p>
     <div class="task__stats">
-      <span>
-        <time :datetime="task.created_at">
-          <Icon> <Flag28Regular /></Icon>
+      <n-space>
+        <span class="d-flex">
+          <time :datetime="task.created_at">
+            <Icon> <Flag28Regular /></Icon>
+          </time>
           {{ task.due_date }}
-        </time>
-      </span>
-      <span>
-        <Icon>
-          <CommentMultiple24Regular />
-        </Icon>
-        {{ Math.floor(Math.random() * 100) }}
-      </span>
-      <span>
-        <Icon>
-          <Attach20Regular />
-        </Icon>
-        {{ Math.floor(Math.random() * 100) }}
-      </span>
+        </span>
+        <span class="d-flex">
+          <Icon>
+            <CommentMultiple24Regular />
+          </Icon>
+
+          {{ Math.floor(Math.random() * 100) }}
+        </span>
+        <span class="d-flex">
+          <Icon>
+            <Attach20Regular />
+          </Icon>
+          {{ Math.floor(Math.random() * 100) }}
+        </span>
+      </n-space>
     </div>
     <n-modal
       v-model:show="showModal"

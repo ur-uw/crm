@@ -33,7 +33,7 @@ class CreateTaskRequest extends FormRequest
             'created_by' => 'required|numeric',
             // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
             'slug' => 'required|string|unique:tasks,title',
-            'description' => 'string',
+            'description' => 'string|nullable',
             'start_date' => 'date',
             'due_date' => 'date',
             'assigned_to' => 'required|array',

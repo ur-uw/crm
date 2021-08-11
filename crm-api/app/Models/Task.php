@@ -33,6 +33,15 @@ class Task extends Model implements Ownable
         'created_by',
         'status_id',
     ];
+    protected $dates = [
+        'start_date',
+        'due_date',
+    ];
+
+    protected $casts = [
+        'start_date' => 'datetime:Y-m-d',
+        'due_date' => 'datetime:Y-m-d',
+    ];
 
     public function ownerKey($owner)
     {

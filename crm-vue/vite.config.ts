@@ -16,6 +16,9 @@ export default defineConfig({
       scss: { additionalData: `@import "${pathSrc}/assets/scss/colors";` }
     }
   },
+  build: {
+    sourcemap: true
+  },
   plugins: [
     vue({
       script: {

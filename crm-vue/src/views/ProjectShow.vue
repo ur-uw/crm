@@ -15,7 +15,8 @@
             <span></span>
             <span></span>
             <span></span>
-            <button class="project-participants__add">Add Participant</button>
+
+            <button class="project-participants__add">Add Member</button>
           </div>
         </div>
         <div class="project-tasks">
@@ -34,59 +35,72 @@
         <div class="tag-progress">
           <h2>Task Progress</h2>
           <div class="tag-progress">
-            <p>Copywriting <span>3/8</span></p>
-            <progress class="progress progress--copyright" max="8" value="3">3</progress>
+            <p>Copywriting</p>
+            <n-progress
+              type="line"
+              :percentage="50"
+              :height="20"
+              border-radius="12px 0 12px 0"
+              fill-border-radius="12px 0 12px 0"
+            />
           </div>
           <div class="tag-progress">
-            <p>Illustration <span>6/10</span></p>
-            <progress class="progress progress--illustration" max="10" value="6">6</progress>
+            <p>Illustration</p>
+            <n-progress
+              type="line"
+              :percentage="50"
+              :height="20"
+              color="orange"
+              border-radius="12px 0 12px 0"
+              fill-border-radius="12px 0 12px 0"
+            />
           </div>
           <div class="tag-progress">
-            <p>UI Design <span>2/7</span></p>
-            <progress class="progress progress--design" max="7" value="2">2</progress>
+            <p>UI Design</p>
+            <n-progress
+              type="line"
+              :percentage="50"
+              :height="20"
+              color="pink"
+              border-radius="12px 0 12px 0"
+              fill-border-radius="12px 0 12px 0"
+            />
           </div>
         </div>
         <div class="task-activity">
           <h2>Recent Activity</h2>
-          <ul>
-            <li>
-              <span class="task-icon task-icon--attachment">
-                <Icon><Attach20Regular /> </Icon>
-              </span>
-              <b>Andrea </b>uploaded 3 documents
-              <time datetime="2021-11-24T20:00:00">Aug 10</time>
-            </li>
-            <li>
-              <span class="task-icon task-icon--comment">
-                <Icon> <Comment28Regular /> </Icon>
-              </span>
-              <b>Karen </b> left a comment
-              <time datetime="2021-11-24T20:00:00">Aug 10</time>
-            </li>
-            <li>
-              <span class="task-icon task-icon--edit">
-                <Icon>
-                  <Edit24Regular />
-                </Icon>
-              </span>
-              <b>Karen </b>uploaded 3 documents
-              <time datetime="2021-11-24T20:00:00">Aug 11</time>
-            </li>
-            <li>
-              <span class="task-icon task-icon--attachment">
-                <Icon><Attach20Regular /> </Icon
-              ></span>
-              <b>Andrea </b>uploaded 3 documents
-              <time datetime="2021-11-24T20:00:00">Aug 11</time>
-            </li>
-            <li>
-              <span class="task-icon task-icon--comment">
-                <Icon> <Comment28Regular /> </Icon
-              ></span>
-              <b>Karen </b> left a comment
-              <time datetime="2021-11-24T20:00:00">Aug 12</time>
-            </li>
-          </ul>
+          <n-timeline size="large">
+            <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
+            <n-timeline-item
+              title="Rejected"
+              type="warning"
+              content="{Task Name} marked as rejected by Admin"
+            />
+            <n-timeline-item
+              type="info"
+              title="Inprogress"
+              content="{Task Name} marked as inprogress by Maitham"
+              time="2018-04-03 20:46"
+            />
+            <n-timeline-item
+              type="error"
+              title="Delete Task"
+              content="{Task Name} was deleted by Hamza"
+              time="2018-04-03 20:46"
+            />
+            <n-timeline-item
+              title="Edit Task"
+              type="info"
+              content=" {Task Name} had been edited by John Doe"
+              time="2018-04-03 20:46"
+            />
+            <n-timeline-item
+              type="success"
+              title="Complete"
+              content="{Task Name} marked as completed by Mohammed"
+              time="2018-04-03 20:46"
+            />
+          </n-timeline>
         </div>
       </div>
     </n-grid-item>
@@ -105,19 +119,12 @@
   import { computed, defineComponent, onMounted, ref } from 'vue'
   import { Project, SelectedProjectTasksTypes } from '@/interfaces/Project'
   import { useRoute } from 'vue-router'
-  import { Icon } from '@vicons/utils'
-  import { Attach20Regular, Comment28Regular, Edit24Regular } from '@vicons/fluent'
   import { useStore } from '@/use/useStore'
   import { ActionTypes as ProjectActions } from '@/store/modules/project/action-types'
   import ProjectColumn from '@/components/project/ProjectColumn.vue'
   export default defineComponent({
     name: 'Project',
     components: {
-      // ICONS
-      Icon,
-      Attach20Regular,
-      Edit24Regular,
-      Comment28Regular,
       ProjectColumn
     },
     setup() {
@@ -201,13 +208,6 @@
   .task-hover {
     border: 3px dashed $light-grey !important;
   }
-  .task-details {
-    border-left: 1px solid #d9e0e9;
-    display: inline-block;
-    height: 100%;
-    vertical-align: top;
-    padding: 3rem 2rem;
-  }
 
   .tag-progress {
     margin: 1.5rem 0;
@@ -224,48 +224,6 @@
         color: rgb(180, 180, 180);
       }
     }
-    .progress {
-      width: 100%;
-      -webkit-appearance: none;
-      appearance: none;
-      border: none;
-      border-radius: 10px;
-      height: 10px;
-
-      &::-webkit-progress-bar,
-      &::-webkit-progress-value {
-        border-radius: 10px;
-      }
-      &--copyright {
-        &::-webkit-progress-bar {
-          background-color: #ecd8e6;
-        }
-
-        &::-webkit-progress-value {
-          background: #d459e8;
-        }
-      }
-
-      &--illustration {
-        &::-webkit-progress-bar {
-          background-color: #dee7e3;
-        }
-
-        &::-webkit-progress-value {
-          background-color: #46bd84;
-        }
-      }
-
-      &--design {
-        &::-webkit-progress-bar {
-          background-color: #d8e7f4;
-        }
-
-        &::-webkit-progress-value {
-          background-color: #08a0f7;
-        }
-      }
-    }
   }
 
   .task-activity {
@@ -273,62 +231,11 @@
       font-size: 16px;
       margin-bottom: 1rem;
     }
-
-    li {
-      list-style: none;
-      margin: 1rem 0;
-      padding: 0rem 1rem 1rem 3rem;
-      position: relative;
-    }
-    time {
-      display: block;
-      color: $light-grey;
-    }
-  }
-
-  .task-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 100rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    @include display;
-    justify-content: center;
-
-    svg {
-      font-size: 12px;
-      color: white;
-    }
-    &--attachment {
-      background-color: #fba63c;
-    }
-
-    &--comment {
-      background-color: #5dc983;
-    }
-
-    &--edit {
-      background-color: #7784ee;
-    }
   }
 
   @media only screen and (max-width: 1300px) {
     .project {
       max-width: 100%;
-    }
-    .task-details {
-      width: 100%;
-      display: flex;
-    }
-    .tag-progress,
-    .task-activity {
-      flex-basis: 50%;
-      color: black;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem;
     }
   }
 
@@ -350,10 +257,7 @@
       flex-wrap: wrap;
       padding: 3rem 1rem;
     }
-    .tag-progress,
-    .task-activity {
-      flex-basis: 100%;
-    }
+
     h1 {
       font-size: 25px;
     }

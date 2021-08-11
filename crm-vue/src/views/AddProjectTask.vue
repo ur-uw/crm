@@ -1,8 +1,8 @@
 <template>
   <n-grid cols="2 s:1 xs:1" :x-gap="15" :y-gap="10" responsive="screen">
-    <n-grid-item>
-      <div class="container min-vh-100 d-flex flex-column justify-content-center">
-        <h3 class="mb-2">Add a Task</h3>
+    <n-grid-item class="h-100 w-100">
+      <div class="container center mt-3 w-100 h-100">
+        <h3 class="mb-3">Add a Task</h3>
         <n-card class="h-100">
           <n-form ref="formRef" :model="model" :rules="rules" @submit.prevent="handleSubmit">
             <n-space vertical size="large" justify="space-around">
@@ -52,14 +52,15 @@
               <n-grid cols="2 xs:1 s:1" responsive="screen">
                 <n-grid-item>
                   <!-- TASK DUE DATE -->
-                  <n-form-item path="dueDate" label="Due Date">
+                  <n-form-item path="taskDates" label="Start Date - Due Date">
                     <n-input-group>
                       <n-date-picker
-                        v-model:value="model.dueDate"
-                        :format="'yyyy-MM-dd'"
-                        :default-value="model.dueDate"
-                        type="date"
-                        :actions="['clear']"
+                        end-placeholder="Due Date and Time"
+                        type="datetimerange"
+                        clearable
+                        update-value-on-close
+                        :on-update:value="onTaskDatesChanged"
+                        :ranges="ranges"
                       />
                     </n-input-group>
                   </n-form-item>
@@ -83,8 +84,17 @@
                   @keydown.prevent.enter
                 />
               </n-form-item>
-
-              <n-button type="primary" save="large" @click.prevent="handleSubmit">Save</n-button>
+              <n-space justify="space-between">
+                <h6 class="text-custom-grey">
+                  <span>Fields with ( <span class="text-custom-pink">*</span> ) are required</span>
+                </h6>
+                <n-space>
+                  <the-back button-size="large" button-text="Cancel"> </the-back>
+                  <n-button type="primary" size="large" @click.prevent="handleSubmit"
+                    >Save</n-button
+                  >
+                </n-space>
+              </n-space>
             </n-space>
           </n-form>
         </n-card>
@@ -106,12 +116,15 @@
   import { useStore } from '@/use/useStore'
   import api from '@/utils/api'
   import { handleApi } from '@/utils/helpers'
-  import { TimeStamp } from '@/utils/Timestamp'
   import { SelectGroupOption, SelectOption, useNotification } from 'naive-ui'
   import { ref, defineComponent, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
+  import moment from 'moment'
+  import TheBack from '@/components/TheBack.vue'
+
   // import { PersonAdd28Regular } from '@vicons/fluent'
   export default defineComponent({
+    components: { TheBack },
     props: {
       taskStatus: {
         type: String,
@@ -124,6 +137,9 @@
       const route = useRoute()
       const store = useStore()
       // VARIABLES
+      const now = new Date()
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
       const notification = useNotification()
       const formRef = ref(null)
       const areUserOptionsLoading = ref(false)
@@ -136,7 +152,7 @@
         assignTo: [] as (string | number)[],
         taskStatus: null as string | null,
         taskPriority: null as string | null,
-        dueDate: null,
+        taskDates: null as { start_date: string; due_date: string } | null,
         tags: [] as string[]
       }
       const modelRef = ref(modelRefValue)
@@ -169,50 +185,54 @@
             message: 'Please set task priority'
           }
         ],
-        dueDate: [
+        taskDates: [
           {
             required: true,
-            message: 'This field is required'
+            message: 'Please set task start and due dates'
           }
         ]
       }
       // FUNCTIONS
       const handleSubmit = () => {
-        formRef.value?.validate(async (errors) => {
+        formRef.value?.validate(async (errors: unknown) => {
           if (!errors) {
-            const task: Task = {
-              title: modelRef.value.taskTitle!,
-              description: modelRef.value.taskDescription!,
-              due_date: new TimeStamp().getDateFromTimestamp(modelRef.value.dueDate! / 1000.0)
-            }
-            const promise = api.post('/api/tasks/create', {
-              ...task,
-              project_id: route.params.id,
-              slug: Math.random().toString(),
-              status_slug: props.taskStatus ?? modelRef.value.taskStatus,
-              assigned_to: modelRef.value.assignTo,
-              created_by: store.getters.getCurrentUser?.id
-            })
-            const [data, error] = await handleApi(promise)
-            if (error) {
-              notification.error({
-                title: 'Error',
-                content: 'Something went wrong, please try agin later',
+            if (modelRef.value.taskDates != null) {
+              const task: Task = {
+                title: modelRef.value.taskTitle!,
+                description: modelRef.value.taskDescription!,
+                due_date: modelRef.value.taskDates?.start_date,
+                start_date: modelRef.value.taskDates.due_date
+              }
+              const promise = api.post('/api/tasks/create', {
+                ...task,
+                project_id: route.params.id,
+                slug: Math.random().toString(),
+                status_slug: props.taskStatus ?? modelRef.value.taskStatus,
+                assigned_to: modelRef.value.assignTo,
+                created_by: store.getters.getCurrentUser?.id
+              })
+              const [data, error] = await handleApi(promise)
+              if (error) {
+                notification.error({
+                  title: 'Error',
+                  content: 'Something went wrong, please try agin later',
+                  duration: 3000
+                })
+                return
+              }
+              // TODO:USE THE DATA
+              const createdTask: Task = data.data['data']
+              notification.success({
+                title: 'New Task Created',
+                content: 'Task created successfully',
                 duration: 3000
               })
-              return
+              console.log(createdTask)
             }
-            // TODO:USE THE DATA
-            const createdTask: Task = data.data['data']
-            notification.success({
-              title: 'New Task Created',
-              content: 'Task created successfully',
-              duration: 3000
-            })
-            console.log(createdTask)
           }
         })
       }
+      // Fetch project users with their teams
       const fetchProjectUsers = async () => {
         if (userOptions.value.length === 0 && modelRef.value.assignTo.length === 0) {
           areUserOptionsLoading.value = true
@@ -248,7 +268,15 @@
         }
         statues.value = data.data['data']
       }
-
+      // When start date and due date picker values change
+      const onTaskDatesChanged = (value: [number, number] | null) => {
+        if (value !== null) {
+          modelRef.value.taskDates = {
+            start_date: moment(value[0]).format(),
+            due_date: moment(value[1]).format()
+          }
+        }
+      }
       onMounted(() => {
         if (!props.taskStatus) {
           fetchTasStatues()
@@ -264,7 +292,11 @@
         options: userOptions,
         statues,
         onFocus: fetchProjectUsers,
-        priorities
+        priorities,
+        onTaskDatesChanged,
+        ranges: {
+          'This Month': [startOfMonth, endOfMonth]
+        }
       }
     }
   })

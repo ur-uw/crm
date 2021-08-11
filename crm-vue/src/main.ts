@@ -37,7 +37,10 @@ import {
   NLayout,
   NCard,
   NRadio,
-  NTimePicker
+  NTimePicker,
+  NTimeline,
+  NTimelineItem,
+  NProgress
 } from 'naive-ui'
 // Custom css
 import './assets/css/app.min.css'
@@ -71,7 +74,10 @@ const naive = create({
     NSelect,
     NDynamicTags,
     NCard,
-    NLayout
+    NLayout,
+    NTimeline,
+    NTimelineItem,
+    NProgress
   ]
 })
 const app = createApp(App).use(store).use(router).use(naive)

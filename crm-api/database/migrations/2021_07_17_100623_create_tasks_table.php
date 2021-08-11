@@ -20,8 +20,8 @@ class CreateTasksTable extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->date('start_date')->default(Date::now());
-            $table->date('due_date')->nullable();
+            $table->timestampTz('start_date')->default(Date::now());
+            $table->timestampTz('due_date')->nullable();
             $table->foreignId('status_id')
                 ->default(1)
                 ->constrained()

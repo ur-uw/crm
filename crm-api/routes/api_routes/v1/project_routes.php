@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 //** Projects *//
 // Get single project
@@ -14,4 +15,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/update/{project}', [ProjectController::class, 'update']);
     // Delete project
     Route::delete('/delete/{project}', [ProjectController::class, 'destroy']);
+    Route::get('/{project}/users', [ProjectController::class, 'getUsers']);
+    // Search project users
+    Route::post('/{project}/users/search', [SearchController::class, 'searchProjectUsers']);
 });

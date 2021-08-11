@@ -22,7 +22,7 @@ class TeamFactory extends Factory
      */
     public function definition()
     {
-        $display_name = $this->faker->name() . 'TEAM';
+        $display_name = $this->faker->name() . ' TEAM';
         return [
             'name' => Str::slug($display_name),
             'display_name' => $display_name,

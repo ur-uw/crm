@@ -29,6 +29,8 @@ class Task extends Model implements Ownable
         'description',
         'start_date',
         'due_date',
+        'project_id',
+        'created_by',
         'status_id',
     ];
 

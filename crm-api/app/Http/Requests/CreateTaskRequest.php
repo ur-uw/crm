@@ -30,12 +30,15 @@ class CreateTaskRequest extends FormRequest
         return [
             'title' => 'required|string',
             'project_id' => 'required|numeric',
+            'created_by' => 'required|numeric',
             // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
             'slug' => 'required|string|unique:tasks,title',
             'description' => 'string',
             'start_date' => 'date',
             'due_date' => 'date',
-            'status_id' => 'required|numeric|exists:statuses,id',
+            'assigned_to' => 'required|array',
+            'assigned_to.*' => 'required|exists:users,slug',
+            'status_slug' => 'required|string|exists:statuses,slug',
         ];
     }
 }

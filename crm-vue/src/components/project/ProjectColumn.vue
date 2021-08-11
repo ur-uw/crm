@@ -2,7 +2,10 @@
   <div class="project-column">
     <div class="project-column-heading">
       <h2 class="project-column-heading__title">{{ columnHeading }}</h2>
-      <router-link class="project-column-heading__options" :to="{ name: 'project.task.add' }">
+      <router-link
+        class="project-column-heading__options"
+        :to="{ name: 'project.task.add', params: { taskStatus: listType } }"
+      >
         <Icon>
           <Add28Filled />
         </Icon>

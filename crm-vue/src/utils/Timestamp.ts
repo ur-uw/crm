@@ -1,6 +1,6 @@
 export class TimeStamp {
   protected date: string
-  constructor(date: Date | string) {
+  constructor(date?: Date | string) {
     this.date = `${date}`
   }
   public getTimeStamp = (format = 'YYYY-MM-DD', separator = '-'): number => {

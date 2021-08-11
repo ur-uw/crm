@@ -55,9 +55,10 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/project/:id/add-task',
+    path: '/project/:id/:taskStatus?/add-task',
     name: 'project.task.add',
     component: () => import('@/views/AddProjectTask.vue'),
+    props: true,
     meta: {
       title: 'Add Task',
       auth: true

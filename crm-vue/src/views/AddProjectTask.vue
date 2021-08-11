@@ -1,9 +1,8 @@
 <template>
   <n-grid cols="2 s:1 xs:1" :x-gap="15" :y-gap="10" responsive="screen">
     <n-grid-item>
-      <div
-        class="container min-vh-100 d-flex flex-column justify-content-center align-items-center"
-      >
+      <div class="container min-vh-100 d-flex flex-column justify-content-center">
+        <h3 class="mb-2">Add a Task</h3>
         <n-card class="h-100">
           <n-form ref="formRef" :model="model" :rules="rules" @submit.prevent="handleSubmit">
             <n-space vertical size="large" justify="space-around">
@@ -35,7 +34,7 @@
               </n-form-item>
 
               <!-- TASK STATUS -->
-              <n-form-item v-if="taskStatus" path="taskStatus" label="Status">
+              <n-form-item v-if="!taskStatus" path="taskStatus" label="Status">
                 <n-radio-group v-model:value="model.taskStatus" name="task-statuses-group">
                   <n-radio v-for="status in statues" :key="status.slug" :value="status.slug">
                     {{ status.name }}
@@ -102,10 +101,13 @@
 <script lang="ts">
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
   import { Status } from '@/interfaces/Status'
+  import { Task } from '@/interfaces/Task'
   import { Team } from '@/interfaces/Team'
+  import { useStore } from '@/use/useStore'
   import api from '@/utils/api'
   import { handleApi } from '@/utils/helpers'
-  import { SelectGroupOption, SelectOption } from 'naive-ui'
+  import { TimeStamp } from '@/utils/Timestamp'
+  import { SelectGroupOption, SelectOption, useNotification } from 'naive-ui'
   import { ref, defineComponent, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   // import { PersonAdd28Regular } from '@vicons/fluent'
@@ -118,15 +120,17 @@
       }
     },
     setup(props) {
-      // INITIALIZE ROUTE
+      // INITIALIZE ROUTE AND STORE
       const route = useRoute()
+      const store = useStore()
       // VARIABLES
+      const notification = useNotification()
       const formRef = ref(null)
       const areUserOptionsLoading = ref(false)
       const userOptions = ref<SelectGroupOption[]>([])
       const statues = ref<Status[]>([])
       const priorities = ref<string[]>(['High', 'Medium', 'Low'])
-      const modelRef = ref({
+      const modelRefValue = {
         taskTitle: null,
         taskDescription: null,
         assignTo: [] as (string | number)[],
@@ -134,7 +138,8 @@
         taskPriority: null as string | null,
         dueDate: null,
         tags: [] as string[]
-      })
+      }
+      const modelRef = ref(modelRefValue)
       const formRules = {
         taskTitle: [
           {
@@ -173,11 +178,38 @@
       }
       // FUNCTIONS
       const handleSubmit = () => {
-        formRef.value?.validate((errors) => {
+        formRef.value?.validate(async (errors) => {
           if (!errors) {
-            console.log(modelRef.value)
-          } else {
-            console.log('invalid')
+            const task: Task = {
+              title: modelRef.value.taskTitle!,
+              description: modelRef.value.taskDescription!,
+              due_date: new TimeStamp().getDateFromTimestamp(modelRef.value.dueDate! / 1000.0)
+            }
+            const promise = api.post('/api/tasks/create', {
+              ...task,
+              project_id: route.params.id,
+              slug: Math.random().toString(),
+              status_slug: props.taskStatus ?? modelRef.value.taskStatus,
+              assigned_to: modelRef.value.assignTo,
+              created_by: store.getters.getCurrentUser?.id
+            })
+            const [data, error] = await handleApi(promise)
+            if (error) {
+              notification.error({
+                title: 'Error',
+                content: 'Something went wrong, please try agin later',
+                duration: 3000
+              })
+              return
+            }
+            // TODO:USE THE DATA
+            const createdTask: Task = data.data['data']
+            notification.success({
+              title: 'New Task Created',
+              content: 'Task created successfully',
+              duration: 3000
+            })
+            console.log(createdTask)
           }
         })
       }
@@ -218,7 +250,7 @@
       }
 
       onMounted(() => {
-        if (props.taskStatus) {
+        if (!props.taskStatus) {
           fetchTasStatues()
         }
       })

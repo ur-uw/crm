@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Project;
 use App\Models\Status;
 use App\Models\Team;
+use App\Models\User;
 use Auth;
 use Date;
 
@@ -38,8 +40,16 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
+        $info = $request->validated();
+        $users = User::whereIn('slug', $info['assigned_to'])
+            ->get();
+        $status = Status::firstWhere('slug', $info['status_slug']);
         $task = Task::create($request->validated());
-        $request->user()->tasks()->attach($task);
+        $task->status()->associate($status);
+        $request->user()->tasks()->sync($task);
+        $users->each(function (User $user) use ($task) {
+            $user->tasks()->sync($task);
+        });
         return TaskResource::make(
             $task->load('status:id,name,color,slug')
         );

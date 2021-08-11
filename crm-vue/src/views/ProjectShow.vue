@@ -7,7 +7,10 @@
     <n-grid-item :span="tasksLength > 4 ? '5 xs:1 s:1' : '3 xs:1 s:1'">
       <div class="project">
         <div class="project-info">
-          <h1>{{ project?.name }}</h1>
+          <div class="project-name">
+            <h2>{{ project?.name }}</h2>
+            <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
+          </div>
           <div class="project-participants">
             <span></span>
             <span></span>

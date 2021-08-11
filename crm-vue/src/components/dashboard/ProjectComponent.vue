@@ -65,9 +65,8 @@
     padding: 0.5em;
 
     span {
-      font-family: 'MyriadProSemiBold', sans-serif;
       font-size: 17px;
-      color: var(--bs-white);
+      color: white;
     }
 
     div.box-color {
@@ -87,7 +86,7 @@
       }
 
       &:hover {
-        border: 3px solid var(--bs-custom-pink);
+        border: 3px solid $custom-pink;
         transition: border 250ms ease-in-out;
       }
     }
@@ -99,42 +98,42 @@
 
     &:nth-child(1) {
       div.box-color {
-        background-color: var(--bs-blue);
+        background-color: $blue;
         @extend .customwidth;
       }
     }
 
     &:nth-child(2) {
       div.box-color {
-        background-color: var(--bs-custom-pink);
+        background-color: $custom-pink;
         @extend .customwidth;
       }
     }
 
     &:nth-child(3) {
       div.box-color {
-        background-color: var(--bs-custom-yellow);
+        background-color: $custom-yellow;
         @extend .customwidth;
       }
     }
 
     &:nth-child(4) {
       div.box-color {
-        background-color: var(--bs-custom-green);
+        background-color: $custom-green;
         @extend .customwidth;
       }
     }
 
     &:nth-child(5) {
       div.box-color {
-        background-color: var(--bs-custom-purple);
+        background-color: $custom-purple;
         @extend .customwidth;
       }
     }
 
     &:nth-child(6) {
       div.box-color {
-        background-color: var(--bs-blue);
+        background-color: $blue;
         @extend .customwidth;
       }
     }

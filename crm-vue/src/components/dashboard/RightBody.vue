@@ -41,7 +41,6 @@
     border-radius: 15px;
 
     h1 {
-      font-family: 'MyriadProBold', sans-serif;
       font-size: 24px;
       font-weight: 400;
       margin-bottom: 10px;
@@ -84,7 +83,6 @@
         justify-content: space-between;
 
         h2 {
-          font-family: 'MyriadProBold', sans-serif;
           font-size: 15px;
           font-weight: 400;
         }
@@ -96,9 +94,9 @@
 
       input[type='text'] {
         border: unset;
-        border-bottom: 1px solid var(--bs-custom-grey);
+        border-bottom: 1px solid $custom-grey;
         width: 100%;
-        caret-color: var(--bs-primary);
+        caret-color: $primary;
       }
 
       ul.tasks-list {

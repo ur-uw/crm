@@ -1,5 +1,5 @@
 <template>
-  <div class="project-column">
+  <div class="project-column bg-primary2 px-2 py-4 rounded">
     <div class="project-column-heading">
       <h2 class="project-column-heading__title">{{ columnHeading }}</h2>
       <router-link
@@ -116,12 +116,15 @@
   }
   .draggable-list {
     position: relative;
+    height: 100%;
     &::after {
       position: absolute;
       content: '';
-      height: 50px;
-      max-height: 200px;
+      height: 100%;
       width: 100%;
     }
+  }
+  .flip-list-move {
+    transition: transform 0.5s;
   }
 </style>

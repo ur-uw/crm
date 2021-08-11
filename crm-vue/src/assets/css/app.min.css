@@ -22824,21 +22824,11 @@ fieldset:disabled .btn {
 .cursor-white {
   caret-color: red;
 }
-@font-face {
-  font-family: 'MyriadProLight';
-  font-weight: normal;
-  src: url('/src/assets/font/MyriadPro-Light.otf');
-}
-@font-face {
-  font-family: 'MyriadProSemiBold';
-  font-weight: normal;
-  src: url('/src/assets/font/MYRIADPRO-SEMIBOLD.OTF');
-}
 body {
   position: relative;
-  font-family: 'MyriadProSemiBold', sans-serif;
   color: white;
   background-color: #15172b;
+  font-family: 'v-sans', 'v-mono', sans-serif;
 }
 body::-webkit-scrollbar {
   display: none;
@@ -22901,10 +22891,10 @@ main {
 .custom-checkbox .checkmark {
   width: 35px;
   height: 35px;
-  border: 2px solid var(--bs-success);
+  border: 2px solid #15d4a1;
   display: inline-block;
   border-radius: 3px;
-  background: var(--bs-success)
+  background: #15d4a1
     url(https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/White_check.svg/1200px-White_check.svg.png)
     center/1250% no-repeat;
   -webkit-transition: background-size 0.2s ease;

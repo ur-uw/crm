@@ -73,10 +73,10 @@
     h3 {
       font-family: 'Open Sans', sans-serif;
       font-size: 19px;
-      color: var(--bs-white) !important;
+      color: white !important;
       span {
         font-size: 14px;
-        color: var(--bs-custom-grey);
+        color: $custom-grey;
       }
     }
 
@@ -98,16 +98,15 @@
         padding: 0.5em;
 
         span {
-          font-family: 'MyriadProSemiBold', sans-serif;
           font-size: 17px;
-          color: var(--bs-white);
+          color: white;
         }
 
         h6 {
           margin-top: 16px;
           font-family: 'Open Sans', sans-serif;
           font-size: 14px;
-          color: var(--bs-white);
+          color: white;
         }
 
         div.box-color {
@@ -127,7 +126,7 @@
           }
 
           &:hover {
-            border: 3px solid var(--bs-custom-pink);
+            border: 3px solid $custom-pink;
             transition: border 250ms ease-in-out;
           }
         }

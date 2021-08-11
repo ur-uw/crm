@@ -1,27 +1,15 @@
 @import 'custom_bootstrap';
 @import 'styles';
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
-@font-face {
-  font-family: 'MyriadProLight';
-  font-weight: normal;
-  src: url('/src/assets/font/MyriadPro-Light.otf');
-}
-
-@font-face {
-  font-family: 'MyriadProSemiBold';
-  font-weight: normal;
-  src: url('/src/assets/font/MYRIADPRO-SEMIBOLD.OTF');
-}
-
 body {
   position: relative;
-  font-family: 'MyriadProSemiBold', sans-serif;
   color: white;
   &::-webkit-scrollbar {
     display: none;
     scrollbar-width: none;
   }
   background-color: $primary;
+  font-family: 'v-sans', 'v-mono', sans-serif;
 }
 
 main {

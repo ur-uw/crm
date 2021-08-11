@@ -158,7 +158,7 @@
           display: inline-block;
           position: relative;
           border-radius: 50px;
-          border: 2px solid var(--bs-success);
+          border: 2px solid $success;
         }
       }
 
@@ -167,7 +167,7 @@
         margin-left: 15px;
         font-family: 'Open Sans', sans-serif;
         font-size: 13px;
-        color: var(--bs-primary2);
+        color: $primary2;
         font-weight: 600;
       }
     }

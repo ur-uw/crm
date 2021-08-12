@@ -1,89 +1,89 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <router-link class="navbar-brand" :to="{ name: 'home' }">Managee</router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarSupportedContent" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'dashboard.show' }">Dashboard</router-link>
-          </li>
-        </ul>
-        <div v-if="!isUserLoggedIn" class="navbar-nav text-white">
-          <div class="nav-item">
-            <router-link class="nav-link me-2" :to="{ name: 'login.show' }">Login</router-link>
-          </div>
-          <div class="nav-item">
-            <router-link class="btn btn-outline-success" :to="{ name: 'register.show' }">
-              Register
-            </router-link>
-          </div>
-        </div>
-        <div v-if="isUserLoggedIn" class="navbar-nav text-white">
-          <div class="nav-item">
-            <n-button ghost type="warning" @click="logOut()">Sign out</n-button>
-          </div>
-        </div>
+  <n-layout has-sider>
+    <n-layout-sider
+      bordered
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="240"
+      :collapsed="collapsed"
+      show-trigger
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+    >
+      <n-menu
+        v-model:value="activeKey"
+        :collapsed="collapsed"
+        :collapsed-width="64"
+        :on-update:value="onMenuItemClicked"
+        :collapsed-icon-size="22"
+        :options="menuOptions"
+      />
+    </n-layout-sider>
+    <n-layout-content>
+      <div id="content">
+        <slot name="content"></slot>
       </div>
-    </div>
-  </nav>
+    </n-layout-content>
+  </n-layout>
 </template>
+
 <script lang="ts">
-  import { computed, defineComponent } from 'vue'
-  import { useStore } from '@/use/useStore'
-  import { ActionTypes as AuthActions } from '@/store/modules/auth/action-types'
+  import { defineComponent, h, ref } from 'vue'
+  import { NIcon, NLayoutSider, NLayoutContent, NMenu } from 'naive-ui'
+  import {
+    ClipboardTaskListLtr24Regular as BoardIcon,
+    Person28Regular as PersonIcon,
+    Home28Regular as HomeIcon
+  } from '@vicons/fluent'
   import { useRouter } from 'vue-router'
-  import { useDialog, useNotification } from 'naive-ui'
-  import { handleActions } from '@/utils/helpers'
+
   export default defineComponent({
+    components: { NLayoutSider, NMenu, NLayoutContent },
     setup() {
-      // Create store & router instances
-      const store = useStore()
+      // INITIALIZE ROUTER
       const router = useRouter()
-      // Variables
-      const notification = useNotification()
-      const isUserLoggedIn = computed(() => store.getters.isUserLoggedIn)
-      // functions
-      const dialog = useDialog()
-      const logOut = () => {
-        dialog.warning({
-          title: 'Sign out',
-          showIcon: false,
-          content: 'Are you sure you want to sign out?',
-          closable: false,
-          positiveText: 'Confirm',
-          negativeText: 'Cancel',
-          maskClosable: false,
-          onPositiveClick: async () => {
-            const promise = store.dispatch(AuthActions.LOGOUT)
-            const [, error] = await handleActions(promise)
-            if (error) {
-              notification.error({
-                title: 'Sign out failed',
-                content: 'Something went wrong, please try again later'
-              })
-            }
-            router.push('/login')
-          },
-          onNegativeClick: () => {
-            dialog.destroyAll()
-          }
-        })
+      function renderIcon(icon) {
+        return () => h(NIcon, null, { default: () => h(icon) })
+      }
+
+      const menuOptions = [
+        {
+          label: 'Home',
+          key: 'home',
+          icon: renderIcon(HomeIcon)
+        },
+
+        {
+          label: 'Dashboard',
+          key: 'dashboard.show',
+          icon: renderIcon(BoardIcon)
+        },
+        {
+          label: 'Profile',
+          key: 'profile',
+          disabled: true,
+          icon: renderIcon(PersonIcon)
+        }
+      ]
+      const collapsed = ref(false)
+      // NAVIGATE TO CORRESPONDING PAGE USING VUE-ROUTER
+      /*
+        ? Note: the menu key should be the same as router link name
+       */
+      const onMenuItemClicked = (key: string) => {
+        router.push({ name: key })
       }
       return {
-        isUserLoggedIn,
-        logOut
+        menuOptions,
+        activeKey: null,
+        collapsed,
+        onMenuItemClicked
       }
     }
   })
 </script>
+<style lang="scss" scoped>
+  #content {
+    min-height: 100vh;
+  }
+</style>

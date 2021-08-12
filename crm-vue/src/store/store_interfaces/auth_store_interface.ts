@@ -38,8 +38,8 @@ export interface AuthActionsTypes {
   [AuthATypes.LOGIN](
     { commit }: AugmentedActionContextAuth,
     payload: {
-      email: string
-      password: string
+      email: string | null
+      password: string | null
     }
   ): Promise<any>
   [AuthATypes.REGISTER](

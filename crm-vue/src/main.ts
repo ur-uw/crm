@@ -44,7 +44,11 @@ import {
   NLayoutSider,
   NLayoutContent,
   NLayoutHeader,
-  NLayoutFooter
+  NLayoutFooter,
+  NCheckbox,
+  NText,
+  NH1,
+  NTooltip
 } from 'naive-ui'
 // Custom css
 import './assets/css/app.min.css'
@@ -85,7 +89,11 @@ const naive = create({
     NLayoutSider,
     NLayoutContent,
     NLayoutHeader,
-    NLayoutFooter
+    NLayoutFooter,
+    NCheckbox,
+    NText,
+    NH1,
+    NTooltip
   ]
 })
 const app = createApp(App).use(store).use(router).use(naive)

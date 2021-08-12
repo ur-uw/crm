@@ -4,5 +4,5 @@ export const state: AuthStateTypes = {
   user: null,
   token: token,
   isLoading: false,
-  isLoggedIn: token != null
+  isLoggedIn: token !== null && token !== ''
 }

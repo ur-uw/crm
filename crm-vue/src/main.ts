@@ -40,7 +40,11 @@ import {
   NTimePicker,
   NTimeline,
   NTimelineItem,
-  NProgress
+  NProgress,
+  NLayoutSider,
+  NLayoutContent,
+  NLayoutHeader,
+  NLayoutFooter
 } from 'naive-ui'
 // Custom css
 import './assets/css/app.min.css'
@@ -77,7 +81,11 @@ const naive = create({
     NLayout,
     NTimeline,
     NTimelineItem,
-    NProgress
+    NProgress,
+    NLayoutSider,
+    NLayoutContent,
+    NLayoutHeader,
+    NLayoutFooter
   ]
 })
 const app = createApp(App).use(store).use(router).use(naive)

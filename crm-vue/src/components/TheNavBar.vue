@@ -11,7 +11,6 @@
       @expand="collapsed = false"
     >
       <n-menu
-        v-model:value="activeKey"
         class="first-nav-menu"
         :collapsed="collapsed"
         :collapsed-width="64"
@@ -20,7 +19,6 @@
       />
       <n-menu
         v-if="isLoggedIn"
-        v-model:value="activeKey"
         class="mt-auto"
         :collapsed="collapsed"
         :collapsed-width="64"
@@ -38,7 +36,7 @@
 
 <script lang="ts">
   import { computed, defineComponent, h, ref } from 'vue'
-  import { NIcon, NLayoutSider, NLayoutContent, NMenu, useNotification } from 'naive-ui'
+  import { NIcon, NMenu, useNotification } from 'naive-ui'
   import {
     ClipboardTaskListLtr24Regular as BoardIcon,
     BookContacts28Regular as PersonIcon,
@@ -55,7 +53,7 @@
   import { handleActions } from '@/utils/helpers'
 
   export default defineComponent({
-    components: { NLayoutSider, NMenu, NLayoutContent },
+    components: { NMenu },
     setup() {
       // INITIALIZE ROUTER AND STORE
       const router = useRouter()
@@ -67,6 +65,7 @@
       }
       // VARIABLES
       const isLoggedIn = computed(() => store.getters.isUserLoggedIn)
+      const activeMenuItemKey = ref(null)
       const menuOptions = ref([
         {
           label: 'Home',
@@ -108,8 +107,8 @@
 
       const secondMenuOptions = ref([
         {
-          label: 'Logout',
-          key: 'logout',
+          label: 'Sign Out',
+          key: 'signOut',
           icon: renderIcon(SignOut24Regular)
         }
       ])
@@ -118,12 +117,13 @@
         ? Note: the menu key should be the same as router link name
        */
       const onMenuItemClicked = (key: string) => {
+        console.log(activeMenuItemKey.value)
         router.push({ name: key })
       }
 
       // DOWN ITEMS OF THE SIDE BAR
       const onSecondMenuClicked = async (key: string) => {
-        if (key === 'sinOut') {
+        if (key === 'signOut') {
           const action = store.dispatch(ActionTypes.LOGOUT)
           const [, error] = await handleActions(action)
           if (error) {
@@ -133,11 +133,12 @@
             })
             return
           }
+          router.replace({ name: 'login.show' })
         }
       }
       return {
         menuOptions,
-        activeKey: null,
+        activeKey: activeMenuItemKey,
         collapsed,
         isLoggedIn,
         onMenuItemClicked,

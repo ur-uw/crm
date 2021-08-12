@@ -10,7 +10,7 @@ export const getters: GetterTree<AuthStateTypes, IRootState> & AuthGettersTypes 
     return state.token
   },
   isUserLoggedIn(state: AuthStateTypes): boolean {
-    return state.isLoggedIn && state.user !== null
+    return state.isLoggedIn
   },
   isAuthLoading(state: AuthStateTypes): boolean {
     return state.isLoading

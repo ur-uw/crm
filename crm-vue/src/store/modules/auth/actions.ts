@@ -52,6 +52,8 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
       commit(MutationTypes.SET_LOADING, true)
       const promise = api.post('/api/auth/register', {
         ...payload,
+        // TODO: implement slugs and remove this
+        slug: Math.random().toString(),
         device_name: navigator.userAgent
       })
       const [data, error] = await handleApi(promise)
@@ -63,6 +65,7 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
         reject(error)
         return
       }
+      console.log(data)
       const token = data.data['token']
       localStorage.setItem('token', token)
       commit(MutationTypes.SET_LOADING, false)

@@ -94,7 +94,7 @@
             if (val.length > 0 && val.length < 8) {
               return Error('Password must be at least 8 chars')
             } else if (val.length === 0 || val === null) {
-              return Error('Please enter you password')
+              return Error('Please enter your password')
             }
           }
         }

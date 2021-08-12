@@ -61,4 +61,8 @@ main {
   color: $custom-dark-blue;
 }
 
+a {
+  text-decoration: none;
+}
+
 @import 'checkbox';

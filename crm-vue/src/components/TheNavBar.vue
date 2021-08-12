@@ -1,89 +1,158 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <router-link class="navbar-brand" :to="{ name: 'home' }">Managee</router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbarSupportedContent" class="collapse navbar-collapse">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'dashboard.show' }">Dashboard</router-link>
-          </li>
-        </ul>
-        <div v-if="!isUserLoggedIn" class="navbar-nav text-white">
-          <div class="nav-item">
-            <router-link class="nav-link me-2" :to="{ name: 'login.show' }">Login</router-link>
-          </div>
-          <div class="nav-item">
-            <router-link class="btn btn-outline-success" :to="{ name: 'register.show' }">
-              Register
-            </router-link>
-          </div>
-        </div>
-        <div v-if="isUserLoggedIn" class="navbar-nav text-white">
-          <div class="nav-item">
-            <n-button ghost type="warning" @click="logOut()">Sign out</n-button>
-          </div>
-        </div>
+  <n-layout has-sider>
+    <n-layout-sider
+      bordered
+      collapse-mode="width"
+      :collapsed-width="64"
+      :width="240"
+      :collapsed="collapsed"
+      show-trigger
+      @collapse="collapsed = true"
+      @expand="collapsed = false"
+    >
+      <n-menu
+        class="first-nav-menu"
+        :collapsed="collapsed"
+        :collapsed-width="64"
+        :on-update:value="onMenuItemClicked"
+        :options="menuOptions"
+      />
+      <n-menu
+        v-if="isLoggedIn"
+        class="mt-auto"
+        :collapsed="collapsed"
+        :collapsed-width="64"
+        :on-update:value="onSecondMenuClicked"
+        :options="secondMenuOptions"
+      />
+    </n-layout-sider>
+    <n-layout-content>
+      <div id="content">
+        <slot name="content"></slot>
       </div>
-    </div>
-  </nav>
+    </n-layout-content>
+  </n-layout>
 </template>
+
 <script lang="ts">
-  import { computed, defineComponent } from 'vue'
-  import { useStore } from '@/use/useStore'
-  import { ActionTypes as AuthActions } from '@/store/modules/auth/action-types'
+  import { computed, defineComponent, h, ref } from 'vue'
+  import { NIcon, NMenu, useNotification } from 'naive-ui'
+  import {
+    ClipboardTaskListLtr24Regular as BoardIcon,
+    BookContacts28Regular as PersonIcon,
+    CalendarLtr28Regular as CalendarIcon,
+    Home28Regular as HomeIcon,
+    ChatMultiple24Regular as ChatIcon,
+    Settings28Regular as SettingsIcon,
+    SignOut24Regular
+    // ArrowRight28Regular as SignoutIcon
+  } from '@vicons/fluent'
   import { useRouter } from 'vue-router'
-  import { useDialog, useNotification } from 'naive-ui'
+  import { useStore } from '@/use/useStore'
+  import { ActionTypes } from '@/store/modules/auth/action-types'
   import { handleActions } from '@/utils/helpers'
+
   export default defineComponent({
+    components: { NMenu },
     setup() {
-      // Create store & router instances
-      const store = useStore()
+      // INITIALIZE ROUTER AND STORE
       const router = useRouter()
-      // Variables
+      const store = useStore()
+      // Function to render icons
       const notification = useNotification()
-      const isUserLoggedIn = computed(() => store.getters.isUserLoggedIn)
-      // functions
-      const dialog = useDialog()
-      const logOut = () => {
-        dialog.warning({
-          title: 'Sign out',
-          showIcon: false,
-          content: 'Are you sure you want to sign out?',
-          closable: false,
-          positiveText: 'Confirm',
-          negativeText: 'Cancel',
-          maskClosable: false,
-          onPositiveClick: async () => {
-            const promise = store.dispatch(AuthActions.LOGOUT)
-            const [, error] = await handleActions(promise)
-            if (error) {
-              notification.error({
-                title: 'Sign out failed',
-                content: 'Something went wrong, please try again later'
-              })
-            }
-            router.push('/login')
-          },
-          onNegativeClick: () => {
-            dialog.destroyAll()
+      function renderIcon(icon) {
+        return () => h(NIcon, null, { default: () => h(icon) })
+      }
+      // VARIABLES
+      const isLoggedIn = computed(() => store.getters.isUserLoggedIn)
+      const activeMenuItemKey = ref(null)
+      const menuOptions = ref([
+        {
+          label: 'Home',
+          key: 'home',
+          icon: renderIcon(HomeIcon)
+        },
+
+        {
+          label: 'Dashboard',
+          key: 'dashboard.show',
+          icon: renderIcon(BoardIcon)
+        },
+        {
+          label: 'Contacts',
+          key: 'contacts',
+          disabled: true,
+          icon: renderIcon(PersonIcon)
+        },
+        {
+          label: 'Calendar',
+          key: 'calendar.show',
+          disabled: true,
+          icon: renderIcon(CalendarIcon)
+        },
+        {
+          label: 'Chat',
+          key: 'chat.show',
+          disabled: true,
+          icon: renderIcon(ChatIcon)
+        },
+        {
+          label: 'Settings',
+          key: 'settings.show',
+          disabled: true,
+          icon: renderIcon(SettingsIcon)
+        }
+      ])
+      const collapsed = ref(true)
+
+      const secondMenuOptions = ref([
+        {
+          label: 'Sign Out',
+          key: 'signOut',
+          icon: renderIcon(SignOut24Regular)
+        }
+      ])
+      // NAVIGATE TO CORRESPONDING PAGE USING VUE-ROUTER
+      /*
+        ? Note: the menu key should be the same as router link name
+       */
+      const onMenuItemClicked = (key: string) => {
+        console.log(activeMenuItemKey.value)
+        router.push({ name: key })
+      }
+
+      // DOWN ITEMS OF THE SIDE BAR
+      const onSecondMenuClicked = async (key: string) => {
+        if (key === 'signOut') {
+          const action = store.dispatch(ActionTypes.LOGOUT)
+          const [, error] = await handleActions(action)
+          if (error) {
+            notification.error({
+              title: 'Error',
+              content: 'Something went wrong, please try again later'
+            })
+            return
           }
-        })
+          router.replace({ name: 'login.show' })
+        }
       }
       return {
-        isUserLoggedIn,
-        logOut
+        menuOptions,
+        activeKey: activeMenuItemKey,
+        collapsed,
+        isLoggedIn,
+        onMenuItemClicked,
+        onSecondMenuClicked,
+        secondMenuOptions
       }
     }
   })
 </script>
+<style lang="scss" scoped>
+  #content {
+    min-height: 100vh;
+  }
+  .first-nav-menu {
+    height: 90%;
+  }
+</style>

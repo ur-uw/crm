@@ -41,20 +41,13 @@ class AuthController extends Controller
     }
     public function register(RegisterRequest $request)
     {
-        try {
-            $user = User::create($request->validated());
-            $token = $user->createToken($request->device_name)->plainTextToken;
-            return response()->json([
-                'message' => 'User created',
-                'user' => $user,
-                'token' => $token,
-            ]);
-        } catch (\Exception $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => $exception->getMessage(),
-            ]);
-        }
+        $user = User::create($request->validated());
+        $token = $user->createToken($request->device_name)->plainTextToken;
+        return response()->json([
+            'message' => 'User created',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
     public function logOut(Request $request): \Illuminate\Http\JsonResponse
     {

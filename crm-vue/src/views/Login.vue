@@ -1,51 +1,62 @@
 <template>
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <form @submit.prevent="login()">
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email Address</label>
-            <input
-              id="exampleInputEmail1"
-              v-model="formData.email"
-              type="email"
-              name="email"
-              class="form-control"
-              aria-describedby="emailHelp"
-            />
-            <div id="emailHelp" class="form-text">
-              We'll never share your email with anyone else.
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="inputPassword5" class="form-label">Password</label>
-            <input
-              id="inputPassword5"
-              v-model="formData.password"
-              type="password"
-              name="password"
-              class="form-control"
-              aria-describedby="passwordHelpBlock"
-            />
-            <div id="passwordHelpBlock" class="form-text">
-              Your password must be 8-20 characters long, contain letters and numbers, and must not
-              contain spaces, special characters, or emoji.
-            </div>
-          </div>
-          <p v-for="(error, index) in authErrors" :key="index" class="text-danger">
-            {{ error[0] }}
-          </p>
-          <button type="submit" class="btn btn-success text-white">Login</button>
-        </form>
-      </div>
-      <div class="col-md-6 align-items-center">
-        <img
-          class="h-100 w-100"
-          src="../assets/images/undraw_product_iteration_kjok.svg"
-          alt="work"
-        />
-      </div>
-    </div>
+  <div class="container vh-100 d-flex align-items-center justify-content-center">
+    <n-grid cols="2" :x-gap="20">
+      <n-grid-item>
+        <div class="d-flex align-items-center justify-content-start">
+          <img class="h-75 w-75" src="../assets/images/project_lifecycle.svg" alt="work" />
+        </div>
+      </n-grid-item>
+      <n-grid-item class="h-100">
+        <n-h1>
+          <n-text type="default"
+            >Welcome back are you ready to <n-text type="primary">Sail</n-text> ?
+          </n-text>
+        </n-h1>
+        <div class="h-100 d-flex flex-column align-items-center justify-content-center">
+          <n-card>
+            <n-form ref="formRef" :rules="formRules" :model="formData" @submit.prevent="login">
+              <n-space vertical size="large" justify="center">
+                <n-form-item label="Email" path="email">
+                  <n-input
+                    v-model:value="formData.email"
+                    size="large"
+                    type="email"
+                    placeholder="Ex: johdoe@email.com"
+                    @keydown.enter.prevent
+                  >
+                    <template #suffix>
+                      <n-icon>
+                        <MailIcon />
+                      </n-icon>
+                    </template>
+                  </n-input>
+                </n-form-item>
+                <n-form-item label="Password" path="password">
+                  <n-input
+                    v-model:value="formData.password"
+                    size="large"
+                    type="password"
+                    show-password-toggle
+                    placeholder=""
+                    @keydown.enter.prevent
+                  />
+                </n-form-item>
+                <n-checkbox> Remember Me </n-checkbox>
+                <n-space align="center" justify="end">
+                  <n-button type="primary" size="large" @click.prevent="login">Login </n-button>
+                </n-space>
+              </n-space>
+            </n-form>
+            <template #action>
+              Don't have an account?
+              <router-link :to="{ name: 'register.show' }">
+                <n-text type="primary">Register</n-text>
+              </router-link>
+            </template>
+          </n-card>
+        </div>
+      </n-grid-item>
+    </n-grid>
   </div>
 </template>
 <script lang="ts">
@@ -54,8 +65,12 @@
   import { ActionTypes } from '@/store/modules/auth/action-types'
   import { handleActions } from '@/utils/helpers'
   import { useRouter } from 'vue-router'
+  import { FormItemRule } from 'naive-ui'
+  import { Mail28Regular as MailIcon } from '@vicons/fluent'
 
   export default defineComponent({
+    name: 'Login',
+    components: { MailIcon },
     setup() {
       // create store instance
       const store = useStore()
@@ -63,24 +78,49 @@
       const router = useRouter()
       // variables
       const formData = ref({
-        email: '',
-        password: ''
+        email: null,
+        password: null
       })
-      const authErrors = ref()
-      // ? LOGIN FUNCTION
-      const login = async () => {
-        const [, error] = await handleActions(store.dispatch(ActionTypes.LOGIN, formData.value))
-        if (error) {
-          authErrors.value = error.response.data.errors
-          return
+      const formRef = ref(null)
+
+      const formRules = {
+        email: {
+          required: true,
+          message: 'Please enter your email'
+        },
+        password: {
+          required: true,
+          validator: (rule: FormItemRule, val: string) => {
+            if (val.length > 0 && val.length < 8) {
+              return Error('Password must be at least 8 chars')
+            } else if (val.length === 0 || val === null) {
+              return Error('Please enter your password')
+            }
+          }
         }
-        router.push('/dashboard')
+      }
+
+      // ? LOGIN FUNCTION
+      const login = () => {
+        formRef.value?.validate(async (errors) => {
+          if (!errors) {
+            const [, error] = await handleActions(store.dispatch(ActionTypes.LOGIN, formData.value))
+            if (error) {
+              // TODO: HANDLE ERRORS FROM THE SERVER
+              return
+            }
+            router.push('/dashboard')
+          } else {
+            console.log('errors', errors)
+          }
+        })
       }
 
       return {
         formData,
         login,
-        authErrors
+        formRef,
+        formRules
       }
     }
   })

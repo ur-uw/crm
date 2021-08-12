@@ -10,28 +10,32 @@ import { handleApi } from '@/utils/helpers'
 export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes = {
   [ActionTypes.LOGIN]({ commit }, payload: { email: string; password: string }): Promise<any> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      commit(MutationTypes.SET_LOADING, true)
-      const promise = api.post('/api/auth/login', {
-        ...payload,
-        device_name: navigator.userAgent
-      })
-      const [data, error] = await handleApi(promise)
-      if (error) {
+      if (payload.email !== null && payload.password !== null) {
+        commit(MutationTypes.SET_LOADING, true)
+        const promise = api.post('/api/auth/login', {
+          ...payload,
+          device_name: navigator.userAgent
+        })
+        const [data, error] = await handleApi(promise)
+        if (error) {
+          commit(MutationTypes.SET_LOADING, false)
+          localStorage.removeItem('token')
+          commit(MutationTypes.SET_USER, null)
+          commit(MutationTypes.SET_TOKEN, null)
+          reject(error)
+          return
+        }
+        const token = data.data['token']
+        localStorage.setItem('token', token)
         commit(MutationTypes.SET_LOADING, false)
-        localStorage.removeItem('token')
-        commit(MutationTypes.SET_USER, null)
-        commit(MutationTypes.SET_TOKEN, null)
-        reject(error)
-        return
+        commit(MutationTypes.SET_USER, data.data['user'])
+        commit(MutationTypes.SET_TOKEN, token)
+        commit(MutationTypes.SET_LOGIN_STATE, true)
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        resolve(data)
+      } else {
+        reject('Credentials are required')
       }
-      const token = data.data['token']
-      localStorage.setItem('token', token)
-      commit(MutationTypes.SET_LOADING, false)
-      commit(MutationTypes.SET_USER, data.data['user'])
-      commit(MutationTypes.SET_TOKEN, token)
-      commit(MutationTypes.SET_LOGIN_STATE, true)
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      resolve(data)
     })
   },
   async [ActionTypes.REGISTER](
@@ -46,9 +50,15 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
   ) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const promise = api.post('/api/auth/register', {
-        ...payload,
-        device_name: navigator.userAgent
+      let promise
+      api.get('/sanctum/csrf-cookie').then((response) => {
+        console.log(response)
+        promise = api.post('/api/auth/register', {
+          ...payload,
+          // TODO: implement slugs and remove this
+          slug: Math.random().toString(),
+          device_name: navigator.userAgent
+        })
       })
       const [data, error] = await handleApi(promise)
       if (error) {
@@ -59,6 +69,7 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
         reject(error)
         return
       }
+      console.log(data)
       const token = data.data['token']
       localStorage.setItem('token', token)
       commit(MutationTypes.SET_LOADING, false)

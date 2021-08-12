@@ -53,16 +53,14 @@
                 <n-grid-item>
                   <!-- TASK DUE DATE -->
                   <n-form-item path="taskDates" label="Start Date - Due Date">
-                    <n-input-group>
-                      <n-date-picker
-                        end-placeholder="Due Date and Time"
-                        type="datetimerange"
-                        clearable
-                        update-value-on-close
-                        :on-update:value="onTaskDatesChanged"
-                        :ranges="ranges"
-                      />
-                    </n-input-group>
+                    <n-date-picker
+                      end-placeholder="Due Date and Time"
+                      type="datetimerange"
+                      clearable
+                      update-value-on-close
+                      :on-update:value="onTaskDatesChanged"
+                      :ranges="ranges"
+                    />
                   </n-form-item>
                 </n-grid-item>
                 <n-grid-item>
@@ -155,6 +153,7 @@
         taskDates: null as { start_date: string; due_date: string } | null,
         tags: [] as string[]
       }
+
       const modelRef = ref(modelRefValue)
       const formRules = {
         taskTitle: [

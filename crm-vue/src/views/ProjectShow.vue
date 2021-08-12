@@ -1,11 +1,11 @@
 <template>
   <n-grid
     v-if="!isLoading"
-    :cols="tasksLength > 4 ? '6 xs:1 s:1' : '4 s:1 xs:1'"
+    :cols="taskTypesLength > 4 ? '6 xs:1 s:1' : '4 s:1 xs:1'"
     responsive="screen"
   >
-    <n-grid-item :span="tasksLength > 4 ? '5 xs:1 s:1' : '3 xs:1 s:1'">
-      <div class="project">
+    <n-grid-item :span="taskTypesLength > 4 ? '5 xs:1 s:1' : '3 xs:1 s:1'">
+      <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
         <div class="project-info">
           <div class="project-name">
             <h2>{{ project?.name }}</h2>
@@ -15,7 +15,6 @@
             <span></span>
             <span></span>
             <span></span>
-
             <button class="project-participants__add">Add Member</button>
           </div>
         </div>
@@ -39,7 +38,7 @@
             <n-progress
               type="line"
               :percentage="50"
-              :height="20"
+              :height="15"
               border-radius="12px 0 12px 0"
               fill-border-radius="12px 0 12px 0"
             />
@@ -49,7 +48,7 @@
             <n-progress
               type="line"
               :percentage="50"
-              :height="20"
+              :height="15"
               color="orange"
               border-radius="12px 0 12px 0"
               fill-border-radius="12px 0 12px 0"
@@ -60,7 +59,7 @@
             <n-progress
               type="line"
               :percentage="50"
-              :height="20"
+              :height="15"
               color="pink"
               border-radius="12px 0 12px 0"
               fill-border-radius="12px 0 12px 0"
@@ -69,7 +68,7 @@
         </div>
         <div class="task-activity">
           <h2>Recent Activity</h2>
-          <n-timeline size="large">
+          <n-timeline class="p-2" size="large">
             <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
             <n-timeline-item
               title="Rejected"
@@ -91,7 +90,7 @@
             <n-timeline-item
               title="Edit Task"
               type="info"
-              content=" {Task Name} had been edited by John Doe"
+              content=" {Task Name} had been updated by John Doe"
               time="2018-04-03 20:46"
             />
             <n-timeline-item
@@ -135,7 +134,7 @@
       const project = ref<Project | null>(null)
       const isLoading = computed(() => store.getters.isProjectsLoading)
       const tasks = computed<SelectedProjectTasksTypes>(() => store.getters.getSelectedProjectTasks)
-      const tasksLength: number = Object.keys(tasks).length
+      const taskTypesLength: number = Object.keys(tasks).length
       onMounted(async () => {
         const [data, error] = await handleActions(
           store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.id.toString())
@@ -146,7 +145,7 @@
         project.value = data.data['data']
       })
 
-      return { project, tasks, isLoading, tasksLength }
+      return { project, tasks, isLoading, taskTypesLength }
     }
   })
 </script>
@@ -161,7 +160,6 @@
   }
 
   .project {
-    padding: 2rem;
     width: 100%;
     display: inline-block;
 

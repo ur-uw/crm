@@ -1,115 +1,101 @@
 <template>
-  <n-grid
-    v-if="!isLoading"
-    :cols="taskTypesLength > 4 ? '6 xs:1 s:1' : '4 s:1 xs:1'"
-    responsive="screen"
-  >
-    <n-grid-item :span="taskTypesLength > 4 ? '5 xs:1 s:1' : '3 xs:1 s:1'">
-      <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
-        <div class="project-info">
-          <div class="project-name">
-            <h2>{{ project?.name }}</h2>
-            <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
+  <n-layout v-if="!isLoading">
+    <n-layout-content>
+      <n-grid :cols="taskTypesLength > 4 ? '7 m:1 xs:1 s:1 ' : '4 s:1 xs:1'" responsive="screen">
+        <n-grid-item :span="taskTypesLength > 4 ? '6 m:1 xs:1 s:1' : '3 xs:1 s:1'">
+          <div class="project-info">
+            <div class="project-name p-3">
+              <h2>{{ project?.name }}</h2>
+              <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
+            </div>
+            <div class="project-participants">
+              <span></span>
+              <span></span>
+              <span></span>
+              <button class="project-participants__add">Add Member</button>
+            </div>
           </div>
-          <div class="project-participants">
-            <span></span>
-            <span></span>
-            <span></span>
-            <button class="project-participants__add">Add Member</button>
+          <div class="tag-progress p-3 d-flex align-items-center">
+            <div class="tag-progress">
+              <n-progress type="circle" color="pink" :percentage="20">
+                <span class="text-center">20%</span>
+              </n-progress>
+              <div class="text-center mt-2">Copywriting</div>
+            </div>
+            <div class="tag-progress ms-3">
+              <div class="tag-progress">
+                <n-progress type="circle" color="orange" :percentage="50">
+                  <span class="text-center">50% </span>
+                </n-progress>
+                <div class="text-center mt-2">Illustration</div>
+              </div>
+            </div>
+            <div class="tag-progress ms-3">
+              <n-progress type="circle" :percentage="75">
+                <span class="text-center">75%</span>
+              </n-progress>
+              <div class="text-center mt-2">UI Design</div>
+            </div>
           </div>
-        </div>
-        <div class="project-tasks">
-          <project-column
-            v-for="(tasksValue, taskName) in tasks"
-            :key="taskName"
-            :column-heading="taskName"
-            :list-type="taskName"
-            :tasks-list="tasksValue"
-          />
-        </div>
-      </div>
-    </n-grid-item>
-    <n-grid-item>
-      <div class="task-details">
-        <div class="tag-progress">
-          <h2>Task Progress</h2>
-          <div class="tag-progress">
-            <p>Copywriting</p>
-            <n-progress
-              type="line"
-              :percentage="50"
-              :height="15"
-              border-radius="12px 0 12px 0"
-              fill-border-radius="12px 0 12px 0"
-            />
+          <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
+            <div class="project-tasks">
+              <project-column
+                v-for="(tasksValue, taskName) in tasks"
+                :key="taskName"
+                :column-heading="taskName"
+                :list-type="taskName"
+                :tasks-list="tasksValue"
+              />
+            </div>
           </div>
-          <div class="tag-progress">
-            <p>Illustration</p>
-            <n-progress
-              type="line"
-              :percentage="50"
-              :height="15"
-              color="orange"
-              border-radius="12px 0 12px 0"
-              fill-border-radius="12px 0 12px 0"
-            />
+        </n-grid-item>
+        <n-grid-item>
+          <div class="task-details">
+            <div class="task-activity my-3 p-md-3">
+              <h2>Recent Activity</h2>
+              <n-timeline class="p-2" size="large">
+                <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
+                <n-timeline-item
+                  title="Rejected"
+                  type="warning"
+                  content="{Task Name} marked as rejected by Admin"
+                />
+                <n-timeline-item
+                  type="info"
+                  title="Inprogress"
+                  content="{Task Name} marked as inprogress by Maitham"
+                  time="2018-04-03 20:46"
+                />
+                <n-timeline-item
+                  type="error"
+                  title="Delete Task"
+                  content="{Task Name} was deleted by Hamza"
+                  time="2018-04-03 20:46"
+                />
+                <n-timeline-item
+                  title="Edit Task"
+                  type="info"
+                  content=" {Task Name} had been updated by John Doe"
+                  time="2018-04-03 20:46"
+                />
+                <n-timeline-item
+                  type="success"
+                  title="Complete"
+                  content="{Task Name} marked as completed by Mohammed"
+                  time="2018-04-03 20:46"
+                />
+              </n-timeline>
+            </div>
           </div>
-          <div class="tag-progress">
-            <p>UI Design</p>
-            <n-progress
-              type="line"
-              :percentage="50"
-              :height="15"
-              color="pink"
-              border-radius="12px 0 12px 0"
-              fill-border-radius="12px 0 12px 0"
-            />
-          </div>
-        </div>
-        <div class="task-activity">
-          <h2>Recent Activity</h2>
-          <n-timeline class="p-2" size="large">
-            <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
-            <n-timeline-item
-              title="Rejected"
-              type="warning"
-              content="{Task Name} marked as rejected by Admin"
-            />
-            <n-timeline-item
-              type="info"
-              title="Inprogress"
-              content="{Task Name} marked as inprogress by Maitham"
-              time="2018-04-03 20:46"
-            />
-            <n-timeline-item
-              type="error"
-              title="Delete Task"
-              content="{Task Name} was deleted by Hamza"
-              time="2018-04-03 20:46"
-            />
-            <n-timeline-item
-              title="Edit Task"
-              type="info"
-              content=" {Task Name} had been updated by John Doe"
-              time="2018-04-03 20:46"
-            />
-            <n-timeline-item
-              type="success"
-              title="Complete"
-              content="{Task Name} marked as completed by Mohammed"
-              time="2018-04-03 20:46"
-            />
-          </n-timeline>
-        </div>
-      </div>
-    </n-grid-item>
-  </n-grid>
-
+        </n-grid-item>
+      </n-grid>
+    </n-layout-content>
+  </n-layout>
   <div v-else>
-    <n-space justify="center">
+    <div class="d-flex flex-column align-items-center justify-content-center vh-100">
       <n-spin size="large" />
-      Getting project info
-    </n-space>
+      <h4 class="mt-2">Getting Project Info</h4>
+    </div>
   </div>
 </template>
 
@@ -207,27 +193,26 @@
     border: 3px dashed $light-grey !important;
   }
 
-  .tag-progress {
-    margin: 1.5rem 0;
-    h2 {
-      font-size: 16px;
-      margin-bottom: 1rem;
-    }
-    p {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
+  // .tag-progress {
+  //   margin: 1.5rem 0;
+  //   h2 {
+  //     font-size: 16px;
+  //     margin-bottom: 1rem;
+  //   }
+  //   p {
+  //     display: flex;
+  //     width: 100%;
+  //     justify-content: space-between;
 
-      span {
-        color: rgb(180, 180, 180);
-      }
-    }
-  }
+  //     span {
+  //       color: rgb(180, 180, 180);
+  //     }
+  //   }
+  // }
 
   .task-activity {
     h2 {
-      font-size: 16px;
-      margin-bottom: 1rem;
+      font-size: 1.5rem;
     }
   }
 

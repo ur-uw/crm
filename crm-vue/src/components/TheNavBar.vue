@@ -117,7 +117,6 @@
         ? Note: the menu key should be the same as router link name
        */
       const onMenuItemClicked = (key: string) => {
-        console.log(activeMenuItemKey.value)
         router.push({ name: key })
       }
 

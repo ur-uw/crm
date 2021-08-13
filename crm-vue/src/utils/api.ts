@@ -1,7 +1,7 @@
 import axios from 'axios'
 import router from '@/router/index'
 
-const baseURL = 'http://127.0.0.1:8000'
+const baseURL = 'http://localhost:8000'
 
 const api = axios.create({
   baseURL: baseURL
@@ -13,6 +13,9 @@ api.interceptors.response.use(undefined, (error) => {
   let route = { name: 'error', path: 'error' }
   switch (error.response.status) {
     case 401:
+      route = { name: 'login', path: '/login' }
+      break
+    case 419:
       route = { name: 'login', path: '/login' }
       break
     case 404:

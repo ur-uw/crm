@@ -5,6 +5,7 @@
   "vetur.validation.template": false,
   "eslint.validate": ["javascript", "vue", "typescript"],
   "cSpell.words": [
+    "Csrf",
     "Fadhil",
     "Managee",
     "Swal",

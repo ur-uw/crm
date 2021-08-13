@@ -1,8 +1,8 @@
 <template>
   <n-layout v-if="!isLoading">
     <n-layout-content>
-      <n-grid :cols="taskTypesLength > 4 ? '7 m:1 xs:1 s:1 ' : '4 s:1 xs:1'" responsive="screen">
-        <n-grid-item :span="taskTypesLength > 4 ? '6 m:1 xs:1 s:1' : '3 xs:1 s:1'">
+      <n-grid :cols="1">
+        <n-grid-item>
           <div class="project-info">
             <div class="project-name p-3">
               <h2>{{ project?.name }}</h2>

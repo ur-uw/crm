@@ -1,3 +1,4 @@
+import { Priority } from './Priority'
 import { Status } from './Status'
 export interface Task {
   id?: number
@@ -5,6 +6,7 @@ export interface Task {
   status_id?: number
   status?: Status
   slug?: string
+  priority?: Priority
   description?: string
   start_date?: Date | string | number
   due_date?: Date | string | number

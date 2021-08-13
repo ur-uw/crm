@@ -33,6 +33,7 @@ class DefaultProjectTeamUserSeeder extends Seeder
             'created_by' => $user->id,
             'project_id' => $project->id,
             'status_id' => rand(1, 4),
+            'priority_id' => rand(1, 3),
         ]);
         $user->tasks()->sync($tasks);
 

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AddressSeeder::class,
             StatusSeeder::class,
+            PrioritySeeder::class,
             ProjectUserSeeder::class,
             ProjectTeamsSeeder::class,
             ProjectTasksSeeder::class,

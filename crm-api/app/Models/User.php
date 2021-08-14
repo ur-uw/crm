@@ -29,6 +29,13 @@ class User extends Authenticatable
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['images'];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -94,6 +101,6 @@ class User extends Authenticatable
      */
     public function images()
     {
-        return $this->morphMany(Image::class, 'imageable');
+        return $this->morphMany(Image::class, 'imageable')->latest();
     }
 }

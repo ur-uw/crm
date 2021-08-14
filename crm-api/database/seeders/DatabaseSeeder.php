@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LaratrustSeeder::class,
             UserSeeder::class,
+            ImageSeeder::class,
             AddressSeeder::class,
             StatusSeeder::class,
             PrioritySeeder::class,
@@ -23,7 +24,6 @@ class DatabaseSeeder extends Seeder
             ProjectTeamsSeeder::class,
             TeamsUsersSeeder::class,
             ProjectTasksSeeder::class,
-            // UsersTasksSeeder::class,
             DefaultProjectTeamUserSeeder::class,
         ]);
     }

@@ -88,4 +88,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class)
             ->withTimestamps();
     }
+
+    /**
+     * Get all of the user's images.
+     */
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
 }

@@ -95,7 +95,7 @@ class UserController extends Controller
         $user_image = Image::make([
             'name' => $image->getClientOriginalName(),
             'path' => $file_path,
-            'slug' => Str::slug($image->getBasename()),
+            'slug' => Str::slug($image->getClientOriginalName())
         ]);
         $user->images()->save($user_image);
         return ImageResource::make($user_image);

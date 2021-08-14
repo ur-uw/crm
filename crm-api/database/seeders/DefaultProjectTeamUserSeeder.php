@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Image;
 use App\Models\Permission;
 use App\Models\Project;
 use App\Models\Role;
@@ -23,6 +24,16 @@ class DefaultProjectTeamUserSeeder extends Seeder
         $user = User::firstWhere('name', 'Mohammed Fadhil');
         $user2 = User::factory()->create(['name' => 'user 2']);
         $user3 = User::factory()->create(['name' => 'user 3']);
+        $user2->images()->save(Image::factory()->make([
+            'path' => 'https://picsum.photos/id/1005/200/300'
+        ]));
+        $user3->images()->save(Image::factory()->make(
+            [
+                'path' => 'https://picsum.photos/id/1009/200/300'
+
+            ]
+        ));
+
         $project = Project::factory()->create([
             'name' => 'Mohammed project',
             'user_id' => $user->id,
@@ -59,6 +70,10 @@ class DefaultProjectTeamUserSeeder extends Seeder
                     ['project-update', 'task-read', 'project-read'],
                     $team
                 );
+                $user->images()->save(Image::factory()->make([
+                    'path' => "https://picsum.photos/id/{$user['id']}/200/300"
+
+                ]));
             });
         });
         $user->attachPermissions(Permission::all(), $mohammedTeam);

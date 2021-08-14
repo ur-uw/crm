@@ -8,8 +8,11 @@
             <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
           </div>
 
-          <div v-if="project !== null" class="project-participants p-3">
-            <div class="d-inline-blo project-project-participants__members me-3">
+          <div
+            v-if="project !== null"
+            class="project-participants p-3 d-flex justify-content-center align-items-center"
+          >
+            <div class="d-inline-block project-project-participants__members me-3">
               <div v-if="project.users != null" class="d-inline-block">
                 <n-badge
                   v-for="user in project.users"
@@ -17,25 +20,59 @@
                   :dot="user?.slug !== project?.owner?.slug"
                   type="success"
                 >
-                  <n-avatar
-                    v-if="user.slug !== project?.owner?.slug"
-                    class="text-center project-participants__member"
-                  >
-                    {{ user.name?.substring(0, 1) }}
-                  </n-avatar>
+                  <div v-if="user.slug !== project?.owner?.slug" class="inline-block">
+                    <n-tooltip placement="bottom" trigger="hover">
+                      <template #trigger>
+                        <n-avatar
+                          v-if="user?.images != null && user?.images[0] != null"
+                          :src="user?.images[0].path"
+                          class="
+                            text-center
+                            project-participants__member
+                            border border-custom-purple
+                          "
+                          circle
+                        >
+                        </n-avatar>
+                        <n-avatar
+                          v-else
+                          circle
+                          class="text-center project-participants__member text-center"
+                        >
+                          {{ user.name?.substring(0, 1) }}
+                        </n-avatar>
+                      </template>
+                      {{ user.name }}
+                    </n-tooltip>
+                  </div>
                 </n-badge>
               </div>
-              <button class="project-participants__add ms-2">Add Member</button>
+
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <button class="project-participants__add ms-2">Add Member</button>
+                </template>
+                Add Member
+              </n-tooltip>
             </div>
 
             <!-- PROJECT OWNER -->
+
             <n-badge value="Owner" class="me-3">
-              <n-avatar :size="50" class="text-center project-participants__owner">
+              <n-avatar
+                v-if="project.owner?.images != null && project.owner?.images[0] != null"
+                :size="50"
+                class="text-center project-participants__owner border border-custom-purple"
+                :src="project.owner?.images[0].path"
+              >
+              </n-avatar>
+              <n-avatar v-else :size="50" class="text-center project-participants__owner">
                 {{ project?.owner?.name?.substring(0, 1) }}
               </n-avatar>
             </n-badge>
           </div>
         </div>
+
         <div class="tag-progress p-3 d-flex align-items-center">
           <div class="tag-progress">
             <n-progress type="circle" color="pink" :percentage="20">
@@ -199,19 +236,19 @@
       &__member,
       &__add {
         position: relative;
-        width: 35px;
-        height: 35px;
-        display: inline-block;
         background: $purple;
-        border-radius: 100rem;
-        border: 1px solid $primary2;
         margin: 0 -0.2rem;
         z-index: 0;
       }
       &__add {
         position: relative;
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        border-radius: 100rem;
+        border: 1px solid $primary2;
         z-index: 10000;
-        background-color: $primary2;
+        background-color: transparent;
         border: 1px dashed rgb(150, 150, 150);
         font-size: 0;
         cursor: pointer;

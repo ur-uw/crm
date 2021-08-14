@@ -8,7 +8,6 @@ const api = axios.create({
 })
 api.defaults.headers.common['Accept'] = 'application/json'
 api.defaults.headers.common['Content-Type'] = 'application/json'
-api.defaults.withCredentials = true
 api.interceptors.response.use(undefined, (error) => {
   let route = { name: 'error', path: 'error' }
   switch (error.response.status) {

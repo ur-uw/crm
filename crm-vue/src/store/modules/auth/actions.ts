@@ -50,15 +50,11 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
   ) {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      let promise
-      api.get('/sanctum/csrf-cookie').then((response) => {
-        console.log(response)
-        promise = api.post('/api/auth/register', {
-          ...payload,
-          // TODO: implement slugs and remove this
-          slug: Math.random().toString(),
-          device_name: navigator.userAgent
-        })
+      const promise = api.post('/api/auth/register', {
+        ...payload,
+        // TODO: implement slugs and remove this
+        slug: Math.random().toString(),
+        device_name: navigator.userAgent
       })
       const [data, error] = await handleApi(promise)
       if (error) {
@@ -101,14 +97,14 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
   [ActionTypes.GET_USER]({ commit }): Promise<any> {
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
-      const response = api.get('/api/auth/user')
+      const response = api.get('/api/user/get_info')
       const [data, error] = await handleApi(response)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)
         reject(error)
         return
       }
-      commit(MutationTypes.SET_USER, data.data['user'])
+      commit(MutationTypes.SET_USER, data.data['data'])
       commit(MutationTypes.SET_LOADING, false)
       resolve(data)
     })

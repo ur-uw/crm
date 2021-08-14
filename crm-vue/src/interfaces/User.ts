@@ -1,3 +1,5 @@
+import { Image } from './Image'
+
 export interface User {
   id?: number
   name?: string
@@ -5,6 +7,7 @@ export interface User {
   email?: string
   phone?: string
   email_verified_at?: Date
+  images?: Image[]
   created_at?: Date
   updated_at?: Date
 }

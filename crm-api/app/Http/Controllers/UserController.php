@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Image;
 use Auth;
 use Illuminate\Http\Request;
+use Storage;
 use Str;
 
 class UserController extends Controller
@@ -89,12 +90,12 @@ class UserController extends Controller
         $user = Auth::user();
         $image_folder_path = "images/profile_images/" . $user->slug;
         $image_name = time() . "__" . $image->getClientOriginalName();
-        $file_path = $image->storeAs($image_folder_path, $image_name, 'public');
+        $file_path = $image->storeAs($image_folder_path, $image_name);
 
         $user_image = Image::make([
             'name' => $image->getClientOriginalName(),
-            'path' => storage_path($file_path),
-            'slug' => Str::slug($image->getClientOriginalName()),
+            'path' => $file_path,
+            'slug' => Str::slug($image->getBasename()),
         ]);
         $user->images()->save($user_image);
         return ImageResource::make($user_image);

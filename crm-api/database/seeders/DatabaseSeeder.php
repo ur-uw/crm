@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             PrioritySeeder::class,
             ProjectUserSeeder::class,
             ProjectTeamsSeeder::class,
-            ProjectTasksSeeder::class,
             TeamsUsersSeeder::class,
+            ProjectTasksSeeder::class,
             // UsersTasksSeeder::class,
             DefaultProjectTeamUserSeeder::class,
         ]);

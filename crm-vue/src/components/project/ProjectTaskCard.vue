@@ -34,7 +34,7 @@
         <span class="task__priority">
           <n-tooltip trigger="hover">
             <template #trigger>
-              <n-icon :color="task.priority.color">
+              <n-icon :color="task.priority?.color">
                 <priority-icon></priority-icon>
               </n-icon>
             </template>

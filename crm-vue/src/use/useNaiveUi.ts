@@ -38,7 +38,9 @@ import {
   NCheckbox,
   NText,
   NH1,
-  NTooltip
+  NTooltip,
+  NBadge,
+  NAvatar
 } from 'naive-ui'
 
 export const naive = create({
@@ -49,6 +51,8 @@ export const naive = create({
     NResult,
     NInputGroup,
     NSpace,
+    NBadge,
+    NAvatar,
     NSpin,
     NSkeleton,
     NSwitch,

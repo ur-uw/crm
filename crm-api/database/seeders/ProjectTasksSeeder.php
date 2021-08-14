@@ -22,7 +22,8 @@ class ProjectTasksSeeder extends Seeder
                 Task::factory(rand(1, 6))->make(
                     [
                         'status_id' => rand(1, $statuses_count),
-                        'priority_id' => rand(1, 3)
+                        'priority_id' => rand(1, 3),
+                        'created_by' => $project->users->random()->id
                     ]
                 )
             );

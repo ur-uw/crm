@@ -47,8 +47,10 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project = $project->load(['users', 'user', 'teams', 'tasks.status']);
+
         return ProjectResource::make(
-            $project->load(['tasks.status', 'tasks.priority', 'teams.users'])
+            $project
         );
     }
 

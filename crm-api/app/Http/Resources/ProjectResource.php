@@ -19,9 +19,10 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'slug' => $this->slug,
-            'owner' => $this->whenLoaded('user'),
+            'owner' => UserResource::make($this->whenLoaded('user')),
+            'users' => UserResource::collection($this->whenLoaded('users')),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),
-            'tasks' => $this->whenLoaded('tasks')
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks'))
         ];
     }
 }

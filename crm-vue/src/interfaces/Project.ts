@@ -12,6 +12,7 @@ export interface Project {
   name: string
   description?: string
   slug: string
+  owner?: User
   tasks?: Task[]
   users?: User[]
   created_at?: string | Date

@@ -29,11 +29,18 @@ class CreateTasksTable extends Migration
                 ->onDelete('cascade');
 
             $table->foreignIdFor(User::class, 'created_by')
-                ->nullable()
+                ->references('id')
+                ->on('users')
+                ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
             $table->foreignId('project_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreignId('priority_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');

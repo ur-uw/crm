@@ -117,12 +117,6 @@
   .draggable-list {
     position: relative;
     height: 100%;
-    &::after {
-      position: absolute;
-      content: '';
-      height: 100%;
-      width: 100%;
-    }
   }
   .flip-list-move {
     transition: transform 0.5s;

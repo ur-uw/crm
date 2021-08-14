@@ -19,13 +19,13 @@
       />
       <n-menu
         v-if="isLoggedIn"
-        class="mt-auto"
         :collapsed="collapsed"
         :collapsed-width="64"
         :on-update:value="onSecondMenuClicked"
         :options="secondMenuOptions"
       />
     </n-layout-sider>
+
     <n-layout-content>
       <div id="content">
         <slot name="content"></slot>
@@ -117,7 +117,6 @@
         ? Note: the menu key should be the same as router link name
        */
       const onMenuItemClicked = (key: string) => {
-        console.log(activeMenuItemKey.value)
         router.push({ name: key })
       }
 
@@ -150,9 +149,10 @@
 </script>
 <style lang="scss" scoped>
   #content {
-    min-height: 100vh;
+    max-height: 100vh;
   }
   .first-nav-menu {
-    height: 90%;
+    height: 90vh;
+    max-height: 95vh;
   }
 </style>

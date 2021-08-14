@@ -2,6 +2,7 @@
   <div class="task bg-dark">
     <div class="task__tags">
       <span class="task__tag task__tag--copyright">Copywriting</span>
+
       <n-dropdown trigger="click" :options="options" @select="handleSelect">
         <button class="task__options">
           <Icon> <MoreHorizontal28Regular /> </Icon>
@@ -12,7 +13,7 @@
     <div class="task__stats">
       <n-space>
         <span class="d-flex">
-          <time :datetime="task.created_at">
+          <time :datetime="task.due_date">
             <Icon> <Flag28Regular /></Icon>
           </time>
           {{ task.due_date }}
@@ -29,6 +30,16 @@
             <Attach20Regular />
           </Icon>
           {{ Math.floor(Math.random() * 100) }}
+        </span>
+        <span class="task__priority">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <n-icon :color="task.priority?.color">
+                <priority-icon></priority-icon>
+              </n-icon>
+            </template>
+            {{ task.priority?.name }} Priority
+          </n-tooltip>
         </span>
       </n-space>
     </div>
@@ -55,7 +66,8 @@
     MoreHorizontal28Regular,
     CommentMultiple24Regular,
     Flag28Regular,
-    Attach20Regular
+    Attach20Regular,
+    Info28Regular as PriorityIcon
   } from '@vicons/fluent'
   import { defineComponent, PropType, ref } from 'vue'
   import { NDropdown, useNotification } from 'naive-ui'
@@ -73,7 +85,8 @@
       MoreHorizontal28Regular,
       CommentMultiple24Regular,
       Flag28Regular,
-      EditProjectTaskForm
+      EditProjectTaskForm,
+      PriorityIcon
     },
     props: {
       taskInfo: {
@@ -163,6 +176,7 @@
     background-color: white;
     padding: 1rem;
     border-radius: 8px;
+    position: relative;
     width: 100%;
     box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
     margin-bottom: 1rem;
@@ -200,7 +214,15 @@
       @include display;
       justify-content: space-between;
     }
-
+    &__priority {
+      display: inline-block;
+      position: absolute;
+      bottom: -5px;
+      right: -10px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
     &__options {
       background: transparent;
       border: 0;

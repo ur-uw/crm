@@ -30,8 +30,8 @@ class UpdateTaskRequest extends FormRequest
             'due_date' => 'date',
             // TODO:CHANGE status_id to status_slug
             'status_id' => 'numeric',
-            'assigned_to' => 'required|array',
-            'assigned_to.*' => 'required|exists:users,slug',
+            'assigned_to' => 'array',
+            'assigned_to.*' => 'exists:users,slug',
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ImageResource;
+use App\Http\Resources\UserResource;
 use App\Models\Image;
 use Auth;
 use Illuminate\Http\Request;
@@ -53,7 +54,6 @@ class UserController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -65,26 +65,35 @@ class UserController extends Controller
         //
     }
 
+    /*
+        * Get current authenticated user info
+    */
+    public function get_info()
+    {
+        $user = Auth::user();
+        return UserResource::make($user);
+    }
+
     /**
      * Upload user avatar image.
      *
      * @param  User  $user
      * @return \Illuminate\Http\Response
      */
-    public function upload_avatar(Request $request)
+    public function change_avatar(Request $request)
     {
         $request->validate([
-            'image' => 'file|image|mimes:png,jpg,jpeg|size:5000',
+            'image' => 'file|image|mimes:png,jpg,jpeg|max:5000',
         ]);
         $image = $request->file('image');
         $user = Auth::user();
-        $image_folder_path = "images/profile_images" . $user->slug;
-        $image_name = now()->toDateTimeLocalString() . "__" . $image->getClientOriginalName();
-        $image->storePubliclyAs($image_folder_path, $image_name);
+        $image_folder_path = "images/profile_images/" . $user->slug;
+        $image_name = time() . "__" . $image->getClientOriginalName();
+        $file_path = $image->storeAs($image_folder_path, $image_name, 'public');
 
-        $user_image = Image::create([
+        $user_image = Image::make([
             'name' => $image->getClientOriginalName(),
-            'path' => $image->path(),
+            'path' => storage_path($file_path),
             'slug' => Str::slug($image->getClientOriginalName()),
         ]);
         $user->images()->save($user_image);

@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 /*
     ! NOTE: if you are on windows change the  slash: "/" to back-slash: "\" in routes paths*
 */
+
 //** Auth *//
 Route::prefix('auth')->group(__DIR__ . '/api_routes/v1/auth_routes.php');
+
+//** User *//
+Route::prefix('user')->group(__DIR__ . '/api_routes/v1/user_routes.php');
 
 //** Projects *//
 Route::prefix('projects')->group(__DIR__ . '/api_routes/v1/project_routes.php');

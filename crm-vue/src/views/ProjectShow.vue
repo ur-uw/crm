@@ -1,113 +1,132 @@
 <template>
-  <n-layout v-if="!isLoading">
-    <n-layout-content>
-      <div class="project-info">
-        <div class="project-name p-3">
-          <h2>{{ project?.name }}</h2>
-          <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
-        </div>
+  <div v-if="!isLoading">
+    <n-layout>
+      <n-layout-content>
+        <div class="project-info">
+          <div class="project-name p-3">
+            <h2>{{ project?.name }}</h2>
+            <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
+          </div>
 
-        <div v-if="project !== null" class="project-participants p-3">
-          <div class="d-inline-blo project-project-participants__members me-4">
-            <div v-if="project.users != null" class="d-inline-block">
-              <n-badge
-                v-for="user in project.users"
-                :key="user?.slug"
-                :dot="user?.slug !== project?.owner?.slug"
-                type="success"
-              >
-                <n-avatar
-                  v-if="user.slug !== project?.owner?.slug"
-                  class="text-center project-participants__member"
+          <div v-if="project !== null" class="project-participants p-3">
+            <div class="d-inline-blo project-project-participants__members me-3">
+              <div v-if="project.users != null" class="d-inline-block">
+                <n-badge
+                  v-for="user in project.users"
+                  :key="user?.slug"
+                  :dot="user?.slug !== project?.owner?.slug"
+                  type="success"
                 >
-                  {{ user.name?.substring(0, 1) }}
-                </n-avatar>
-              </n-badge>
+                  <n-avatar
+                    v-if="user.slug !== project?.owner?.slug"
+                    class="text-center project-participants__member"
+                  >
+                    {{ user.name?.substring(0, 1) }}
+                  </n-avatar>
+                </n-badge>
+              </div>
+              <button class="project-participants__add ms-2">Add Member</button>
             </div>
-            <button class="project-participants__add">Add Member</button>
-          </div>
 
-          <!-- PROJECT OWNER -->
-          <n-badge type="info" value="owner" class="me-3">
-            <n-avatar class="text-center project-participants__owner">
-              {{ project?.owner?.name?.substring(0, 1) }}
-            </n-avatar>
-          </n-badge>
+            <!-- PROJECT OWNER -->
+            <n-badge value="Owner" class="me-3">
+              <n-avatar :size="50" class="text-center project-participants__owner">
+                {{ project?.owner?.name?.substring(0, 1) }}
+              </n-avatar>
+            </n-badge>
+          </div>
         </div>
-      </div>
-      <div class="tag-progress p-3 d-flex align-items-center">
-        <div class="tag-progress">
-          <n-progress type="circle" color="pink" :percentage="20">
-            <span class="text-center">20%</span>
-          </n-progress>
-          <div class="text-center mt-2">Copywriting</div>
-        </div>
-        <div class="tag-progress ms-3">
+        <div class="tag-progress p-3 d-flex align-items-center">
           <div class="tag-progress">
-            <n-progress type="circle" color="orange" :percentage="50">
-              <span class="text-center">50% </span>
+            <n-progress type="circle" color="pink" :percentage="20">
+              <span class="text-center">20%</span>
             </n-progress>
-            <div class="text-center mt-2">Illustration</div>
+            <div class="text-center mt-2">Copywriting</div>
+          </div>
+          <div class="tag-progress ms-3">
+            <div class="tag-progress">
+              <n-progress type="circle" color="orange" :percentage="50">
+                <span class="text-center">50% </span>
+              </n-progress>
+              <div class="text-center mt-2">Illustration</div>
+            </div>
+          </div>
+          <div class="tag-progress ms-3">
+            <n-progress type="circle" :percentage="75">
+              <span class="text-center">75%</span>
+            </n-progress>
+            <div class="text-center mt-2">UI Design</div>
           </div>
         </div>
-        <div class="tag-progress ms-3">
-          <n-progress type="circle" :percentage="75">
-            <span class="text-center">75%</span>
-          </n-progress>
-          <div class="text-center mt-2">UI Design</div>
+        <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
+          <div class="project-tasks">
+            <project-column
+              v-for="(tasksValue, taskName) in tasks"
+              :key="taskName"
+              :column-heading="taskName"
+              :list-type="taskName"
+              :tasks-list="tasksValue"
+            />
+          </div>
         </div>
-      </div>
-      <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
-        <div class="project-tasks">
-          <project-column
-            v-for="(tasksValue, taskName) in tasks"
-            :key="taskName"
-            :column-heading="taskName"
-            :list-type="taskName"
-            :tasks-list="tasksValue"
-          />
-        </div>
-      </div>
 
-      <div class="task-details">
-        <div class="task-activity my-3 p-md-3">
-          <h2>Recent Activity</h2>
-          <n-timeline class="p-2" size="large">
-            <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
-            <n-timeline-item
-              title="Rejected"
-              type="warning"
-              content="{Task Name} marked as rejected by Admin"
-            />
-            <n-timeline-item
-              type="info"
-              title="Inprogress"
-              content="{Task Name} marked as inprogress by Maitham"
-              time="2018-04-03 20:46"
-            />
-            <n-timeline-item
-              type="error"
-              title="Delete Task"
-              content="{Task Name} was deleted by Hamza"
-              time="2018-04-03 20:46"
-            />
-            <n-timeline-item
-              title="Edit Task"
-              type="info"
-              content=" {Task Name} had been updated by John Doe"
-              time="2018-04-03 20:46"
-            />
-            <n-timeline-item
-              type="success"
-              title="Complete"
-              content="{Task Name} marked as completed by Mohammed"
-              time="2018-04-03 20:46"
-            />
-          </n-timeline>
+        <div class="task-details">
+          <div class="task-activity my-3 p-md-3">
+            <h2>Recent Activity</h2>
+            <n-timeline class="p-2" size="large">
+              <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
+              <n-timeline-item
+                title="Rejected"
+                type="warning"
+                content="{Task Name} marked as rejected by Admin"
+              />
+              <n-timeline-item
+                type="info"
+                title="Inprogress"
+                content="{Task Name} marked as inprogress by Maitham"
+                time="2018-04-03 20:46"
+              />
+              <n-timeline-item
+                type="error"
+                title="Delete Task"
+                content="{Task Name} was deleted by Hamza"
+                time="2018-04-03 20:46"
+              />
+              <n-timeline-item
+                title="Edit Task"
+                type="info"
+                content=" {Task Name} had been updated by John Doe"
+                time="2018-04-03 20:46"
+              />
+              <n-timeline-item
+                type="success"
+                title="Complete"
+                content="{Task Name} marked as completed by Mohammed"
+                time="2018-04-03 20:46"
+              />
+            </n-timeline>
+          </div>
         </div>
-      </div>
-    </n-layout-content>
-  </n-layout>
+      </n-layout-content>
+    </n-layout>
+    <!-- BACK TO TOP COMPONENT -->
+    <n-back-top
+      :bottom="100"
+      :visibility-height="300"
+      :style="{
+        transition: 'all .3s cubic-bezier(.4, 0, .2, 1)'
+      }"
+    >
+      <n-button circle>
+        <template #icon>
+          <n-icon>
+            <arrow-icon />
+          </n-icon>
+        </template>
+      </n-button>
+    </n-back-top>
+  </div>
+  <!-- LOADING PROJECT COMPONENT -->
   <div v-else>
     <div class="d-flex flex-column align-items-center justify-content-center vh-100">
       <n-spin size="large" />
@@ -124,10 +143,12 @@
   import { useStore } from '@/use/useStore'
   import { ActionTypes as ProjectActions } from '@/store/modules/project/action-types'
   import ProjectColumn from '@/components/project/ProjectColumn.vue'
+  import { ArrowUp48Filled as ArrowIcon } from '@vicons/fluent'
   export default defineComponent({
     name: 'Project',
     components: {
-      ProjectColumn
+      ProjectColumn,
+      ArrowIcon
     },
     setup() {
       // INITIALIZE ROUTES and STORE

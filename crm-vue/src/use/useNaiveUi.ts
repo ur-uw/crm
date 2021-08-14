@@ -40,7 +40,8 @@ import {
   NH1,
   NTooltip,
   NBadge,
-  NAvatar
+  NAvatar,
+  NBackTop
 } from 'naive-ui'
 
 export const naive = create({
@@ -58,6 +59,7 @@ export const naive = create({
     NSwitch,
     NModal,
     NForm,
+    NBackTop,
     NFormItem,
     NInput,
     NDatePicker,

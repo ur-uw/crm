@@ -39,6 +39,7 @@ class CreateTaskRequest extends FormRequest
             'assigned_to' => 'required|array',
             'assigned_to.*' => 'required|exists:users,slug',
             'status_slug' => 'required|string|exists:statuses,slug',
+            'priority_id' => 'required|numeric|exists:priorities,id'
         ];
     }
 }

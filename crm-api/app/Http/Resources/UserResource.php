@@ -17,6 +17,8 @@ class UserResource extends JsonResource
     {
         $images = $this->whenLoaded('images');
         return [
+            // TODO: REMOVE ID WHEN USING SLUGS
+            'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
             'email' => $this->email,

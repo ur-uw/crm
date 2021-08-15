@@ -45,7 +45,7 @@ class TaskController extends Controller
             ->get();
         // TODO: HANDLE TASK STATUS WITH SLUGABLE PACKAGE
         $status = Status::firstWhere('slug', $info['status_slug']);
-        $task = Task::make($request->validated());
+        $task = Task::make($info);
         $status->tasks()->save($task);
         $request->user()->tasks()->sync($task);
         $users->each(function (User $user) use ($task) {

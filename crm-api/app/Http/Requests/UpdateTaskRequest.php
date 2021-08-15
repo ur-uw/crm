@@ -25,13 +25,16 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'title' => 'string',
+            'project_id' => 'numeric',
+            // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
+            'slug' => 'string|unique:tasks,title',
             'description' => 'string|nullable',
             'start_date' => 'date',
             'due_date' => 'date',
-            // TODO:CHANGE status_id to status_slug
-            'status_id' => 'numeric',
             'assigned_to' => 'array',
             'assigned_to.*' => 'exists:users,slug',
+            'status_slug' => 'string|exists:statuses,slug',
+            'priority_id' => 'numeric|exists:priorities,id'
         ];
     }
 }

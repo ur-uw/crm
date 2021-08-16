@@ -9,22 +9,23 @@ const api = axios.create({
 api.defaults.headers.common['Accept'] = 'application/json'
 api.defaults.headers.common['Content-Type'] = 'application/json'
 api.interceptors.response.use(undefined, (error) => {
-  let route = { name: 'error', path: 'error' }
+  let route = { name: 'error.show' }
   switch (error.response.status) {
     case 401:
-      route = { name: 'login', path: '/login' }
+      route = { name: 'login' }
       break
     case 419:
-      route = { name: 'login', path: '/login' }
+      route = { name: 'login' }
       break
+    // TODO: make sure that url stay the same when it redirects to NotFound page
     case 404:
       route = {
-        name: 'not-found.show',
-        path: '/:pathMatch(.*)*'
+        name: 'not-found.show'
       }
       break
+    case 422:
+      return Promise.reject(error)
   }
-  // TODO: make sure that url stay the same when it redirects to NotFound page
   router.push(route)
   return Promise.reject(error)
 })

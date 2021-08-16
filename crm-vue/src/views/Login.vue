@@ -16,11 +16,16 @@
           <n-card>
             <n-form ref="formRef" :rules="formRules" :model="formData" @submit.prevent="login">
               <n-space vertical size="large" justify="center">
-                <n-form-item label="Email" path="email">
+                <n-form-item
+                  label="Email"
+                  path="email"
+                  :validation-status="formErrors?.email ? 'error' : undefined"
+                  :feedback="formErrors?.email ? formErrors?.email[0] : undefined"
+                >
                   <n-input
                     v-model:value="formData.email"
-                    size="large"
                     type="email"
+                    size="large"
                     placeholder="Ex: johdoe@email.com"
                     @keydown.enter.prevent
                   >
@@ -42,8 +47,15 @@
                   />
                 </n-form-item>
                 <n-checkbox> Remember Me </n-checkbox>
-                <n-space align="center" justify="end">
-                  <n-button type="primary" size="large" @click.prevent="login">Login </n-button>
+                <n-space align="center" justify="space-between">
+                  <transition name="fade">
+                    <n-text v-if="formErrors?.auth_error" type="error">
+                      <n-icon><ErrorIcon /> </n-icon>
+                      {{ formErrors?.auth_error[0] }}
+                    </n-text>
+                  </transition>
+
+                  <n-button type="primary" size="large" @click.prevent="login">Sail </n-button>
                 </n-space>
               </n-space>
             </n-form>
@@ -63,14 +75,14 @@
   import { ref, defineComponent } from 'vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from '@/store/modules/auth/action-types'
-  import { handleActions } from '@/utils/helpers'
+  import { handleActions, validEmail } from '@/utils/helpers'
   import { useRouter } from 'vue-router'
   import { FormItemRule } from 'naive-ui'
-  import { Mail28Regular as MailIcon } from '@vicons/fluent'
+  import { Mail28Regular as MailIcon, ErrorCircle24Regular as ErrorIcon } from '@vicons/fluent'
 
   export default defineComponent({
     name: 'Login',
-    components: { MailIcon },
+    components: { MailIcon, ErrorIcon },
     setup() {
       // create store instance
       const store = useStore()
@@ -78,15 +90,24 @@
       const router = useRouter()
       // variables
       const formData = ref({
-        email: null,
-        password: null
+        email: '',
+        password: ''
       })
-      const formRef = ref(null)
+      const formErrors = ref()
+      const formRef = ref()
 
       const formRules = {
         email: {
           required: true,
-          message: 'Please enter your email'
+          validator: (rule: FormItemRule, value: string) => {
+            if (!value) {
+              return new Error('Pleas enter your email')
+            } else if (!validEmail(value)) {
+              return Error('Please enter valid email address')
+            }
+            return true
+          },
+          trigger: ['input', 'blur']
         },
         password: {
           required: true,
@@ -102,16 +123,18 @@
 
       // ? LOGIN FUNCTION
       const login = () => {
-        formRef.value?.validate(async (errors) => {
+        formRef.value?.validate(async (errors: unknown) => {
           if (!errors) {
-            const [, error] = await handleActions(store.dispatch(ActionTypes.LOGIN, formData.value))
-            if (error) {
-              // TODO: HANDLE ERRORS FROM THE SERVER
+            const [, errorData] = await handleActions(
+              store.dispatch(ActionTypes.LOGIN, formData.value)
+            )
+            if (errorData) {
+              if (errorData.errors != null) {
+                formErrors.value = errorData.errors
+              }
               return
             }
             router.push('/dashboard')
-          } else {
-            console.log('errors', errors)
           }
         })
       }
@@ -120,10 +143,21 @@
         formData,
         login,
         formRef,
-        formRules
+        formRules,
+        formErrors
       }
     }
   })
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+</style>

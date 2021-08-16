@@ -60,7 +60,8 @@
       const store = useStore()
       // Function to render icons
       const notification = useNotification()
-      function renderIcon(icon) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      function renderIcon(icon: any) {
         return () => h(NIcon, null, { default: () => h(icon) })
       }
       // VARIABLES

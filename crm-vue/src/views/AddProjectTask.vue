@@ -6,23 +6,35 @@
         <n-card class="h-100">
           <n-form ref="formRef" :model="model" :rules="rules" @submit.prevent="handleSubmit">
             <n-space vertical size="large" justify="space-around">
-              <!-- TASK TITLE -->
-              <n-form-item path="taskTitle" label="Task Title">
-                <n-input
-                  v-model:value="model.taskTitle"
-                  maxlength="25"
-                  size="large"
-                  type="text"
-                  placeholder=""
-                  clearable
-                  @keydown.enter.prevent
-                >
-                </n-input>
-              </n-form-item>
+              <n-grid cols="2 s:1 xs:1" :x-gap="15" responsive="screen">
+                <n-grid-item>
+                  <!-- TASK TITLE -->
+                  <n-form-item path="taskTitle" label="Task Title">
+                    <n-input
+                      v-model:value="model.taskTitle"
+                      maxlength="25"
+                      show-count
+                      size="large"
+                      type="text"
+                      placeholder=""
+                      clearable
+                      @keydown.enter.prevent
+                    >
+                    </n-input>
+                  </n-form-item>
+                </n-grid-item>
+                <n-grid-item>
+                  <!-- TASK TAGS -->
+                  <n-form-item path="tags" label="Tags">
+                    <n-dynamic-tags v-model:value="model.tags" :max="4" />
+                  </n-form-item>
+                </n-grid-item>
+              </n-grid>
               <!-- ASSIGN USERS -->
               <n-form-item path="assignTo" label="Assign To">
                 <n-select
                   v-model:value="model.assignTo"
+                  size="large"
                   multiple
                   clearable
                   placeholder="Select Users"
@@ -32,7 +44,6 @@
                   :loading="areUserOptionsLoading"
                 />
               </n-form-item>
-
               <!-- TASK STATUS -->
               <n-form-item v-if="!taskStatus" path="taskStatus" label="Status">
                 <n-radio-group v-model:value="model.taskStatus" name="task-statuses-group">
@@ -43,33 +54,31 @@
               </n-form-item>
               <!-- TASK PRIORITY -->
               <n-form-item path="taskPriority" label="Priority">
-                <n-radio-group v-model:value="model.taskPriority" name="task-statuses-group">
-                  <n-radio v-for="priority in priorities" :key="priority" :value="priority">
-                    {{ priority }}
-                  </n-radio>
+                <n-radio-group
+                  v-if="priorities"
+                  v-model:value="model.taskPriority"
+                  name="task-priority-group"
+                >
+                  <n-radio-button
+                    v-for="priority in priorities"
+                    :key="priority.slug"
+                    :value="priority?.slug"
+                  >
+                    {{ priority.name }}
+                  </n-radio-button>
                 </n-radio-group>
               </n-form-item>
-              <n-grid cols="2 xs:1 s:1" responsive="screen">
-                <n-grid-item>
-                  <!-- TASK DUE DATE -->
-                  <n-form-item path="taskDates" label="Start Date - Due Date">
-                    <n-date-picker
-                      end-placeholder="Due Date and Time"
-                      type="datetimerange"
-                      clearable
-                      update-value-on-close
-                      :on-update:value="onTaskDatesChanged"
-                      :ranges="ranges"
-                    />
-                  </n-form-item>
-                </n-grid-item>
-                <n-grid-item>
-                  <!-- TASK TAGS -->
-                  <n-form-item path="tags" label="Tags">
-                    <n-dynamic-tags v-model:value="model.tags" :max="4" />
-                  </n-form-item>
-                </n-grid-item>
-              </n-grid>
+              <!-- TASK DUE DATE -->
+              <n-form-item path="taskDates" label="Start Date - Due Date">
+                <n-date-picker
+                  end-placeholder="Due Date and Time"
+                  type="datetimerange"
+                  clearable
+                  update-value-on-close
+                  :on-update:value="onTaskDatesChanged"
+                  :ranges="ranges"
+                />
+              </n-form-item>
 
               <!-- TASK DESCRIPTION -->
               <n-form-item path="taskDescription" label="Task Description">
@@ -89,8 +98,8 @@
                 <n-space>
                   <the-back button-size="large" button-text="Cancel"> </the-back>
                   <n-button type="primary" size="large" @click.prevent="handleSubmit"
-                    >Save</n-button
-                  >
+                    >Save
+                  </n-button>
                 </n-space>
               </n-space>
             </n-space>
@@ -114,11 +123,12 @@
   import { useStore } from '@/use/useStore'
   import api from '@/utils/api'
   import { handleApi } from '@/utils/helpers'
-  import { SelectGroupOption, SelectOption, useNotification } from 'naive-ui'
+  import { SelectGroupOption, SelectOption, useMessage } from 'naive-ui'
   import { ref, defineComponent, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
   import moment from 'moment'
   import TheBack from '@/components/TheBack.vue'
+  import { Priority } from '@/interfaces/Priority'
 
   // import { PersonAdd28Regular } from '@vicons/fluent'
   export default defineComponent({
@@ -138,12 +148,12 @@
       const now = new Date()
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
       const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      const notification = useNotification()
+      const message = useMessage()
       const formRef = ref(null)
       const areUserOptionsLoading = ref(false)
       const userOptions = ref<SelectGroupOption[]>([])
       const statues = ref<Status[]>([])
-      const priorities = ref<string[]>(['High', 'Medium', 'Low'])
+      const priorities = ref<Priority>()
       const modelRefValue = {
         taskTitle: null,
         taskDescription: null,
@@ -199,34 +209,26 @@
               const task: Task = {
                 title: modelRef.value.taskTitle!,
                 description: modelRef.value.taskDescription!,
-                due_date: modelRef.value.taskDates?.start_date,
-                start_date: modelRef.value.taskDates.due_date
+                start_date: modelRef.value.taskDates.start_date,
+                due_date: modelRef.value.taskDates?.due_date
               }
               const promise = api.post('/api/tasks/create', {
                 ...task,
-                project_id: route.params.id,
-                slug: Math.random().toString(),
-                status_slug: props.taskStatus ?? modelRef.value.taskStatus,
+                project: route.params.id,
+                status: props.taskStatus ?? modelRef.value.taskStatus,
                 assigned_to: modelRef.value.assignTo,
-                created_by: store.getters.getCurrentUser?.id
+                created_by: store.getters.getCurrentUser?.id,
+                priority: modelRef.value.taskPriority
               })
-              const [data, error] = await handleApi(promise)
+              const [, error] = await handleApi(promise)
               if (error) {
-                notification.error({
-                  title: 'Error',
-                  content: 'Something went wrong, please try agin later',
-                  duration: 3000
-                })
+                message.error('Something went wrong, please try agin later', { duration: 3000 })
                 return
               }
               // TODO:USE THE DATA
-              const createdTask: Task = data.data['data']
-              notification.success({
-                title: 'New Task Created',
-                content: 'Task created successfully',
+              message.success('Task created successfully', {
                 duration: 3000
               })
-              console.log(createdTask)
             }
           }
         })
@@ -265,7 +267,17 @@
         if (error) {
           return
         }
+        console.log('test')
         statues.value = data.data['data']
+      }
+      // Fetch task priorities
+      const fetchPriorities = async () => {
+        const promise = api.get('api/priorities/get')
+        const [data, error] = await handleApi(promise)
+        if (error) {
+          return
+        }
+        priorities.value = data.data['data']
       }
       // When start date and due date picker values change
       const onTaskDatesChanged = (value: [number, number] | null) => {
@@ -277,6 +289,7 @@
         }
       }
       onMounted(() => {
+        fetchPriorities()
         if (!props.taskStatus) {
           fetchTasStatues()
         }
@@ -293,6 +306,7 @@
         onFocus: fetchProjectUsers,
         priorities,
         onTaskDatesChanged,
+
         ranges: {
           'This Month': [startOfMonth, endOfMonth]
         }

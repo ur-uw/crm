@@ -4,11 +4,12 @@
       <IconConfigProvider size="20">
         <n-dialog-provider>
           <n-notification-provider>
-            <the-nav-bar>
-              <template #content>
-                <router-view :key="$route.path" />
-              </template>
-            </the-nav-bar>
+            <n-message-provider>
+              <the-nav-bar>
+                <template #content>
+                  <router-view :key="$route.path" />
+                </template> </the-nav-bar
+            ></n-message-provider>
           </n-notification-provider>
         </n-dialog-provider>
       </IconConfigProvider>
@@ -23,7 +24,8 @@
     GlobalThemeOverrides,
     NConfigProvider,
     NDialogProvider,
-    NNotificationProvider
+    NNotificationProvider,
+    NMessageProvider
   } from 'naive-ui'
   import TheNavBar from '@/components/TheNavBar.vue'
   import { useStore } from '@/use/useStore'
@@ -39,7 +41,8 @@
       NConfigProvider,
       NDialogProvider,
       NNotificationProvider,
-      NThemeEditor
+      NThemeEditor,
+      NMessageProvider
     },
     setup() {
       const store = useStore()

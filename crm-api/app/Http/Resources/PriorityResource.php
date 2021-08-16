@@ -16,7 +16,7 @@ class PriorityResource extends JsonResource
     {
         return [
             'name' => $this->name,
-            'slug '  => $this->slug,
+            'slug'  => $this->slug,
             'color' => $this->color,
             'tasks' => $this->whenLoaded('tasks'),
         ];

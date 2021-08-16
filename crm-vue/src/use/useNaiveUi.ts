@@ -73,6 +73,7 @@ export const naive = create({
     NTimePicker,
     NInputGroup,
     NRadioGroup,
+    NRadioButton,
     NSelect,
     NDynamicTags,
     NCard,

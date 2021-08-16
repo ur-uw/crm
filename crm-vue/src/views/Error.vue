@@ -1,22 +1,23 @@
 <template>
   <div class="result-wrapper d-flex flex-column align-items-center justify-content-center vh-100">
     <n-result
-      status="404"
-      title="404 Not Found"
-      description="The resource you want to reach doesn't exists"
+      status="500"
+      title="500 Server Error"
+      description="This is a problem from our side and we will try to fix it as soon as possible."
     >
       <template #footer>
-        <the-back></the-back>
+        <the-back />
       </template>
     </n-result>
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import TheBack from '@/components/TheBack.vue'
-  import { defineComponent } from 'vue'
+  import { defineComponent } from '@vue/runtime-core'
+
   export default defineComponent({
-    name: 'NotFound',
+    name: 'Error',
     components: { TheBack }
   })
 </script>

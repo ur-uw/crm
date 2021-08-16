@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePriorityRequest;
+use App\Http\Requests\UpdatePriorityRequest;
+use App\Http\Resources\PriorityResource;
 use App\Models\Priority;
+use Auth;
 use Illuminate\Http\Request;
+use Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class PriorityController extends Controller
 {
@@ -14,7 +20,7 @@ class PriorityController extends Controller
      */
     public function index()
     {
-        //
+        return PriorityResource::collection(Priority::all());
     }
 
     /**
@@ -23,9 +29,13 @@ class PriorityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePriorityRequest $request)
     {
-        //
+        $priority = Priority::make($request->validated());
+        $slug = Str::slug($request['name']);
+        $priority->slug = $slug;
+        $priority->save();
+        return PriorityResource::make($priority);
     }
 
     /**
@@ -36,7 +46,7 @@ class PriorityController extends Controller
      */
     public function show(Priority $priority)
     {
-        //
+        return PriorityResource::make($priority);
     }
 
     /**
@@ -46,9 +56,10 @@ class PriorityController extends Controller
      * @param  \App\Models\Priority  $priority
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Priority $priority)
+    public function update(UpdatePriorityRequest $request, Priority $priority)
     {
-        //
+        $priority->update($request->validated());
+        return PriorityResource::make($priority);
     }
 
     /**
@@ -59,6 +70,16 @@ class PriorityController extends Controller
      */
     public function destroy(Priority $priority)
     {
-        //
+        if (Auth::user()->isAn('super-admin')) {
+            $priority->delete();
+            return response()->json([
+                'message' => 'Priority Deleted',
+                Response::HTTP_NO_CONTENT
+            ]);
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
 }

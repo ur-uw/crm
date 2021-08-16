@@ -13,7 +13,7 @@ class Priority extends Model
     protected $fillable = [
         'name',
         'slug',
-        'color'
+        'color',
     ];
 
 

@@ -21,6 +21,10 @@ Route::prefix('tasks')->group(__DIR__ . '/api_routes/v1/task_routes.php');
 //** Statues *//
 Route::prefix('statues')->group(__DIR__ . '/api_routes/v1/status_routes.php');
 
+//** Priorities *//
+Route::prefix('priorities')->group(__DIR__ . '/api_routes/v1/priority_routes.php');
+
+
 //** Addresses *//
 Route::prefix('addresses')->group(__DIR__ . '/api_routes/v1/address_routes.php');
 

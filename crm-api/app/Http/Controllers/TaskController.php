@@ -8,12 +8,14 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Status;
 use App\Models\Team;
 use App\Models\User;
 use Auth;
 use Date;
+use Str;
 
 class TaskController extends Controller
 {
@@ -41,13 +43,19 @@ class TaskController extends Controller
     public function store(CreateTaskRequest $request)
     {
         $info = $request->validated();
+
+        // Creating new task
+        $task = Task::make($info);
+        $task->slug = Str::slug($task->title);
+        $task->project()->associate(Project::find($info['project']));
+        $task->status()->associate(Status::firstWhere('slug', $info['status']));
+        $task->priority()->associate(Priority::firstWhere('slug', $info['priority']));
+        $task->save();
+        // Assign task to authenticated user
+        $request->user()->tasks()->sync($task);
+        // Assign task to assigned user
         $users = User::whereIn('slug', $info['assigned_to'])
             ->get();
-        // TODO: HANDLE TASK STATUS WITH SLUGABLE PACKAGE
-        $status = Status::firstWhere('slug', $info['status_slug']);
-        $task = Task::make($info);
-        $status->tasks()->save($task);
-        $request->user()->tasks()->sync($task);
         $users->each(function (User $user) use ($task) {
             $user->tasks()->sync($task);
         });

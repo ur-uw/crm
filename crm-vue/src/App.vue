@@ -63,10 +63,11 @@
           borderColorHorizontal: '#15172bFF',
           colorInverted: '#15172bFF'
         },
+
         Layout: {
-          siderColor: '#15172bFF',
+          siderColor: '#15172BFF',
+          color: '#262a41FF',
           siderColorInverted: '#15172bFF',
-          color: '#15172bFF',
           colorEmbedded: '#15172bFF',
           headerColor: '#15172bFF',
           headerColorInverted: '#15172bFF',

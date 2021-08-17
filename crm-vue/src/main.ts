@@ -22,5 +22,6 @@ app.directive('focus', {
     el.focus()
   }
 })
+app.config.globalProperties.$user = store.getters.getCurrentUser
 app.config.performance = true
 app.mount('#app')

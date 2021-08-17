@@ -41,7 +41,9 @@ import {
   NTooltip,
   NBadge,
   NAvatar,
-  NBackTop
+  NBackTop,
+  NMenu,
+  NDivider
 } from 'naive-ui'
 
 export const naive = create({
@@ -80,6 +82,7 @@ export const naive = create({
     NLayout,
     NTimeline,
     NTimelineItem,
+    NDivider,
     NProgress,
     NLayoutSider,
     NLayoutContent,
@@ -88,6 +91,7 @@ export const naive = create({
     NCheckbox,
     NText,
     NH1,
-    NTooltip
+    NTooltip,
+    NMenu
   ]
 })

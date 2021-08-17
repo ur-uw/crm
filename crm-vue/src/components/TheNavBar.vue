@@ -36,24 +36,22 @@
 
 <script lang="ts">
   import { computed, defineComponent, h, ref } from 'vue'
-  import { NIcon, NMenu, useNotification } from 'naive-ui'
+  import { NIcon, useNotification } from 'naive-ui'
   import {
     ClipboardTaskListLtr24Regular as BoardIcon,
-    BookContacts28Regular as PersonIcon,
+    BookContacts28Regular as ContactsIcon,
     CalendarLtr28Regular as CalendarIcon,
     Home28Regular as HomeIcon,
     ChatMultiple24Regular as ChatIcon,
     Settings28Regular as SettingsIcon,
-    SignOut24Regular
+    SignOut24Regular as SignOutIcon
     // ArrowRight28Regular as SignoutIcon
   } from '@vicons/fluent'
   import { useRouter } from 'vue-router'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from '@/store/modules/auth/action-types'
   import { handleActions } from '@/utils/helpers'
-
   export default defineComponent({
-    components: { NMenu },
     setup() {
       // INITIALIZE ROUTER AND STORE
       const router = useRouter()
@@ -83,7 +81,7 @@
           label: 'Contacts',
           key: 'contacts',
           disabled: true,
-          icon: renderIcon(PersonIcon)
+          icon: renderIcon(ContactsIcon)
         },
         {
           label: 'Calendar',
@@ -100,7 +98,6 @@
         {
           label: 'Settings',
           key: 'settings.show',
-          disabled: true,
           icon: renderIcon(SettingsIcon)
         }
       ])
@@ -110,7 +107,7 @@
         {
           label: 'Sign Out',
           key: 'signOut',
-          icon: renderIcon(SignOut24Regular)
+          icon: renderIcon(SignOutIcon)
         }
       ])
       // NAVIGATE TO CORRESPONDING PAGE USING VUE-ROUTER
@@ -118,7 +115,16 @@
         ? Note: the menu key should be the same as router link name
        */
       const onMenuItemClicked = (key: string) => {
-        router.push({ name: key })
+        let params = {}
+        if (key === 'settings.show') {
+          params = {
+            ...params,
+            id: store.getters.getCurrentUser?.id
+          }
+          router.push({ name: 'settings.account', params })
+          return
+        }
+        router.push({ name: key, params })
       }
 
       // DOWN ITEMS OF THE SIDE BAR

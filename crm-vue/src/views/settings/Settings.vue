@@ -50,11 +50,14 @@
     ClipboardTaskListLtr24Regular as ChoosePlanIcon,
     ShieldCheckmark48Regular as SecurityIcon
   } from '@vicons/fluent'
-  import { RouterLink } from 'vue-router'
+  import { RouterLink, useRoute } from 'vue-router'
   import { useBreakPoints } from '@/use/useBreakpoints'
   export default defineComponent({
     name: 'Profile',
     setup() {
+      // INITIALIZE ROUTE
+      const route = useRoute()
+      // VARIABLES
       const { width, type } = useBreakPoints()
 
       function renderIcon(icon) {
@@ -63,25 +66,28 @@
 
       const menuOptions = [
         {
-          label: () => h(RouterLink, { to: '' }, () => 'Account Settings'),
+          label: () =>
+            h(RouterLink, { to: { name: 'settings.account' } }, () => 'Account Settings'),
           key: 'settings.account',
           icon: renderIcon(PenIcon)
         },
         {
-          label: 'Notifications',
+          label: () =>
+            h(RouterLink, { to: { name: 'settings.notifications' } }, () => 'Notifications'),
           key: 'settings.notifications',
-          icon: renderIcon(NotificationIcon),
-          disabled: true
+          icon: renderIcon(NotificationIcon)
         },
         {
-          label: 'Choose a plan',
+          label: () => h(RouterLink, { to: { name: 'settings.plan' } }, () => 'Choose a plan'),
+
           key: 'settings.plan',
-          disabled: true,
+
           icon: renderIcon(ChoosePlanIcon)
         },
         {
-          label: 'Password & Security',
-          disabled: true,
+          label: () =>
+            h(RouterLink, { to: { name: 'settings.security' } }, () => 'Password & Security'),
+
           key: 'settings.security',
           icon: renderIcon(SecurityIcon)
         }
@@ -89,7 +95,7 @@
 
       return {
         menuOptions,
-        activeKey: ref('settings.account'),
+        activeKey: ref(route.name),
         type,
         width
       }

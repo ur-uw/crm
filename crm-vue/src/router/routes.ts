@@ -77,7 +77,7 @@ const userRoutes: Array<RouteRecordRaw> = [
         path: 'notifications',
         name: 'settings.notifications',
         // TODO: IMPLEMENT THIS COMPONENT
-        component: () => import('@/views/SettingsNotifications.vue'),
+        component: () => import('@/views/settings/SettingsNotifications.vue'),
         meta: {
           title: 'Settings | Notifications',
           auth: true
@@ -87,7 +87,7 @@ const userRoutes: Array<RouteRecordRaw> = [
         path: 'plan',
         name: 'settings.plan',
         // TODO: IMPLEMENT THIS COMPONENT
-        component: () => import('@/views/SettingsPlan.vue'),
+        component: () => import('@/views/settings/SettingsPlan.vue'),
         meta: {
           title: 'Settings | Plan',
           auth: true
@@ -97,7 +97,7 @@ const userRoutes: Array<RouteRecordRaw> = [
         path: 'security',
         name: 'settings.security',
         // TODO: IMPLEMENT THIS COMPONENT
-        component: () => import('@/views/SettingsSecurity.vue'),
+        component: () => import('@/views/settings/SettingsSecurity.vue'),
         meta: {
           title: 'Settings | Security',
           auth: true

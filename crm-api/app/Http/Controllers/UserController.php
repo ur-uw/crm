@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\UserResource;
 use App\Models\Image;
+use App\Models\User;
 use Auth;
+use Hash;
 use Illuminate\Http\Request;
 use Storage;
 use Str;
@@ -51,9 +54,17 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $newInfo = $request->validated();
+        if (!empty($newInfo['first_name']) && !empty($newInfo['last_name'])) {
+            $newInfo['name'] = $newInfo['first_name'] . ' ' . $newInfo['last_name'];
+        }
+        if (!empty($newInfo['password'])) {
+            $newInfo['password'] = Hash::make($newInfo['password']);
+        }
+        $user->update($newInfo);
+        return UserResource::make($user);
     }
     /**
      * Remove the specified resource from storage.
@@ -72,7 +83,7 @@ class UserController extends Controller
     public function get_info()
     {
         $user = Auth::user();
-        return UserResource::make($user);
+        return UserResource::make($user->load('images'));
     }
 
     /**

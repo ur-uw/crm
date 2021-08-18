@@ -6,6 +6,7 @@ import { IRootState } from '@/store/register'
 import { AuthActionsTypes, AuthStateTypes } from '@/store/store_interfaces/auth_store_interface'
 import api from '@/utils/api'
 import { handleApi } from '@/utils/helpers'
+import { User } from '@/interfaces/User'
 
 export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes = {
   [ActionTypes.LOGIN]({ commit }, payload: { email: string; password: string }): Promise<any> {
@@ -98,6 +99,22 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
     return new Promise(async (resolve, reject) => {
       commit(MutationTypes.SET_LOADING, true)
       const response = api.get('/api/user/get_info')
+      const [data, error] = await handleApi(response)
+      if (error) {
+        commit(MutationTypes.SET_LOADING, false)
+        reject(error)
+        return
+      }
+      commit(MutationTypes.SET_USER, data.data['data'])
+      commit(MutationTypes.SET_LOADING, false)
+      resolve(data)
+    })
+  },
+  // TODO: MAKE SEPARATE USER MODULE FOR THESE METHODS
+  [ActionTypes.UPDATE_USER_INFO]({ commit }, user: User): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      commit(MutationTypes.SET_LOADING, true)
+      const response = api.post(`/api/user/update/${user?.id}`, user)
       const [data, error] = await handleApi(response)
       if (error) {
         commit(MutationTypes.SET_LOADING, false)

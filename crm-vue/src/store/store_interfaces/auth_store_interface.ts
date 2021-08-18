@@ -33,7 +33,6 @@ export type AugmentedActionContextAuth = {
     payload: Parameters<AuthMutationsTypes[K]>[1]
   ): ReturnType<AuthMutationsTypes[K]>
 } & Omit<ActionContext<AuthStateTypes, IRootState>, 'commit'>
-
 export interface AuthActionsTypes {
   [AuthATypes.LOGIN](
     { commit }: AugmentedActionContextAuth,
@@ -52,6 +51,7 @@ export interface AuthActionsTypes {
       phone?: string
     }
   ): Promise<any>
+  [AuthATypes.UPDATE_USER_INFO]({ commit }: AugmentedActionContextAuth, payload: User): Promise<any>
   [AuthATypes.GET_USER]({ commit }: AugmentedActionContextAuth): void
   [AuthATypes.LOGOUT]({ commit }: AugmentedActionContextAuth): Promise<any>
 }

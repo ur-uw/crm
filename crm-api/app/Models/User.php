@@ -29,13 +29,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var array
-     */
-    protected $with = ['images'];
-
-    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array

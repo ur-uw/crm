@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from 'vue-router'
 import Home from '@/views/Home.vue'
-import AccountSettings from '@/views/settings/AccountSettings.vue'
+import AccountSettings from '@/views/settings/SettingsAccount.vue'
 /*
  * Authentication Routes
  */

@@ -14,7 +14,7 @@ export const mutations: MutationTree<AuthStateTypes> & AuthMutationsTypes = {
     if (state.user !== null) {
       state.user = {
         ...state.user,
-        payload
+        ...payload
       }
     } else {
       state.user = payload

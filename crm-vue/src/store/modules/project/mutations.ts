@@ -31,7 +31,7 @@ export const mutations: MutationTree<ProjectStateTypes> & ProjectMutationsTypes 
       state.projects.unshift(project)
     }
   },
-  [MutationTypes.SET_LOADING](state: ProjectStateTypes, value: boolean): void {
+  [MutationTypes.SET_PROJECTS_LOADING](state: ProjectStateTypes, value: boolean): void {
     state.isLoading = value
   },
   [MutationTypes.DELETE_PROJECT_TASK](state: ProjectStateTypes, payload: Task): void {

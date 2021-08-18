@@ -51,7 +51,10 @@ export interface AuthActionsTypes {
       phone?: string
     }
   ): Promise<any>
-  [AuthATypes.UPDATE_USER_INFO]({ commit }: AugmentedActionContextAuth, payload: User): Promise<any>
+  [AuthATypes.UPDATE_USER_INFO](
+    { commit }: AugmentedActionContextAuth,
+    payload: { newInfo: User; additional?: any }
+  ): Promise<any>
   [AuthATypes.GET_USER]({ commit }: AugmentedActionContextAuth): void
   [AuthATypes.LOGOUT]({ commit }: AugmentedActionContextAuth): Promise<any>
 }

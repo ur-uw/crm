@@ -28,7 +28,7 @@ export type ProjectMutationsTypes<S = ProjectStateTypes> = {
   ): void
   [ProjectMTypes.ADD_PROJECT](state: S, project: Project): void
   [ProjectMTypes.DELETE_PROJECT](state: S, id: number): void
-  [ProjectMTypes.SET_LOADING](state: S, payload: boolean): void
+  [ProjectMTypes.SET_PROJECTS_LOADING](state: S, payload: boolean): void
   [ProjectMTypes.CAST_PROJECT_TASKS](state: S, payload: Task[]): void
   [ProjectMTypes.DELETE_PROJECT_TASK](state: S, payload: Task): void
   [ProjectMTypes.EDIT_PROJECT_TASK](state: S, payload: Task): void

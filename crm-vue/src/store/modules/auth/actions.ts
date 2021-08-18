@@ -111,18 +111,26 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
     })
   },
   // TODO: MAKE SEPARATE USER MODULE FOR THESE METHODS
-  [ActionTypes.UPDATE_USER_INFO]({ commit }, user: User): Promise<any> {
+  [ActionTypes.UPDATE_USER_INFO](
+    { commit },
+    payload: { newInfo: User; additional?: any }
+  ): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      commit(MutationTypes.SET_LOADING, true)
-      const response = api.post(`/api/user/update/${user?.id}`, user)
+      let newUserData = payload.newInfo
+      if (payload.additional !== null) {
+        newUserData = {
+          ...newUserData,
+          ...payload.additional
+        }
+      }
+
+      const response = api.post(`/api/user/update/${payload.newInfo.id}`, newUserData)
       const [data, error] = await handleApi(response)
       if (error) {
-        commit(MutationTypes.SET_LOADING, false)
         reject(error)
         return
       }
       commit(MutationTypes.SET_USER, data.data['data'])
-      commit(MutationTypes.SET_LOADING, false)
       resolve(data)
     })
   }

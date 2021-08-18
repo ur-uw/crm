@@ -15,15 +15,15 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   // FETCH ALL PROJECTS
   [ActionTypes.FETCH_PROJECTS]({ commit }): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      commit(MutationTypes.SET_LOADING, true)
+      commit(MutationTypes.SET_PROJECTS_LOADING, true)
       const promise = api.get('/api/projects/get')
       const [data, error] = await handleApi(promise)
       if (error) {
-        commit(MutationTypes.SET_LOADING, false)
+        commit(MutationTypes.SET_PROJECTS_LOADING, false)
         reject(error)
         return
       }
-      commit(MutationTypes.SET_LOADING, false)
+      commit(MutationTypes.SET_PROJECTS_LOADING, false)
       commit(MutationTypes.SET_PROJECTS, data.data['data'])
       resolve(data)
     })
@@ -34,16 +34,16 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     payload: Project | string | number
   ): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      commit(MutationTypes.SET_LOADING, true)
+      commit(MutationTypes.SET_PROJECTS_LOADING, true)
       const promise = api.get(`/api/projects/show/${payload}`)
       const [data, error] = await handleApi(promise)
       if (error) {
-        commit(MutationTypes.SET_LOADING, false)
+        commit(MutationTypes.SET_PROJECTS_LOADING, false)
         reject(error)
         return
       }
       const project: Project = data.data['data']
-      commit(MutationTypes.SET_LOADING, false)
+      commit(MutationTypes.SET_PROJECTS_LOADING, false)
       if (project.tasks != null) {
         commit(MutationTypes.CAST_PROJECT_TASKS, project.tasks)
       }

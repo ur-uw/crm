@@ -43,7 +43,10 @@ import {
   NAvatar,
   NBackTop,
   NMenu,
-  NDivider
+  NDivider,
+  NH6,
+  NCollapse,
+  NCollapseItem
 } from 'naive-ui'
 
 export const naive = create({
@@ -91,6 +94,9 @@ export const naive = create({
     NCheckbox,
     NText,
     NH1,
+    NH6,
+    NCollapse,
+    NCollapseItem,
     NTooltip,
     NMenu
   ]

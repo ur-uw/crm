@@ -64,31 +64,15 @@
         </n-input>
       </n-form-item>
 
-      <n-grid class="px-3" :x-gap="15" :y-gap="15" cols="2 xs:1 s:1">
-        <n-grid-item>
-          <n-form-item path="password" label="Password">
-            <n-input
-              v-model:value="model.password"
-              class="input-field"
-              show-password-toggle
-              type="password"
-              size="large"
-              placeholder="Change password"
-            >
-            </n-input>
-          </n-form-item>
-        </n-grid-item>
-        <n-grid-item>
-          <n-form-item path="phone" label="Phone Number">
-            <n-input
-              v-model:value="model.phone"
-              class="input-field"
-              placeholder=""
-              size="large"
-            ></n-input>
-          </n-form-item>
-        </n-grid-item>
-      </n-grid>
+      <n-form-item class="px-3" path="phone" label="Phone Number">
+        <n-input
+          v-model:value="model.phone"
+          class="input-field"
+          placeholder=""
+          maxlength="15"
+          size="large"
+        ></n-input>
+      </n-form-item>
     </n-form>
     <n-divider />
 
@@ -170,8 +154,16 @@
       <div v-else><h3 class="text-center text-info">No addresses yet</h3></div>
     </div>
     <n-space size="large" class="pe-3" justify="end">
-      <n-button size="large" ghost @click="discardChanges"> Discard</n-button>
-      <n-button size="large" type="success" @click.prevent="changeUserInfo">
+      <n-button :disabled="!isChangeActive" size="large" ghost @click="discardChanges">
+        Discard
+      </n-button>
+
+      <n-button
+        size="large"
+        :disabled="!isChangeActive"
+        type="success"
+        @click.prevent="changeUserInfo"
+      >
         Save Changes
       </n-button>
     </n-space>
@@ -188,7 +180,7 @@
   import { FormItemRule, useMessage } from 'naive-ui'
   import { handleActions, handleApi, validEmail } from '@/utils/helpers'
   import { AllActionTypes } from '@/store/action-types'
-  import { AllMutationTypes } from '@/store/mutation-types'
+  import { MutationTypes as AuthMutations } from '@/store/modules/auth/mutation-types'
   import api from '@/utils/api'
   import { Address } from '@/interfaces/Address'
 
@@ -204,27 +196,28 @@
       const message = useMessage()
       const currentUser = computed<User | null>(() => store.getters.getCurrentUser)
       let userAddresses = ref<Address[] | null>(null)
-      const initializeUserInfo = () => {
+      const getInitialUserData = () => {
         const userName = currentUser.value?.name?.split(' ')
         return {
           firstName: userName != null ? userName[0] : '',
           lastName: userName != null ? userName[1] : '',
           phone: currentUser.value?.phone,
-          email: currentUser?.value?.email,
-          password: ''
+          email: currentUser?.value?.email
         }
       }
-      let modelValue = initializeUserInfo()
+      const initialUserInfo = getInitialUserData()
       const formRef = ref(null)
-      const formModel = ref(modelValue)
+      const formModel = ref(initialUserInfo)
+      const counter = ref(1)
       watch(currentUser, (newVal: User | null) => {
         if (newVal !== null) {
-          modelValue.firstName = newVal.name?.split(' ')[0] ?? ''
-          modelValue.lastName = newVal.name?.split(' ')[1] ?? ''
-          modelValue.email = newVal.email
-          modelValue.phone = newVal.phone
+          initialUserInfo.firstName = newVal.name?.split(' ')[0] ?? ''
+          initialUserInfo.lastName = newVal.name?.split(' ')[1] ?? ''
+          initialUserInfo.email = newVal.email
+          initialUserInfo.phone = newVal.phone
         }
       })
+
       // Form Rules
       const formRules = {
         email: {
@@ -239,40 +232,30 @@
           },
           trigger: ['input', 'blur']
         },
-        password: {
-          validator: (rule: FormItemRule, val: string) => {
-            if (val.length > 0 && val.length < 8) {
-              return Error('Password must be at least 8 chars')
-            }
-            return true
-          }
-        },
         firstName: {
           required: true,
-          message: 'Please enter your first name'
+          message: 'Please enter your first name',
+          trigger: ['blur']
         },
         lastName: {
           required: true,
-          message: 'Please enter your last name'
+          message: 'Please enter your last name',
+          trigger: ['blur']
         }
       }
 
       // Change user info
       const changeUserInfo = () => {
         formRef.value?.validate(async (errors: unknown) => {
+          // ? Check if any of the information is changed
+
           if (!errors) {
             let newUser = {
               newUserData: {
                 id: currentUser.value?.id,
-                name: modelValue.firstName + ' ' + modelValue.lastName
+                name: formModel.value.firstName + ' ' + formModel.value.lastName
               } as User,
               additional: null as null | unknown
-            }
-
-            if (formModel.value.password) {
-              newUser.additional = {
-                password: formModel.value.password
-              }
             }
 
             const promise = store.dispatch(AllActionTypes.UPDATE_USER_INFO, {
@@ -295,7 +278,7 @@
 
       // Discard Changes
       const discardChanges = () => {
-        formModel.value = initializeUserInfo()
+        formModel.value = getInitialUserData()
       }
 
       // Load User addresses
@@ -309,7 +292,7 @@
         const newUser: User = {
           addresses: data.data['data']
         }
-        store.commit(AllMutationTypes.SET_USER, newUser)
+        store.commit(AuthMutations.SET_USER, newUser)
         userAddresses.value = data.data['data']
       }
       loadUserAddresses()
@@ -322,7 +305,11 @@
         discardChanges,
         changeUserInfo,
         isUserLoading: computed(() => store.getters.isAuthLoading),
-        userAddresses
+        userAddresses,
+        counter,
+        isChangeActive: computed(
+          () => JSON.stringify(getInitialUserData()) !== JSON.stringify(formModel.value)
+        )
       }
     }
   })
@@ -330,7 +317,7 @@
 
 <style lang="scss">
   .input-field {
-    border-radius: 0.5rem;
+    border-radius: 0.45rem;
   }
   .avatar {
     border: 1px solid #efefff;

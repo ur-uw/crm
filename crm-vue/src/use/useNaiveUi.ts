@@ -45,8 +45,10 @@ import {
   NMenu,
   NDivider,
   NH6,
+  NUpload,
   NCollapse,
-  NCollapseItem
+  NCollapseItem,
+  NUploadDragger
 } from 'naive-ui'
 
 export const naive = create({
@@ -70,6 +72,8 @@ export const naive = create({
     NDatePicker,
     NDialog,
     NAlert,
+    NUpload,
+    NUploadDragger,
     NIcon,
     NDropdown,
     NLayout,

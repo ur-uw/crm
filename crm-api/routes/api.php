@@ -30,3 +30,8 @@ Route::prefix('addresses')->group(__DIR__ . '/api_routes/v1/address_routes.php')
 
 //** Teams *//
 Route::prefix('teams')->group(__DIR__ . '/api_routes/v1/team_routes.php');
+
+/* Testing routes */
+Route::post('/upload', function () {
+    return 'testing-route';
+});

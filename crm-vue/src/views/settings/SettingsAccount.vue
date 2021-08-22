@@ -4,29 +4,10 @@
     <n-divider />
     <h5 class="fw-bold mt-5">Personal Information</h5>
     <n-form ref="formRef" :model="model" :rules="rules" class="mt-5">
-      <div class="avatar-wrapper mb-3 px-3 d-flex align-items-center justify-content-start">
-        <n-form-item>
-          <n-avatar
-            class="avatar"
-            round
-            :size="200"
-            :src="(user?.images !== null) !== null ? user?.images[0]?.path : null"
-          />
-        </n-form-item>
-        <div
-          class="
-            avatar-buttons-container
-            d-flex
-            flex-column
-            align-items-center
-            justify-content-between
-            ms-5
-          "
-        >
-          <n-button class="mb-3" size="large" type="primary">Change picture </n-button>
-          <n-button ghost size="large">Delete picture </n-button>
-        </div>
-      </div>
+      <settings-user-avatar
+        :path="(user?.images !== null) !== null ? user?.images[0]?.path : null"
+        @avatar-changed="handleAvatarChange"
+      />
 
       <n-grid class="px-3" :x-gap="15" :y-gap="15" cols="2 xs:1 s:1">
         <n-grid-item>
@@ -183,11 +164,13 @@
   import { MutationTypes as AuthMutations } from '@/store/modules/auth/mutation-types'
   import api from '@/utils/api'
   import { Address } from '@/interfaces/Address'
-
+  import SettingsUserAvatar from '@/components/settings/SettingsUserAvatar.vue'
+  import { Image } from '@/interfaces/Image'
   export default defineComponent({
     name: 'AccountSettings',
     components: {
-      MailIcon
+      MailIcon,
+      SettingsUserAvatar
     },
     setup() {
       // INITIALIZE STORE
@@ -276,6 +259,15 @@
         })
       }
 
+      // Adding new user image to vuex when user avatar is changed
+      const handleAvatarChange = (newImage: Image) => {
+        if (newImage) {
+          const user = currentUser.value
+          user?.images?.unshift(newImage)
+          store.commit(AuthMutations.SET_USER, user)
+        }
+      }
+
       // Discard Changes
       const discardChanges = () => {
         formModel.value = getInitialUserData()
@@ -307,6 +299,7 @@
         isUserLoading: computed(() => store.getters.isAuthLoading),
         userAddresses,
         counter,
+        handleAvatarChange,
         isChangeActive: computed(
           () => JSON.stringify(getInitialUserData()) !== JSON.stringify(formModel.value)
         )

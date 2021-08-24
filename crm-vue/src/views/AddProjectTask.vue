@@ -133,6 +133,7 @@
   // import { PersonAdd28Regular } from '@vicons/fluent'
   export default defineComponent({
     components: { TheBack },
+    inheritAttrs: false,
     props: {
       taskStatus: {
         type: String,
@@ -154,17 +155,19 @@
       const userOptions = ref<SelectGroupOption[]>([])
       const statues = ref<Status[]>([])
       const priorities = ref<Priority>()
-      const modelRefValue = {
-        taskTitle: null,
-        taskDescription: null,
-        assignTo: [] as (string | number)[],
-        taskStatus: null as string | null,
-        taskPriority: null as string | null,
-        taskDates: null as { start_date: string; due_date: string } | null,
-        tags: [] as string[]
+      const initializeFormRef = () => {
+        return {
+          taskTitle: null,
+          taskDescription: null,
+          assignTo: [] as (string | number)[],
+          taskStatus: null as string | null,
+          taskPriority: null as string | null,
+          taskDates: null as { start_date: string; due_date: string } | null,
+          tags: [] as string[]
+        }
       }
 
-      const modelRef = ref(modelRefValue)
+      const modelRef = ref(initializeFormRef())
       const formRules = {
         taskTitle: [
           {
@@ -225,7 +228,7 @@
                 message.error('Something went wrong, please try agin later', { duration: 3000 })
                 return
               }
-              // TODO:USE THE DATA
+              modelRef.value = initializeFormRef()
               message.success('Task created successfully', {
                 duration: 3000
               })
@@ -267,7 +270,6 @@
         if (error) {
           return
         }
-        console.log('test')
         statues.value = data.data['data']
       }
       // Fetch task priorities

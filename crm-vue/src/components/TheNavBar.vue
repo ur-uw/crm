@@ -119,7 +119,7 @@
         if (key === 'settings.show') {
           params = {
             ...params,
-            id: store.getters.getCurrentUser?.id
+            slug: store.getters.getCurrentUser?.slug
           }
           router.push({ name: 'settings.account', params })
           return

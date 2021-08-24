@@ -1,5 +1,5 @@
 <template>
-  <div class="task bg-dark">
+  <div class="task bg-custom-dark-blue">
     <div class="task__tags">
       <span class="task__tag task__tag--copyright">Copywriting</span>
 

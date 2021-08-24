@@ -24,13 +24,13 @@
                     <n-tooltip placement="bottom" trigger="hover">
                       <template #trigger>
                         <n-avatar
-                          v-if="user?.images != null && user?.images[0] != null"
-                          :src="user?.images[0].path"
+                          v-if="user.images !== undefined && user?.images[0] !== null"
                           class="
                             text-center
                             project-participants__member
                             border border-custom-purple
                           "
+                          :src="user?.images[0].path"
                           circle
                         >
                         </n-avatar>
@@ -39,7 +39,7 @@
                           circle
                           class="text-center project-participants__member text-center"
                         >
-                          {{ user.name?.substring(0, 1) }}
+                          {{ user.name?.substring(0, 1).toUpperCase() }}
                         </n-avatar>
                       </template>
                       {{ user.name }}

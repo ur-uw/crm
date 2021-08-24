@@ -5,7 +5,11 @@
     <h5 class="fw-bold mt-5">Personal Information</h5>
     <n-form ref="formRef" :model="model" :rules="rules" class="mt-5">
       <settings-user-avatar
-        :path="(user?.images !== null) !== null ? user?.images[0]?.path : null"
+        :path="
+          user?.images !== undefined
+            ? user?.images[0]?.path
+            : `https://avatars.dicebear.com/api/human/${user?.name}.svg`
+        "
         @avatar-changed="handleAvatarChange"
       />
 
@@ -189,7 +193,8 @@
         }
       }
       const initialUserInfo = getInitialUserData()
-      const formRef = ref(null)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const formRef = ref<any>(null)
       const formModel = ref(initialUserInfo)
       const counter = ref(1)
       watch(currentUser, (newVal: User | null) => {
@@ -229,34 +234,35 @@
 
       // Change user info
       const changeUserInfo = () => {
-        formRef.value?.validate(async (errors: unknown) => {
-          // ? Check if any of the information is changed
-
-          if (!errors) {
-            let newUser = {
-              newUserData: {
-                slug: currentUser.value?.slug,
-                name: formModel.value.firstName + ' ' + formModel.value.lastName
-              } as User,
-              additional: null as null | unknown
-            }
-
-            const promise = store.dispatch(AllActionTypes.UPDATE_USER_INFO, {
-              newInfo: newUser.newUserData,
-              additional: newUser.additional
-            })
-            const [, error] = await handleActions(promise)
-            if (error) {
-              message.error('Some thing went wrong please try again latter', {
+        if (formRef.value !== null) {
+          formRef.value.validate(async (errors: unknown): Promise<void> => {
+            // ? Check if any of the information is changed
+            if (!errors) {
+              let newUser = {
+                newUserData: {
+                  slug: currentUser.value?.slug,
+                  name: formModel.value.firstName + ' ' + formModel.value.lastName,
+                  phone: formModel.value.phone
+                } as User,
+                additional: null as null | unknown
+              }
+              const promise = store.dispatch(AllActionTypes.UPDATE_USER_INFO, {
+                newInfo: newUser.newUserData,
+                additional: newUser.additional
+              })
+              const [, error] = await handleActions(promise)
+              if (error) {
+                message.error('Some thing went wrong please try again latter', {
+                  duration: 3000
+                })
+                return
+              }
+              message.success('Profile Updated', {
                 duration: 3000
               })
-              return
             }
-            message.success('Profile Updated', {
-              duration: 3000
-            })
-          }
-        })
+          })
+        }
       }
 
       // Adding new user image to vuex when user avatar is changed

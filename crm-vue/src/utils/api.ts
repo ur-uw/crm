@@ -17,6 +17,9 @@ api.interceptors.response.use(undefined, (error) => {
     case 419:
       route = { name: 'login' }
       break
+    case 403:
+      route = { name: 'forbidden.show' }
+      break
     // TODO: make sure that url stay the same when it redirects to NotFound page
     case 404:
       route = {

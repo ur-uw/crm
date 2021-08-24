@@ -114,15 +114,23 @@ const errorRoutes: Array<RouteRecordRaw> = [
   {
     path: '/error',
     name: 'error.show',
-    component: () => import('@/views/Error.vue'),
+    component: () => import('@/views/errors/Error.vue'),
     meta: {
       title: 'Server Error'
     }
   },
   {
+    path: '/forbidden',
+    name: 'forbidden.show',
+    component: () => import('@/views/errors/Forbidden.vue'),
+    meta: {
+      title: 'Forbidden'
+    }
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found.show',
-    component: () => import('@/views/NotFound.vue'),
+    component: () => import('@/views/errors/NotFound.vue'),
     meta: {
       title: 'Not Found'
     }

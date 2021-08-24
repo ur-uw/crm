@@ -1,17 +1,14 @@
 <template>
-  <div id="right" class="p-lg-5 p-md-4 p-sm-2">
+  <div id="right" class="p-lg-5 p-md-4 p-2">
     <h1 class="text-primary2">Development Crm</h1>
-    <div class="horizontal">
+    <div class="horizontal d-flex align-items-center justify-content-between">
       <img src="../../assets/images/horizontal.png" alt="horizontal" />
+      <img src="../../assets/images/users.png" alt="users" />
     </div>
     <p class="text-primary w-lg-50 w-sm-100">
       Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
       been the industry's standard dummy text ever since the 1500s
     </p>
-
-    <div class="users-icon">
-      <img src="../../assets/images/users.png" alt="users" />
-    </div>
 
     <div class="tasks">
       <div class="add-tasks">
@@ -44,7 +41,6 @@
     border-radius: 15px;
 
     h1 {
-      font-family: 'MyriadProBold', sans-serif;
       font-size: 24px;
       font-weight: 400;
       margin-bottom: 10px;
@@ -67,8 +63,8 @@
 
     .users-icon {
       position: absolute;
-      right: 42px;
-      top: 65px;
+      right: 10px;
+      top: 10px;
       cursor: pointer;
 
       img {
@@ -87,7 +83,6 @@
         justify-content: space-between;
 
         h2 {
-          font-family: 'MyriadProBold', sans-serif;
           font-size: 15px;
           font-weight: 400;
         }
@@ -99,9 +94,9 @@
 
       input[type='text'] {
         border: unset;
-        border-bottom: 1px solid var(--bs-custom-grey);
+        border-bottom: 1px solid $custom-grey;
         width: 100%;
-        caret-color: var(--bs-primary);
+        caret-color: $primary;
       }
 
       ul.tasks-list {

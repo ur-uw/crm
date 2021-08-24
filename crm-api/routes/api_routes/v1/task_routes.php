@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 // Get single task
 Route::get('/show/{task}', [TaskController::class, 'show']);
-// Mark task as completed
-Route::put('/changestatus/{task}', [TaskController::class, 'changeStatus']);
 // Protected routes
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Get all tasks
@@ -22,6 +20,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/create', [TaskController::class, 'store']);
     // Update task
     Route::put('/update/{task}', [TaskController::class, 'update']);
+    // Mark task as completed
+    Route::put('/changestatus/{task}', [TaskController::class, 'changeStatus']);
     // Delete task
     Route::delete('/delete/{task}', [TaskController::class, 'destroy']);
 });

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 
 // Used to generate a delay
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -7,26 +7,33 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 // Used with api calls and logs the error
 export const handleApi = async (
   promise: Promise<any>
-): Promise<[any, Error | AxiosError | any]> => {
+): Promise<[any, Error | AxiosError | null]> => {
   try {
-    await sleep(350)
+    await sleep(300)
     const data = await promise
     return [data, null]
-  } catch (err: AxiosError | any | Error) {
-    console.error(err.response.data)
-    return [null, err]
+  } catch (err: AxiosError | Error | any) {
+    if (axios.isAxiosError(err)) {
+      console.error('🚀 ~ file: helpers.ts ~ line 16 ~ err', err.response?.data)
+      return [null, err.response?.data]
+    } else {
+      console.error('🚀 ~ file: helpers.ts ~ line 16 ~ err', err)
+      return [null, err]
+    }
   }
 }
 
 // Used with vuex actions
-export const handleActions = async (
-  promise: Promise<any>
-): Promise<[any, any | Error | AxiosError]> => {
+export const handleActions = async (promise: Promise<any>): Promise<[any, null | any]> => {
   try {
     const data = await promise
     return [data, null]
   } catch (err: AxiosError | any | Error) {
-    return [null, err]
+    if (axios.isAxiosError(err)) {
+      return [null, err.response?.data]
+    } else {
+      return [null, err]
+    }
   }
 }
 
@@ -53,4 +60,11 @@ export const today = (): string => {
     mm = '0' + mm
   }
   return `${yyyy}-${mm}-${dd}`
+}
+
+// Validate email
+export const validEmail = (email: string): boolean => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(String(email).toLowerCase())
 }

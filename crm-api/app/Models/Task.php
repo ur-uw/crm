@@ -7,23 +7,76 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laratrust\Contracts\Ownable;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Task extends Model implements Ownable
 {
-    use HasFactory;
+
+
+    use HasFactory, HasSlug;
+    use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
+
+
     protected $fillable = [
         'title',
         'slug',
         'description',
         'start_date',
         'due_date',
+        'project_id',
+        'created_by',
         'status_id',
+        'priority_id'
+    ];
+    protected $dates = [
+        'start_date',
+        'due_date',
     ];
 
+    protected $casts = [
+        'start_date' => 'datetime:Y-m-d',
+        'due_date' => 'datetime:Y-m-d',
+    ];
+
+
+    /**
+     * Get the ownerKey for ownable interface.
+     */
     public function ownerKey($owner)
     {
-        return $this->users()->getParent()->id();
+        return $this->created_by ?? $this->users()->getParent()->id;
+    }
+
+
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+    }
+
+
+    /**
+     * Get the user that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -37,14 +90,16 @@ class Task extends Model implements Ownable
     }
 
     /**
-     * Get the project that owns the Task
+     * The users that belong to the Task
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function project(): BelongsTo
+    public function users(): BelongsToMany
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsToMany(User::class)
+            ->withTimestamps();
     }
+
     /**
      * Scope a query to only include recent updated tasks.
      *
@@ -63,29 +118,59 @@ class Task extends Model implements Ownable
             ->latest('tasks.updated_at');
     }
 
-
     /**
-     * Get all of the users that are assigned this task.
+     * Get all of the teams for the Task
+     *
+     * @return HasManyDeep
      */
-    public function users()
+    public function teams(): HasManyDeep
     {
-        return $this->morphedByMany(User::class, 'taskkable');
+        return $this->hasManyDeep(Team::class, [
+            'task_user', User::class, 'team_user'
+        ]);
     }
 
 
     /**
-     * Get all of the projects that are assigned this task.
+     * Get the project that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function projects()
+    public function project(): BelongsTo
     {
-        return $this->morphedByMany(Project::class, 'taskkable');
+        return $this->belongsTo(Project::class);
     }
 
     /**
-     * Get all of the teams that are assigned this task.
+     * The "booted" method of the model.
+     *
+     * @return void
      */
-    public function teams()
+    protected static function booted()
     {
-        return $this->morphedByMany(Team::class, 'taskkable');
+        static::creating(function (Task $task) {
+            if (Auth::user()) {
+                $task->created_by = Auth::user()->id;
+            }
+        });
+    }
+
+    /**
+     * Get the priority that owns the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function priority(): BelongsTo
+    {
+        return $this->belongsTo(Priority::class);
+    }
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

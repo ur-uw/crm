@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -13,14 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-
-    // get user data
-    public function user(Request $request)
-    {
-        return response()->json([
-            'user' => $request->user(),
-        ]);
-    }
 
 
     public function login(LoginRequest $request)
@@ -35,26 +26,19 @@ class AuthController extends Controller
         $token = $user->createToken($request->device_name)->plainTextToken;
         return response()->json([
             'message' => 'Login Success',
-            'user' => $user,
+            'user' => $user->load('images'),
             'token' => $token,
         ]);
     }
     public function register(RegisterRequest $request)
     {
-        try {
-            $user = User::create($request->validated());
-            $token = $user->createToken($request->device_name)->plainTextToken;
-            return response()->json([
-                'message' => 'User created',
-                'user' => $user,
-                'token' => $token,
-            ]);
-        } catch (\Exception $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => $exception->getMessage(),
-            ]);
-        }
+        $user = User::create($request->validated());
+        $token = $user->createToken($request->device_name)->plainTextToken;
+        return response()->json([
+            'message' => 'User created',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
     public function logOut(Request $request): \Illuminate\Http\JsonResponse
     {

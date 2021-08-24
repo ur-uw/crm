@@ -2,5 +2,12 @@ import { ProjectStateTypes } from '@/store/store_interfaces/project_store_interf
 
 export const state: ProjectStateTypes = {
   projects: null,
-  isLoading: false
+  isLoading: false,
+  selectedProjectTasks: {
+    waiting: [],
+    approved: [],
+    inprogress: [],
+    completed: [],
+    rejected: []
+  }
 }

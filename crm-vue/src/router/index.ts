@@ -2,73 +2,23 @@ import {
   createRouter,
   createWebHistory,
   NavigationGuardNext,
-  RouteLocationNormalized,
-  RouteRecordRaw
+  RouteLocationNormalized
 } from 'vue-router'
-import Home from '@/views/Home.vue'
 import { store as myStore } from '@/store'
-
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home,
-    meta: {
-      title: 'Home'
-    }
-  },
-  {
-    path: '/dashboard',
-    name: 'dashboard.show',
-    component: () => import('@/views/Dashboard.vue'),
-    meta: {
-      title: 'Dashboard',
-      auth: true
-    }
-  },
-  {
-    path: '/login',
-    name: 'login.show',
-    component: () => import('@/views/Login.vue'),
-
-    meta: {
-      title: 'Login',
-      auth: false
-    }
-  },
-  {
-    path: '/register',
-    name: 'register.show',
-    component: () => import('@/views/Register.vue'),
-    meta: {
-      title: 'Register',
-      auth: false
-    }
-  },
-  {
-    path: '/project/:id',
-    name: 'project.show',
-    component: () => import('@/views/ProjectShow.vue'),
-    meta: {
-      title: 'Project',
-      auth: true
-    }
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'not-found.show',
-    component: () => import('@/views/NotFound.vue'),
-    meta: {
-      title: 'Not Found'
-    }
-  }
-]
-
+import routes from './routes'
 const store = myStore
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  linkActiveClass: 'active'
+  linkActiveClass: 'active',
+  scrollBehavior(to) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth'
+      }
+    }
+  }
 })
 router.beforeEach((to, from, next) => {
   authGuard(to, from, next)

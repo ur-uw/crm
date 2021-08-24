@@ -10,10 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, LaratrustUserTrait;
+    use HasFactory, Notifiable, HasApiTokens, LaratrustUserTrait, HasSlug;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'slug',
         'phone',
     ];
 
@@ -46,6 +49,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
+
     /**
      * Get all of the address for the User
      *
@@ -67,15 +83,15 @@ class User extends Authenticatable
     }
 
     /**
-     * Get all of the tasks for the user.
+     * The tasks that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function tasks()
+    public function tasks(): BelongsToMany
     {
-        return $this->morphToMany(Task::class, 'taskkable');
+        return $this->belongsToMany(Task::class)
+            ->withTimestamps();
     }
-
-
-
 
     /**
      * The teams that belong to the User
@@ -86,5 +102,22 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Team::class)
             ->withTimestamps();
+    }
+
+    /**
+     * Get all of the user's images.
+     */
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable')->latest();
+    }
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

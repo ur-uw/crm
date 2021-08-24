@@ -1,25 +1,83 @@
 <template>
-  <the-nav-bar></the-nav-bar>
-  <router-view :key="$route.path" />
+  <n-config-provider :theme-overrides="theme_overrides" :theme="theme">
+    <n-theme-editor>
+      <IconConfigProvider size="20">
+        <n-dialog-provider>
+          <n-notification-provider>
+            <n-message-provider>
+              <the-nav-bar>
+                <template #content>
+                  <router-view :key="$route.path" />
+                </template> </the-nav-bar
+            ></n-message-provider>
+          </n-notification-provider>
+        </n-dialog-provider>
+      </IconConfigProvider>
+    </n-theme-editor>
+  </n-config-provider>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue'
+  import { defineComponent, ref } from 'vue'
+  import { IconConfigProvider } from '@vicons/utils'
+  import {
+    darkTheme,
+    GlobalThemeOverrides,
+    NConfigProvider,
+    NDialogProvider,
+    NNotificationProvider,
+    NMessageProvider
+  } from 'naive-ui'
   import TheNavBar from '@/components/TheNavBar.vue'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from './store/modules/auth/action-types'
-  import axios from 'axios'
+  import { NThemeEditor } from 'naive-ui'
+
+  import api from '@/utils/api'
   export default defineComponent({
     name: 'App',
-    components: { TheNavBar },
+    components: {
+      TheNavBar,
+      IconConfigProvider,
+      NConfigProvider,
+      NDialogProvider,
+      NNotificationProvider,
+      NThemeEditor,
+      NMessageProvider
+    },
     setup() {
       const store = useStore()
       const getUser = () => {
         if (store.getters.getToken) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getToken}`
+          api.defaults.headers.common['Authorization'] = `Bearer ${store.getters.getToken}`
           store.dispatch(ActionTypes.GET_USER)
         }
       }
       getUser()
+      const theme_overrides: GlobalThemeOverrides = {
+        Card: {
+          color: '#262a41FF'
+        },
+        Menu: {
+          color: '#15172bFF',
+          itemColorActiveCollapsed: '#15172bFF',
+          borderColorHorizontal: '#15172bFF',
+          colorInverted: '#15172bFF'
+        },
+
+        Layout: {
+          siderColor: '#15172BFF',
+          color: '#262a41FF',
+          siderColorInverted: '#15172bFF',
+          colorEmbedded: '#15172bFF',
+          headerColor: '#15172bFF',
+          headerColorInverted: '#15172bFF',
+          footerColor: '#15172bFF',
+          footerColorInverted: '#15172bFF'
+        }
+      }
+
+      const theme = ref(darkTheme)
+      return { theme, theme_overrides }
     }
   })
 </script>

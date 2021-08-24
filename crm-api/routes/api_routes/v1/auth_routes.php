@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
- // Login
-    Route::post('/login', [AuthController::class, 'login']);
-    // Register
-    Route::post('/register', [AuthController::class, 'register']);
+// Login
+Route::post('/login', [AuthController::class, 'login']);
+// Register
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
     // Logout
-    Route::get('/logout', [AuthController::class, 'logOut'])->middleware('auth:sanctum');
-    // Get user data
-    Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
+    Route::get('/logout', [AuthController::class, 'logOut']);
+});

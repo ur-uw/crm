@@ -8,8 +8,8 @@ import { TaskStoreModuleTypes } from './modules/task/types'
 import { AuthStoreModuleTypes } from './modules/auth/types'
 import { ProjectStoreModuleTypes } from './modules/project/types'
 export const store = createStore<IRootState>({
-  ...root,
-  plugins: import.meta.env.DEV ? [createLogger()] : []
+  ...root
+  // plugins: import.meta.env.DEV ? [createLogger()] : []
 })
 
 type StoreModules = {

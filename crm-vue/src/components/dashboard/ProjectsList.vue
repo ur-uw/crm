@@ -3,13 +3,13 @@
     <h3>
       Projects <span>{{ projects?.length }}</span>
     </h3>
-    <transition-group tag="div" name="projects-list" class="projects">
-      <Project
+    <div class="projects">
+      <ProjectComponent
         v-for="project in projects"
-        :key="project.id"
+        :key="project.slug"
         index
         :project="project"
-        @click="showProject(project.id, project.slug)"
+        @click="$router.push({ name: 'project.show', params: { slug: project.slug } })"
       />
       <div key="addProject" class="add-project">
         <div
@@ -22,32 +22,28 @@
             flex-column
           "
         >
-          <fa icon="plus" class="display-4" />
+          <Icon>
+            <Add28Filled />
+          </Icon>
         </div>
       </div>
-    </transition-group>
+    </div>
   </div>
 </template>
 <script lang="ts">
-  import { Project as project } from '@/interfaces/Project'
+  import { Icon } from '@vicons/utils'
+  import { Add28Filled } from '@vicons/fluent'
+  import { Project } from '@/interfaces/Project'
   import { defineComponent, PropType } from 'vue'
-  import { useRouter } from 'vue-router'
-  import Project from './Project.vue'
+  import ProjectComponent from './ProjectComponent.vue'
   export default defineComponent({
     name: 'ProjectsList',
-    components: { Project },
+    components: { ProjectComponent, Icon, Add28Filled },
     props: {
       projects: {
-        type: Object as PropType<project[]>,
+        type: Object as PropType<Project[]>,
         required: true
       }
-    },
-    setup() {
-      const router = useRouter()
-      const showProject = (id: number, slug: string) => {
-        router.push({ name: 'project.show', params: { id: id, slug: slug } })
-      }
-      return { showProject }
     }
   })
 </script>
@@ -69,10 +65,10 @@
     h3 {
       font-family: 'Open Sans', sans-serif;
       font-size: 19px;
-      color: var(--bs-white) !important;
+      color: white !important;
       span {
         font-size: 14px;
-        color: var(--bs-custom-grey);
+        color: $custom-grey;
       }
     }
 
@@ -94,16 +90,15 @@
         padding: 0.5em;
 
         span {
-          font-family: 'MyriadProSemiBold', sans-serif;
           font-size: 17px;
-          color: var(--bs-white);
+          color: white;
         }
 
         h6 {
           margin-top: 16px;
           font-family: 'Open Sans', sans-serif;
           font-size: 14px;
-          color: var(--bs-white);
+          color: white;
         }
 
         div.box-color {
@@ -123,7 +118,7 @@
           }
 
           &:hover {
-            border: 3px solid var(--bs-custom-pink);
+            border: 3px solid $custom-pink;
             transition: border 250ms ease-in-out;
           }
         }

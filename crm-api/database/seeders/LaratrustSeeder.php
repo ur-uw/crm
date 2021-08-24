@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
+use Str;
 
 class LaratrustSeeder extends Seeder
 {
@@ -59,12 +60,12 @@ class LaratrustSeeder extends Seeder
 
             // Attach all permissions to the role
             $role->permissions()->sync($permissions);
-
             if (Config::get('laratrust_seeder.create_users')) {
                 $this->command->info("Creating '{$key}' user");
                 // Create default user for each role
+                $name = ucwords(str_replace('_', ' ', $key));
                 $user = \App\Models\User::create([
-                    'name' => ucwords(str_replace('_', ' ', $key)),
+                    'name' => $name,
                     'email' => $key . '@app.com',
                     'password' => bcrypt('password')
                 ]);

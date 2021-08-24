@@ -29,8 +29,6 @@ class CreateProjectRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            // NOTE: THIS CAN BE REMOVED AFTER IMPLEMENTING SLUGS FOR TASK MODEL
-            'slug' => 'required|string|unique:tasks,title',
             'description' => 'string',
             'user_id' => 'required|numeric|exists:statuses,id',
         ];

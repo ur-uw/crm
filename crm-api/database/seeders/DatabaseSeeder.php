@@ -16,13 +16,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LaratrustSeeder::class,
             UserSeeder::class,
+            ImageSeeder::class,
             AddressSeeder::class,
             StatusSeeder::class,
-            TasksSeeder::class,
+            PrioritySeeder::class,
             ProjectUserSeeder::class,
             ProjectTeamsSeeder::class,
             TeamsUsersSeeder::class,
-            ProjectTeamUserTaskSeeder::class,
+            ProjectTasksSeeder::class,
+            DefaultProjectTeamUserSeeder::class,
         ]);
     }
 }

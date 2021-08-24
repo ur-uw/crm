@@ -25,10 +25,17 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            'description' => 'string',
+            //Project Id
+            'project' => 'numeric',
+            'description' => 'string|nullable',
             'start_date' => 'date',
-            'due_date' => 'date',
-            'status_id' => 'numeric',
+            'due_date' => 'date|nullable|after:start_date',
+            'assigned_to' => 'array',
+            'assigned_to.*' => 'exists:users,slug',
+            // Status Slug
+            'status' => 'string|exists:statuses,slug',
+            // Priority Id
+            'priority' => 'string|exists:priorities,slug'
         ];
     }
 }

@@ -9,6 +9,9 @@ export const getters: GetterTree<ProjectStateTypes, IRootState> & ProjectGetters
   getProjects(state: ProjectStateTypes): null | Project[] {
     return state.projects
   },
+  getSelectedProjectTasks(state: ProjectStateTypes) {
+    return state.selectedProjectTasks
+  },
   isProjectsLoading(state: ProjectStateTypes): boolean {
     return state.isLoading
   }

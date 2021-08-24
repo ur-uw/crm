@@ -26,8 +26,8 @@ export const mutations: MutationTree<TaskStateTypes> & TaskMutationsTypes = {
       state.tasks.sort(sortByUpdatedAt)
     }
   },
-  [MutationTypes.DELETE_TASK](state: TaskStateTypes, id: number): void {
-    state.tasks = state.tasks?.filter((task) => task.id !== id) ?? null
+  [MutationTypes.DELETE_TASK](state: TaskStateTypes, slug: string): void {
+    state.tasks = state.tasks?.filter((task) => task.slug !== slug) ?? null
   },
   [MutationTypes.ADD_ITEM](state: TaskStateTypes, task: Task): void {
     state.tasks?.unshift(task)

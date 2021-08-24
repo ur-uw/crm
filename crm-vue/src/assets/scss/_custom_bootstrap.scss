@@ -1,17 +1,4 @@
-// CUSTOM VARIABLES
-$primary: #15172b;
-$primary2: #262a41;
-$blue: #0026ff;
-$danger: #ff3250;
-$warning: #ffbb00;
-$success: #15d4a1;
-$custom-grey: #707070;
-$input-placeholder-color: #dddddd;
-$custom-purple: #894fc6;
-$custom-dark-blue: #121432;
-$custom-pink: #ff3250;
-$custom-yellow: #ffbb00;
-$custom-green: #07e642;
+@import './colors';
 //IMPORT FUNCTIONS AND VARIABLES
 @import '../../../node_modules/bootstrap/scss/_functions.scss';
 @import '../../../node_modules/bootstrap/scss/_variables.scss';

@@ -7,7 +7,7 @@ import {
   ProjectActionsTypes,
   ProjectStateTypes
 } from '@/store/store_interfaces/project_store_interface'
-import axios from 'axios'
+import api from '@/utils/api'
 import { handleApi } from '@/utils/helpers'
 import { Project } from '@/interfaces/Project'
 
@@ -15,39 +15,45 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   // FETCH ALL PROJECTS
   [ActionTypes.FETCH_PROJECTS]({ commit }): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.get('/api/projects/get')
+      commit(MutationTypes.SET_PROJECTS_LOADING, true)
+      const promise = api.get('/api/projects/get')
       const [data, error] = await handleApi(promise)
       if (error) {
-        commit(MutationTypes.SET_LOADING, false)
+        commit(MutationTypes.SET_PROJECTS_LOADING, false)
         reject(error)
         return
       }
-      commit(MutationTypes.SET_LOADING, false)
+      commit(MutationTypes.SET_PROJECTS_LOADING, false)
       commit(MutationTypes.SET_PROJECTS, data.data['data'])
       resolve(data)
     })
   },
   // FETCH SINGLE PROJECT
-  [ActionTypes.FETCH_SINGLE_PROJECT]({ commit }, payload: Project): Promise<unknown> {
+  [ActionTypes.FETCH_SINGLE_PROJECT](
+    { commit },
+    payload: Project | string | number
+  ): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      commit(MutationTypes.SET_LOADING, true)
-      const promise = axios.get(`/api/projects/show/${payload}`)
+      commit(MutationTypes.SET_PROJECTS_LOADING, true)
+      const promise = api.get(`/api/projects/show/${payload}`)
       const [data, error] = await handleApi(promise)
       if (error) {
-        commit(MutationTypes.SET_LOADING, false)
+        commit(MutationTypes.SET_PROJECTS_LOADING, false)
         reject(error)
         return
       }
-      commit(MutationTypes.SET_LOADING, false)
-      // TODO: Make use of the fetched project
+      const project: Project = data.data['data']
+      commit(MutationTypes.SET_PROJECTS_LOADING, false)
+      if (project.tasks != null) {
+        commit(MutationTypes.CAST_PROJECT_TASKS, project.tasks)
+      }
       resolve(data)
     })
   },
   // CREATE PROJECT
   [ActionTypes.CREATE_PROJECT]({ commit }, project: Project): Promise<unknown> {
     return new Promise(async (resolve, reject): Promise<void> => {
-      const promise = axios.post(`/api/projects/create`, project)
+      const promise = api.post(`/api/projects/create`, project)
       const [data, error] = await handleApi(promise)
       if (error) {
         reject(error)
@@ -63,8 +69,8 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     payload: { index: number; updatedProject: Project }
   ): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const response = axios.put(
-        `/api/projects/update/${payload.updatedProject.id}`,
+      const response = api.put(
+        `/api/projects/update/${payload.updatedProject.slug}`,
         payload.updatedProject
       )
       const [data, error] = await handleApi(response)
@@ -80,16 +86,38 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     })
   },
   // UPDATE A PROJECT
-  [ActionTypes.DELETE_PROJECT]({ commit }, id: number): Promise<unknown> {
+  [ActionTypes.DELETE_PROJECT]({ commit }, slug: string): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const response = axios.delete(`/api/projects/delete/${id}`)
+      const response = api.delete(`/api/projects/delete/${slug}`)
       const [, error] = await handleApi(response)
       if (error) {
         reject(error)
         return
       }
-      commit(MutationTypes.DELETE_PROJECT, id)
+      commit(MutationTypes.DELETE_PROJECT, slug)
       resolve(null)
+    })
+  },
+  // CHANGE A PROJECT TASK STATUS
+  [ActionTypes.CHANGE_PROJECT_TASK_STATUS](
+    { commit },
+    payload: {
+      slug: string
+      status: string
+    }
+  ): Promise<unknown> {
+    return new Promise(async (resolve, reject) => {
+      const promise = api.put(`/api/tasks/changestatus/${payload.slug}`, {
+        status_slug: payload.status
+      })
+      const [data, error] = await handleApi(promise)
+      if (error) {
+        // TODO: HANDLE ERROR IN THE CALL LOCATION
+        reject(error)
+        return
+      }
+
+      resolve(data)
     })
   }
 }

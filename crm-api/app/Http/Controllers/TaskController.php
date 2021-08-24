@@ -8,8 +8,14 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Priority;
+use App\Models\Project;
 use App\Models\Status;
+use App\Models\Team;
+use App\Models\User;
+use Auth;
 use Date;
+use Str;
 
 class TaskController extends Controller
 {
@@ -22,7 +28,8 @@ class TaskController extends Controller
     {
 
         return TaskResource::collection(
-            $request->user()->tasks()->with('status:id,name,color,slug')
+            $request->user()->tasks()
+                ->with('status:id,name,color,slug')
                 ->orderBy('created_at', 'desc')
                 ->get()
         );
@@ -35,7 +42,22 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $info = $request->validated();
+
+        // Creating new task
+        $task = Task::make($info);
+        $task->project()->associate(Project::firstWhere('slug', $info['project']));
+        $task->status()->associate(Status::firstWhere('slug', $info['status']));
+        $task->priority()->associate(Priority::firstWhere('slug', $info['priority']));
+        $task->save();
+        // Assign task to authenticated user
+        $request->user()->tasks()->sync($task);
+        // Assign task to assigned user
+        $users = User::whereIn('slug', $info['assigned_to'])
+            ->get();
+        $users->each(function (User $user) use ($task) {
+            $user->tasks()->sync($task);
+        });
         return TaskResource::make(
             $task->load('status:id,name,color,slug')
         );
@@ -63,8 +85,17 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->validated());
-        return TaskResource::make($task->load('status:id,name,color,slug'));
+        $user = $request->user();
+
+        $team = Team::firstWhere('project_id', $task->project->id);
+        if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
+            $task->update($request->validated());
+            return TaskResource::make($task->load('status:id,name,color,slug'));
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
 
     /**
@@ -74,13 +105,21 @@ class TaskController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(Request $request, Task $task)
     {
-        $task->delete();
-        return response()->json([
-            'message' => 'Task Deleted',
-            Response::HTTP_NO_CONTENT
-        ]);
+        $user = $request->user();
+        $team = Team::firstWhere('project_id', $task->project->id);
+        if ($user->owns($task) || $user->isAbleTo('task-delete', $team)) {
+            $task->delete();
+            return response()->json([
+                'message' => 'Task Deleted',
+                Response::HTTP_NO_CONTENT
+            ]);
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
     public function changeStatus(Request $request, Task $task)
     {
@@ -89,10 +128,19 @@ class TaskController extends Controller
                 'status_slug' => 'required',
             ]
         );
-        $status = Status::where('slug', $request->status_slug)->first();
-        $task->status()->associate($status);
-        $task->save();
-        return TaskResource::make($task);
+        $user = Auth::user();
+        $team = Team::firstWhere('project_id', $task->project->id);
+        if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
+            $status = Status::firstWhere('slug', $request->status_slug);
+            $task->update([
+                'status_id' => $status->id
+            ]);
+            return TaskResource::make($task);
+        }
+        abort(
+            Response::HTTP_FORBIDDEN,
+            "You don't have the correct permissions for this action"
+        );
     }
 
     public function recently(Request $request, $number = 3)

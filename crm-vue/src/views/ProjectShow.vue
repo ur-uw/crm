@@ -1,241 +1,211 @@
 <template>
-  <main class="project">
-    <div class="project-info">
-      <h1>{{ project?.name }}</h1>
-      <div class="project-participants">
-        <span></span>
-        <span></span>
-        <span></span>
-        <button class="project-participants__add">Add Participant</button>
-      </div>
-    </div>
-    <div class="project-tasks">
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">Waiting</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
-        </div>
-        <draggable
-          class="draggable-list"
-          :list="tasks.waiting"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'waiting')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
-      </div>
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">Approved</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+  <div v-if="!isLoading">
+    <n-layout>
+      <n-layout-content>
+        <div class="project-info">
+          <div class="project-name p-3">
+            <h2>{{ project?.name }}</h2>
+            <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
+          </div>
+
+          <div
+            v-if="project !== null"
+            class="project-participants p-3 d-flex justify-content-center align-items-center"
+          >
+            <div class="d-inline-block project-project-participants__members me-3">
+              <div v-if="project.users != null" class="d-inline-block">
+                <n-badge
+                  v-for="user in project.users"
+                  :key="user?.slug"
+                  :dot="user?.slug !== project?.owner?.slug"
+                  type="success"
+                >
+                  <div v-if="user.slug !== project?.owner?.slug" class="inline-block">
+                    <n-tooltip placement="bottom" trigger="hover">
+                      <template #trigger>
+                        <n-avatar
+                          v-if="user.images !== undefined && user?.images[0] !== null"
+                          class="
+                            text-center
+                            project-participants__member
+                            border border-custom-purple
+                          "
+                          :src="user?.images[0].path"
+                          circle
+                        >
+                        </n-avatar>
+                        <n-avatar
+                          v-else
+                          circle
+                          class="text-center project-participants__member text-center"
+                        >
+                          {{ user.name?.substring(0, 1).toUpperCase() }}
+                        </n-avatar>
+                      </template>
+                      {{ user.name }}
+                    </n-tooltip>
+                  </div>
+                </n-badge>
+              </div>
+
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <button class="project-participants__add ms-2">Add Member</button>
+                </template>
+                Add Member
+              </n-tooltip>
+            </div>
+
+            <!-- PROJECT OWNER -->
+
+            <n-badge value="Owner" class="me-3">
+              <n-avatar
+                v-if="project.owner?.images != null && project.owner?.images[0] != null"
+                :size="50"
+                class="text-center project-participants__owner border border-custom-purple"
+                :src="project.owner?.images[0].path"
+              >
+              </n-avatar>
+              <n-avatar v-else :size="50" class="text-center project-participants__owner">
+                {{ project?.owner?.name?.substring(0, 1) }}
+              </n-avatar>
+            </n-badge>
+          </div>
         </div>
 
-        <draggable
-          :list="tasks.approved"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          class="draggable-list"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'approved')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
-      </div>
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">In Progress</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+        <div class="tag-progress p-3 d-flex align-items-center">
+          <div class="tag-progress">
+            <n-progress type="circle" color="pink" :percentage="20">
+              <span class="text-center">20%</span>
+            </n-progress>
+            <div class="text-center mt-2">Copywriting</div>
+          </div>
+          <div class="tag-progress ms-3">
+            <div class="tag-progress">
+              <n-progress type="circle" color="orange" :percentage="50">
+                <span class="text-center">50% </span>
+              </n-progress>
+              <div class="text-center mt-2">Illustration</div>
+            </div>
+          </div>
+          <div class="tag-progress ms-3">
+            <n-progress type="circle" :percentage="75">
+              <span class="text-center">75%</span>
+            </n-progress>
+            <div class="text-center mt-2">UI Design</div>
+          </div>
+        </div>
+        <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
+          <div class="project-tasks">
+            <project-column
+              v-for="(tasksValue, taskName) in tasks"
+              :key="taskName"
+              :column-heading="taskName"
+              :list-type="taskName"
+              :tasks-list="tasksValue"
+            />
+          </div>
         </div>
 
-        <draggable
-          class="draggable-list"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          :list="tasks.inprogress"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'inprogress')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
-      </div>
-      <div class="project-column">
-        <div class="project-column-heading">
-          <h2 class="project-column-heading__title">Completed</h2>
-          <button class="project-column-heading__options">
-            <fa icon="ellipsis-h" />
-          </button>
+        <div class="task-details">
+          <div class="task-activity my-3 p-md-3">
+            <h2>Recent Activity</h2>
+            <n-timeline class="p-2" size="large">
+              <n-timeline-item title="Create Task" content="{Task Name} created by Khalid" />
+              <n-timeline-item
+                title="Rejected"
+                type="warning"
+                content="{Task Name} marked as rejected by Admin"
+              />
+              <n-timeline-item
+                type="info"
+                title="Inprogress"
+                content="{Task Name} marked as inprogress by Maitham"
+                time="2018-04-03 20:46"
+              />
+              <n-timeline-item
+                type="error"
+                title="Delete Task"
+                content="{Task Name} was deleted by Hamza"
+                time="2018-04-03 20:46"
+              />
+              <n-timeline-item
+                title="Edit Task"
+                type="info"
+                content=" {Task Name} had been updated by John Doe"
+                time="2018-04-03 20:46"
+              />
+              <n-timeline-item
+                type="success"
+                title="Complete"
+                content="{Task Name} marked as completed by Mohammed"
+                time="2018-04-03 20:46"
+              />
+            </n-timeline>
+          </div>
         </div>
-        <draggable
-          class="draggable-list"
-          tag="transition-group"
-          :component-data="{
-            type: 'transition-group',
-            name: 'flip-list',
-            tag: 'div'
-          }"
-          :list="tasks.completed"
-          group="tasks"
-          item-key="id"
-          @add="changeTaskStatus($event, 'completed')"
-        >
-          <template #item="{ element }">
-            <ProjectTaskCard :task="element" :data-id="element.id" />
-          </template>
-        </draggable>
-      </div>
+      </n-layout-content>
+    </n-layout>
+    <!-- BACK TO TOP COMPONENT -->
+    <n-back-top
+      :bottom="100"
+      :visibility-height="300"
+      :style="{
+        transition: 'all .3s cubic-bezier(.4, 0, .2, 1)'
+      }"
+    >
+      <n-button circle>
+        <template #icon>
+          <n-icon>
+            <arrow-icon />
+          </n-icon>
+        </template>
+      </n-button>
+    </n-back-top>
+  </div>
+  <!-- LOADING PROJECT COMPONENT -->
+  <div v-else>
+    <div class="d-flex flex-column align-items-center justify-content-center vh-100">
+      <n-spin size="large" />
+      <h4 class="mt-2">Getting Project Info</h4>
     </div>
-  </main>
-  <aside class="task-details">
-    <div class="tag-progress">
-      <h2>Task Progress</h2>
-      <div class="tag-progress">
-        <p>Copywriting <span>3/8</span></p>
-        <progress class="progress progress--copyright" max="8" value="3">3</progress>
-      </div>
-      <div class="tag-progress">
-        <p>Illustration <span>6/10</span></p>
-        <progress class="progress progress--illustration" max="10" value="6">6</progress>
-      </div>
-      <div class="tag-progress">
-        <p>UI Design <span>2/7</span></p>
-        <progress class="progress progress--design" max="7" value="2">2</progress>
-      </div>
-    </div>
-    <div class="task-activity">
-      <h2>Recent Activity</h2>
-      <ul>
-        <li>
-          <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
-          <b>Andrea </b>uploaded 3 documents
-          <time datetime="2021-11-24T20:00:00">Aug 10</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
-          <b>Karen </b> left a comment
-          <time datetime="2021-11-24T20:00:00">Aug 10</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--edit"><i class="fas fa-pencil-alt"></i></span>
-          <b>Karen </b>uploaded 3 documents
-          <time datetime="2021-11-24T20:00:00">Aug 11</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--attachment"><i class="fas fa-paperclip"></i></span>
-          <b>Andrea </b>uploaded 3 documents
-          <time datetime="2021-11-24T20:00:00">Aug 11</time>
-        </li>
-        <li>
-          <span class="task-icon task-icon--comment"><i class="fas fa-comment"></i></span>
-          <b>Karen </b> left a comment
-          <time datetime="2021-11-24T20:00:00">Aug 12</time>
-        </li>
-      </ul>
-    </div>
-  </aside>
+  </div>
 </template>
 
 <script lang="ts">
-  import { handleApi } from '@/utils/helpers'
-  import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core'
-  import { Project } from '@/interfaces/Project'
+  import { handleActions } from '@/utils/helpers'
+  import { computed, defineComponent, onMounted, ref } from 'vue'
+  import { Project, SelectedProjectTasksTypes } from '@/interfaces/Project'
   import { useRoute } from 'vue-router'
-  import { Task } from '@/interfaces/Task'
-  import axios from 'axios'
-  import ProjectTaskCard from '@/components/project/ProjectTaskCard.vue'
-  import draggable from 'vuedraggable'
+  import { useStore } from '@/use/useStore'
+  import { ActionTypes as ProjectActions } from '@/store/modules/project/action-types'
+  import ProjectColumn from '@/components/project/ProjectColumn.vue'
+  import { ArrowUp48Filled as ArrowIcon } from '@vicons/fluent'
   export default defineComponent({
     name: 'Project',
-    components: { ProjectTaskCard, draggable },
+    components: {
+      ProjectColumn,
+      ArrowIcon
+    },
     setup() {
+      // INITIALIZE ROUTES and STORE
+      const store = useStore()
       const route = useRoute()
+      // VARIABLES
       const project = ref<Project | null>(null)
-      const tasks = ref({
-        waiting: [] as Task[],
-        approved: [] as Task[],
-        inprogress: [] as Task[],
-        completed: [] as Task[],
-        rejected: [] as Task[]
-      })
-      const drag = computed(() => false)
-      const getProject = async () => {
-        const response = axios.get(`/api/projects/show/${route.params.id}`)
-        const [data, error] = await handleApi(response)
+      const isLoading = computed(() => store.getters.isProjectsLoading)
+      const tasks = computed<SelectedProjectTasksTypes>(() => store.getters.getSelectedProjectTasks)
+      const taskTypesLength: number = Object.keys(tasks).length
+      onMounted(async () => {
+        const [data, error] = await handleActions(
+          store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.slug.toString())
+        )
         if (error) {
           return
         }
         project.value = data.data['data']
-        if (project.value?.tasks) {
-          const checkTaskStatus = (task: Task) => {
-            switch (task.status?.slug) {
-              case 'waiting':
-                tasks.value.waiting.unshift(task)
-                break
-              case 'approved':
-                tasks.value.approved.unshift(task)
-                break
-              case 'inprogress':
-                tasks.value.inprogress.unshift(task)
-                break
-              case 'completed':
-                tasks.value.completed.unshift(task)
-                break
-              case 'rejected':
-                tasks.value.rejected.unshift(task)
-                break
-              default:
-                // TODO: IMPLEMENT DEFAULT CASE
-                console.log(task.status?.name)
-                break
-            }
-          }
-          project.value.tasks.forEach(checkTaskStatus)
-        }
-      }
-      onMounted(() => {
-        getProject()
       })
-
-      const changeTaskStatus = async (event: Event, status: string) => {
-        // Get the task id from the data-id attributes in li element
-        const taskId = event.item.getAttribute('data-id')
-        const promise = axios.put(`/api/tasks/changestatus/${taskId}`, { status_slug: status })
-        const [, error] = await handleApi(promise)
-        if (error) {
-          // TODO: HANDLE ERROR
-          return
-        }
-      }
-
-      return { project, drag, tasks, changeTaskStatus }
+      return { project, tasks, isLoading, taskTypesLength }
     }
   })
 </script>
@@ -250,8 +220,6 @@
   }
 
   .project {
-    padding: 2rem;
-    max-width: 75%;
     width: 100%;
     display: inline-block;
 
@@ -264,17 +232,23 @@
     }
     &-participants {
       @include display;
-      span,
+
+      &__member,
       &__add {
-        width: 30px;
-        height: 30px;
-        display: inline-block;
+        position: relative;
         background: $purple;
-        border-radius: 100rem;
-        margin: 0 0.2rem;
+        margin: 0 -0.2rem;
+        z-index: 0;
       }
       &__add {
-        background: transparent;
+        position: relative;
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        border-radius: 100rem;
+        border: 1px solid $primary2;
+        z-index: 10000;
+        background-color: transparent;
         border: 1px dashed rgb(150, 150, 150);
         font-size: 0;
         cursor: pointer;
@@ -290,203 +264,45 @@
 
     &-tasks {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       width: 100%;
       grid-column-gap: 1.5rem;
-    }
-    &-column {
-      &-heading {
-        margin-bottom: 1rem;
-        @include display;
-        justify-content: space-between;
-        &__title {
-          font-size: 20px;
-        }
-        &__options {
-          background: transparent;
-          color: $light-grey;
-          font-size: 18px;
-          border: 0;
-          cursor: pointer;
-        }
-      }
-    }
-    .draggable-list {
-      position: relative;
-      &::after {
-        position: absolute;
-        content: '';
-        height: 50px;
-        max-height: 200px;
-        width: 100%;
-      }
     }
   }
   .task-hover {
     border: 3px dashed $light-grey !important;
   }
-  .task-details {
-    width: 24%;
-    border-left: 1px solid #d9e0e9;
-    display: inline-block;
-    height: 100%;
-    vertical-align: top;
-    padding: 3rem 2rem;
-  }
-
-  .tag-progress {
-    margin: 1.5rem 0;
-    h2 {
-      font-size: 16px;
-      margin-bottom: 1rem;
-    }
-    p {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-
-      span {
-        color: rgb(180, 180, 180);
-      }
-    }
-    .progress {
-      width: 100%;
-      -webkit-appearance: none;
-      appearance: none;
-      border: none;
-      border-radius: 10px;
-      height: 10px;
-
-      &::-webkit-progress-bar,
-      &::-webkit-progress-value {
-        border-radius: 10px;
-      }
-      &--copyright {
-        &::-webkit-progress-bar {
-          background-color: #ecd8e6;
-        }
-
-        &::-webkit-progress-value {
-          background: #d459e8;
-        }
-      }
-
-      &--illustration {
-        &::-webkit-progress-bar {
-          background-color: #dee7e3;
-        }
-
-        &::-webkit-progress-value {
-          background-color: #46bd84;
-        }
-      }
-
-      &--design {
-        &::-webkit-progress-bar {
-          background-color: #d8e7f4;
-        }
-
-        &::-webkit-progress-value {
-          background-color: #08a0f7;
-        }
-      }
-    }
-  }
-
   .task-activity {
     h2 {
-      font-size: 16px;
-      margin-bottom: 1rem;
+      font-size: 1.5rem;
     }
-
-    li {
-      list-style: none;
-      margin: 1rem 0;
-      padding: 0rem 1rem 1rem 3rem;
-      position: relative;
-    }
-    time {
-      display: block;
-      color: $light-grey;
-    }
-  }
-
-  .task-icon {
-    width: 30px;
-    height: 30px;
-    border-radius: 100rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    @include display;
-    justify-content: center;
-
-    svg {
-      font-size: 12px;
-      color: white;
-    }
-    &--attachment {
-      background-color: #fba63c;
-    }
-
-    &--comment {
-      background-color: #5dc983;
-    }
-
-    &--edit {
-      background-color: #7784ee;
-    }
-  }
-
-  // Transition animation
-  .flip-list-move {
-    transition: transform 0.3s;
   }
 
   @media only screen and (max-width: 1300px) {
     .project {
       max-width: 100%;
     }
-    .task-details {
-      width: 100%;
-      display: flex;
-    }
-    .tag-progress,
-    .task-activity {
-      flex-basis: 50%;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      margin: 1rem;
-    }
   }
 
   @media only screen and (max-width: 1000px) {
-    .project-column:nth-child(2),
-    .project-column:nth-child(3) {
-      display: none;
-    }
     .project-tasks {
       grid-template-columns: 1fr 1fr;
     }
   }
 
   @media only screen and (max-width: 600px) {
-    .project-column:nth-child(4) {
-      display: none;
-    }
     .project-tasks {
+      padding: 1rem;
       grid-template-columns: 1fr;
     }
 
     .task-details {
+      padding: 1rem;
+      border: none;
       flex-wrap: wrap;
       padding: 3rem 1rem;
     }
-    .tag-progress,
-    .task-activity {
-      flex-basis: 100%;
-    }
+
     h1 {
       font-size: 25px;
     }

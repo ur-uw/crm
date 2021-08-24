@@ -24,7 +24,7 @@
   </div>
   <div v-else>
     <transition-group v-if="todayTasks.length > 0" tag="ul" name="list" class="tasks-list">
-      <li v-for="(task, index) in todayTasks" :key="task.id">
+      <li v-for="(task, index) in todayTasks" :key="task.slug">
         <TodayTask :index="index" :task="task" />
       </li>
     </transition-group>
@@ -57,7 +57,7 @@
   </div>
   <div v-else>
     <transition-group v-if="recentTasks.length > 0" tag="ul" name="list" class="tasks-list">
-      <li v-for="(task, index) in recentTasks" :key="task.id">
+      <li v-for="(task, index) in recentTasks" :key="task.slug">
         <TodayTask :index="index" :task="task" />
       </li>
     </transition-group>

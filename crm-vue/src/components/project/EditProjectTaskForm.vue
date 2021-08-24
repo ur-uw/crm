@@ -69,7 +69,7 @@
         formRef.value?.validate(async (errors: unknown) => {
           if (!errors) {
             // TODO: make api call only when the data of task is changed
-            const promise = api.put(`/api/tasks/update/${props.task.id}`, {
+            const promise = api.put(`/api/tasks/update/${props.task.slug}`, {
               title: modelRef.value.taskTitle,
               description: modelRef.value.taskDescription,
               due_date: taskDueDate.getDateFromTimestamp(modelRef.value.dueDate / 1000.0)

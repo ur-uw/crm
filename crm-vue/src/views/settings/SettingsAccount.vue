@@ -235,7 +235,7 @@
           if (!errors) {
             let newUser = {
               newUserData: {
-                id: currentUser.value?.id,
+                slug: currentUser.value?.slug,
                 name: formModel.value.firstName + ' ' + formModel.value.lastName
               } as User,
               additional: null as null | unknown

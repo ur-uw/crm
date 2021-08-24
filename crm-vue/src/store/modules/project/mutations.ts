@@ -21,9 +21,9 @@ export const mutations: MutationTree<ProjectStateTypes> & ProjectMutationsTypes 
       state.projects.sort(sortByUpdatedAt)
     }
   },
-  [MutationTypes.DELETE_PROJECT](state: ProjectStateTypes, id: number): void {
+  [MutationTypes.DELETE_PROJECT](state: ProjectStateTypes, slug: string): void {
     if (state.projects != null) {
-      state.projects = state.projects?.filter((p) => p.id !== id)
+      state.projects = state.projects?.filter((p) => p.slug !== slug)
     }
   },
   [MutationTypes.ADD_PROJECT](state: ProjectStateTypes, project: Project): void {
@@ -43,7 +43,7 @@ export const mutations: MutationTree<ProjectStateTypes> & ProjectMutationsTypes 
       | 'inprogress'
     if (taskType != null) {
       state.selectedProjectTasks[taskType] = state.selectedProjectTasks[taskType].filter(
-        (el) => el.id !== payload.id
+        (el) => el.slug !== payload.slug
       )
     }
   },
@@ -56,7 +56,7 @@ export const mutations: MutationTree<ProjectStateTypes> & ProjectMutationsTypes 
       | 'inprogress'
     if (taskType != null) {
       const tasks = state.selectedProjectTasks[taskType]
-      const index = tasks.findIndex((el) => el.id === payload.id)
+      const index = tasks.findIndex((el) => el.slug === payload.slug)
       tasks[index] = payload
     }
   },

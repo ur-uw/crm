@@ -21,11 +21,11 @@
         tag: 'div'
       }"
       group="project-tasks"
-      item-key="id"
+      item-key="slug"
       @add="changeTaskStatus($event, listType)"
     >
       <template #item="{ element }">
-        <project-task-card :task-info="element" :data-id="element.id" @task-delete="deleteTask" />
+        <project-task-card :task-info="element" :data-id="element.slug" @task-delete="deleteTask" />
       </template>
     </draggable>
   </div>
@@ -69,11 +69,11 @@
       // VARIABLES
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const changeTaskStatus = async (event: any, status: string) => {
-        // Get the task id from the data-id attributes in li element
-        const taskId = event.item.getAttribute('data-id')
+        // Get task slug from the data-id attributes in li element
+        const taskSlug = event.item.getAttribute('data-id')
         const [, error] = await handleActions(
           store.dispatch(ActionTypes.CHANGE_PROJECT_TASK_STATUS, {
-            id: taskId,
+            slug: taskSlug,
             status: status
           })
         )

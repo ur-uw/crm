@@ -120,7 +120,7 @@
         }
       ]
       const deleteTask = async () => {
-        const promise = api.delete(`/api/tasks/delete/${props.taskInfo.id}`)
+        const promise = api.delete(`/api/tasks/delete/${props.taskInfo.slug}`)
         const [, error] = await handleApi(promise)
         if (error) {
           notification.error({

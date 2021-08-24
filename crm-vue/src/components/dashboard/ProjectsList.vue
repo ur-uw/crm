@@ -3,13 +3,13 @@
     <h3>
       Projects <span>{{ projects?.length }}</span>
     </h3>
-    <transition-group tag="div" name="projects-list" class="projects">
+    <div class="projects">
       <ProjectComponent
         v-for="project in projects"
-        :key="project.id"
+        :key="project.slug"
         index
         :project="project"
-        @click="showProject(project.id, project.slug)"
+        @click="$router.push({ name: 'project.show', params: { slug: project.slug } })"
       />
       <div key="addProject" class="add-project">
         <div
@@ -27,7 +27,7 @@
           </Icon>
         </div>
       </div>
-    </transition-group>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -35,7 +35,6 @@
   import { Add28Filled } from '@vicons/fluent'
   import { Project } from '@/interfaces/Project'
   import { defineComponent, PropType } from 'vue'
-  import { useRouter } from 'vue-router'
   import ProjectComponent from './ProjectComponent.vue'
   export default defineComponent({
     name: 'ProjectsList',
@@ -45,13 +44,6 @@
         type: Object as PropType<Project[]>,
         required: true
       }
-    },
-    setup() {
-      const router = useRouter()
-      const showProject = (id: number, slug: string) => {
-        router.push({ name: 'project.show', params: { id: id, slug: slug } })
-      }
-      return { showProject }
     }
   })
 </script>

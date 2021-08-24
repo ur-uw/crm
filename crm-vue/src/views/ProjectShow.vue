@@ -198,7 +198,7 @@
       const taskTypesLength: number = Object.keys(tasks).length
       onMounted(async () => {
         const [data, error] = await handleActions(
-          store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.id.toString())
+          store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.slug.toString())
         )
         if (error) {
           return

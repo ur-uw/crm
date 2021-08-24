@@ -31,7 +31,7 @@ const authRoutes: Array<RouteRecordRaw> = [
  */
 const projectRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/project/:id',
+    path: '/project/:slug',
     name: 'project.show',
     component: () => import('@/views/ProjectShow.vue'),
     meta: {
@@ -40,7 +40,7 @@ const projectRoutes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: '/project/:id/:taskStatus?/add-task',
+    path: '/project/:slug/:taskStatus?/add-task',
     name: 'project.task.add',
     component: () => import('@/views/AddProjectTask.vue'),
     props: true,
@@ -60,7 +60,7 @@ const projectRoutes: Array<RouteRecordRaw> = [
  */
 const userRoutes: Array<RouteRecordRaw> = [
   {
-    path: '/user/:id/settings',
+    path: '/user/:slug/settings',
     name: 'settings.show',
     component: () => import('@/views/settings/Settings.vue'),
     meta: {

@@ -217,10 +217,10 @@
               }
               const promise = api.post('/api/tasks/create', {
                 ...task,
-                project: route.params.id,
+                project: route.params.slug,
                 status: props.taskStatus ?? modelRef.value.taskStatus,
                 assigned_to: modelRef.value.assignTo,
-                created_by: store.getters.getCurrentUser?.id,
+                created_by: store.getters.getCurrentUser?.slug,
                 priority: modelRef.value.taskPriority
               })
               const [, error] = await handleApi(promise)
@@ -240,7 +240,7 @@
       const fetchProjectUsers = async () => {
         if (userOptions.value.length === 0 && modelRef.value.assignTo.length === 0) {
           areUserOptionsLoading.value = true
-          const promise = api.get(`api/projects/${route.params.id}/users?withTeams=` + true)
+          const promise = api.get(`api/projects/${route.params.slug}/users?withTeams=` + true)
           const [data, error] = await handleApi(promise)
           if (error) {
             areUserOptionsLoading.value = false

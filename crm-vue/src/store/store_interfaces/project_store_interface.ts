@@ -27,7 +27,7 @@ export type ProjectMutationsTypes<S = ProjectStateTypes> = {
     payload: { index: number; updatedProject: Project }
   ): void
   [ProjectMTypes.ADD_PROJECT](state: S, project: Project): void
-  [ProjectMTypes.DELETE_PROJECT](state: S, id: number): void
+  [ProjectMTypes.DELETE_PROJECT](state: S, slug: string): void
   [ProjectMTypes.SET_PROJECTS_LOADING](state: S, payload: boolean): void
   [ProjectMTypes.CAST_PROJECT_TASKS](state: S, payload: Task[]): void
   [ProjectMTypes.DELETE_PROJECT_TASK](state: S, payload: Task): void
@@ -58,10 +58,10 @@ export interface ProjectActionsTypes {
   ): Promise<unknown>
   [ProjectATypes.CHANGE_PROJECT_TASK_STATUS](
     { commit }: AugmentedActionContextProject,
-    payload: { id: number; status: string }
+    payload: { slug: string; status: string }
   ): Promise<unknown>
   [ProjectATypes.DELETE_PROJECT](
     { commit }: AugmentedActionContextProject,
-    id: number
+    slug: string
   ): Promise<unknown>
 }

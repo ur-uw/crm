@@ -70,7 +70,7 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   ): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
       const response = api.put(
-        `/api/projects/update/${payload.updatedProject.id}`,
+        `/api/projects/update/${payload.updatedProject.slug}`,
         payload.updatedProject
       )
       const [data, error] = await handleApi(response)
@@ -86,15 +86,15 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
     })
   },
   // UPDATE A PROJECT
-  [ActionTypes.DELETE_PROJECT]({ commit }, id: number): Promise<unknown> {
+  [ActionTypes.DELETE_PROJECT]({ commit }, slug: string): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const response = api.delete(`/api/projects/delete/${id}`)
+      const response = api.delete(`/api/projects/delete/${slug}`)
       const [, error] = await handleApi(response)
       if (error) {
         reject(error)
         return
       }
-      commit(MutationTypes.DELETE_PROJECT, id)
+      commit(MutationTypes.DELETE_PROJECT, slug)
       resolve(null)
     })
   },
@@ -102,12 +102,12 @@ export const actions: ActionTree<ProjectStateTypes, IRootState> & ProjectActions
   [ActionTypes.CHANGE_PROJECT_TASK_STATUS](
     { commit },
     payload: {
-      id: number
+      slug: string
       status: string
     }
   ): Promise<unknown> {
     return new Promise(async (resolve, reject) => {
-      const promise = api.put(`/api/tasks/changestatus/${payload.id}`, {
+      const promise = api.put(`/api/tasks/changestatus/${payload.slug}`, {
         status_slug: payload.status
       })
       const [data, error] = await handleApi(promise)

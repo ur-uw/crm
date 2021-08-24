@@ -76,7 +76,7 @@
       /* TOGGLE TASK COMPLETED PROPERTY */
       const toggleTaskCompleted = async () => {
         store.dispatch(ActionTypes.CHANGE_STATUS, {
-          id: props.task.id!,
+          slug: props.task.slug!,
           status_slug: props.task.status?.slug === 'completed' ? 'inprogress' : 'completed',
           index: props.index!
         })
@@ -91,7 +91,7 @@
             title: newTaskTitle.value
           }
           store.dispatch(ActionTypes.EDIT_TASK, {
-            id: props.task.id!,
+            slug: props.task.slug!,
             updatedTask: newTask,
             index: props.index!
           })
@@ -106,7 +106,7 @@
       }
       /* DELETE TASK */
       const deleteTask = (): void => {
-        store.dispatch(ActionTypes.DELETE_TASK, props.task.id)
+        store.dispatch(ActionTypes.DELETE_TASK, props.task.slug)
       }
 
       const { width, type } = useBreakPoints()

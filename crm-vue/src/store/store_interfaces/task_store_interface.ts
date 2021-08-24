@@ -28,7 +28,7 @@ export type TaskMutationsTypes<S = TaskStateTypes> = {
   [TaskMTypes.SET_ITEM](state: S, payload: { index: number; updatedTask: Task }): void
   [TaskMTypes.SET_LOADING](state: S, value: boolean): void
   [TaskMTypes.CHANGE_STATUS](state: S, payload: { index: number; updatedTask: Task }): void
-  [TaskMTypes.DELETE_TASK](state: S, id: number): void
+  [TaskMTypes.DELETE_TASK](state: S, slug: string): void
 }
 
 export type AugmentedActionContextTask = {
@@ -48,11 +48,11 @@ export interface TaskActionsTypes {
   [TaskATypes.CREATE_TASK]({ commit }: AugmentedActionContextTask, payload: Task): Promise<unknown>
   [TaskATypes.EDIT_TASK](
     { commit }: AugmentedActionContextTask,
-    payload: { index: number; id: number; updatedTask: Task }
+    payload: { index: number; slug: string; updatedTask: Task }
   ): Promise<unknown>
   [TaskATypes.CHANGE_STATUS](
     { commit }: AugmentedActionContextTask,
-    payload: { id: number; status_slug: string; index: number }
+    payload: { slug: string; status_slug: string; index: number }
   ): Promise<unknown>
-  [TaskATypes.DELETE_TASK]({ commit }: AugmentedActionContextTask, id: number): void
+  [TaskATypes.DELETE_TASK]({ commit }: AugmentedActionContextTask, slug: string): void
 }

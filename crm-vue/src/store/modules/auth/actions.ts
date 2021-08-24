@@ -124,7 +124,7 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
         }
       }
 
-      const response = api.post(`/api/user/update/${payload.newInfo.id}`, newUserData)
+      const response = api.post(`/api/user/update/${payload.newInfo.slug}`, newUserData)
       const [data, error] = await handleApi(response)
       if (error) {
         reject(error)

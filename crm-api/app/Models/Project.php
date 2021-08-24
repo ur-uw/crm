@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Project extends model implements \Laratrust\Contracts\Ownable
 {
-    use HasFactory, HasRelationships;
+    use HasFactory, HasRelationships, HasSlug;
 
     protected $fillable = [
         'name',
@@ -26,6 +28,15 @@ class Project extends model implements \Laratrust\Contracts\Ownable
         return $this->user->id;
     }
 
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
     /**
      * Get the user that owns the Project
      *
@@ -66,5 +77,15 @@ class Project extends model implements \Laratrust\Contracts\Ownable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

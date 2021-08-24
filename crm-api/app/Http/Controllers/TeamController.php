@@ -30,10 +30,8 @@ class TeamController extends Controller
     public function store(CreateTeamRequest $request)
     {
         $data = $request->validated();
-
-
-        $data['name'] = Str::slug($data['display_name']);
-        return TeamResource::make(Team::create($data));
+        $team = Team::create($data);
+        return TeamResource::make($team);
     }
     /**
      * Display the specified resource.

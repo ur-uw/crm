@@ -46,7 +46,6 @@ class TaskController extends Controller
 
         // Creating new task
         $task = Task::make($info);
-        $task->slug = Str::slug($task->title);
         $task->project()->associate(Project::find($info['project']));
         $task->status()->associate(Status::firstWhere('slug', $info['status']));
         $task->priority()->associate(Priority::firstWhere('slug', $info['priority']));
@@ -132,8 +131,7 @@ class TaskController extends Controller
         $user = Auth::user();
         $team = Team::firstWhere('project_id', $task->project->id);
         if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
-            $status = Status::where('slug', $request->status_slug)
-                ->first();
+            $status = Status::firstWhere('slug', $request->status_slug);
             $task->update([
                 'status_id' => $status->id
             ]);

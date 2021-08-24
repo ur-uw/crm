@@ -25,7 +25,6 @@ class PriorityFactory extends Factory
         $name = $this->faker->word();
         return [
             'name' => $name,
-            'slug' => Str::slug($name),
             'color' => $this->faker->hexColor()
         ];
     }

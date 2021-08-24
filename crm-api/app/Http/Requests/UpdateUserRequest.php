@@ -14,7 +14,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user() != null && Auth::user()->id === $this->user->id;
+        return Auth::user() != null && Auth::user()->slug === $this->user->slug;
     }
 
     /**

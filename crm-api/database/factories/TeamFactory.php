@@ -24,7 +24,6 @@ class TeamFactory extends Factory
     {
         $display_name = $this->faker->name() . ' TEAM';
         return [
-            'name' => Str::slug($display_name),
             'display_name' => $display_name,
             'description' => $this->faker->realText()
         ];

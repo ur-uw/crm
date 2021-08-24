@@ -6,14 +6,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laratrust\Models\LaratrustTeam;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 
 class Team extends LaratrustTeam
 {
 
-    use HasFactory, HasRelationships;
+    use HasFactory, HasRelationships, HasSlug;
     public $guarded = [];
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('display_name')
+            ->saveSlugsTo('name');
+    }
 
     /**
      * Get the project that owns the Team
@@ -47,5 +58,14 @@ class Team extends LaratrustTeam
             Task::class,
             ['team_user', User::class, 'task_user']
         );
+    }
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'name';
     }
 }

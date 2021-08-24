@@ -29,7 +29,6 @@ class TaskFactory extends Factory
         $due_date = $this->faker->dateTimeBetween($task_created_at, '+1 month');
         return [
             'title' => $title,
-            'slug' => Str::slug($title),
             'start_date' => $this->faker->dateTimeBetween($task_created_at, $due_date),
             'due_date' => $due_date,
             'description' => $this->faker->text(100),

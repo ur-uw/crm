@@ -31,10 +31,7 @@ class PriorityController extends Controller
      */
     public function store(StorePriorityRequest $request)
     {
-        $priority = Priority::make($request->validated());
-        $slug = Str::slug($request['name']);
-        $priority->slug = $slug;
-        $priority->save();
+        $priority = Priority::create($request->validated());
         return PriorityResource::make($priority);
     }
 

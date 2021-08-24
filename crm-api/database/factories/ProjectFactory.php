@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str as SupportStr;
 
 class ProjectFactory extends Factory
 {
@@ -25,7 +24,6 @@ class ProjectFactory extends Factory
         $name = $this->faker->company();
         return [
             'name' => $name,
-            'slug' => SupportStr::slug($name),
             'description' => $this->faker->text(100),
         ];
     }

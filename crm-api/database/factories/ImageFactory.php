@@ -34,8 +34,6 @@ class ImageFactory extends Factory
         return [
             'name' => $image_name,
             'path' => 'https://picsum.photos/200',
-            'slug' => Str::slug($image_name),
-
         ];
     }
 }

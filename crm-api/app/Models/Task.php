@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laratrust\Contracts\Ownable;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Znck\Eloquent\Relations\BelongsToThrough;
 
@@ -19,7 +21,7 @@ class Task extends Model implements Ownable
 {
 
 
-    use HasFactory;
+    use HasFactory, HasSlug;
     use \Staudenmeir\EloquentHasManyDeep\HasRelationships;
     use \Znck\Eloquent\Traits\BelongsToThrough;
 
@@ -45,10 +47,27 @@ class Task extends Model implements Ownable
         'due_date' => 'datetime:Y-m-d',
     ];
 
+
+    /**
+     * Get the ownerKey for ownable interface.
+     */
     public function ownerKey($owner)
     {
         return $this->created_by ?? $this->users()->getParent()->id;
     }
+
+
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+    }
+
 
     /**
      * Get the user that owns the Task
@@ -144,5 +163,14 @@ class Task extends Model implements Ownable
     public function priority(): BelongsTo
     {
         return $this->belongsTo(Priority::class);
+    }
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

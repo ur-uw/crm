@@ -16,17 +16,16 @@ class TaskResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->id,
             "title" => $this->title,
             "slug" => $this->slug,
             "description" => $this->description,
-            "status" => $this->whenLoaded('status'),
+            "status" => StatusResource::make($this->whenLoaded('status')),
             "created_by" => $this->created_by,
             "start_date" => Carbon::parse($this->start_date)
                 ->toDateTimeString(),
             "due_date" => Carbon::parse($this->due_date)
                 ->toDateTimeString(),
-            'priority' => $this->whenLoaded('priority'),
+            'priority' => PriorityResource::make($this->whenLoaded('priority')),
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];

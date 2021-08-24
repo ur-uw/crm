@@ -26,7 +26,6 @@ class StatusFactory extends Factory
         $status = $this->faker->unique()->randomElement($statues);
         return [
             'name' => $status,
-            'slug' => Str::slug($status),
             'color' => $this->faker->hexColor(),
         ];
     }
@@ -36,7 +35,6 @@ class StatusFactory extends Factory
         return $this->state(function () {
             return [
                 'name' => 'Waiting',
-                'slug' => 'waiting',
                 'color' => "#ffbf0e",
             ];
         });
@@ -46,7 +44,6 @@ class StatusFactory extends Factory
         return $this->state(function () {
             return [
                 'name' => 'Approved',
-                'slug' => 'approved',
                 'color' => "#15d4a150",
             ];
         });
@@ -58,7 +55,6 @@ class StatusFactory extends Factory
         return $this->state(function () {
             return [
                 'name' => 'Inprogress',
-                'slug' => 'inprogress',
                 'color' => "#0060ff20",
             ];
         });
@@ -68,7 +64,6 @@ class StatusFactory extends Factory
         return $this->state(function () {
             return [
                 'name' => 'Completed',
-                'slug' => 'completed',
                 'color' => "#894fc6",
             ];
         });
@@ -79,7 +74,6 @@ class StatusFactory extends Factory
         return $this->state(function () {
             return [
                 'name' => 'Rejected',
-                'slug' => 'rejected',
                 'color' => "#ff0e4620",
             ];
         });

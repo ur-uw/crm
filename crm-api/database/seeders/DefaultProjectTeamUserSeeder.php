@@ -10,7 +10,6 @@ use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Str;
 
 class DefaultProjectTeamUserSeeder extends Seeder
 {
@@ -52,7 +51,6 @@ class DefaultProjectTeamUserSeeder extends Seeder
         $mohammedTeam = Team::factory()->create([
             'display_name' => $team_name,
             'project_id' => $project->id,
-            'name' => Str::slug($team_name)
         ]);
         $mohammedTeam->users()->sync(
             collect([$user, $user2, $user3])->pluck('id')->toArray()

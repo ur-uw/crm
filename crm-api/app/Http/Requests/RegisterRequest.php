@@ -29,8 +29,6 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:8|confirmed',
             'phone_number' => 'string',
             'device_name' => 'required|string',
-            // TODO: IMPLEMENT SLUGS AND REMOVE THIS
-            'slug' => 'required|unique:users,slug'
         ];
     }
 }

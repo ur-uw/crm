@@ -29,9 +29,10 @@ class CreateTaskRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            //Project Id
-            'project' => 'required|numeric',
-            'created_by' => 'required|numeric',
+            //Project Slug
+            'project' => 'required|string|exists:projects,slug',
+            //User Slug
+            'created_by' => 'required|string|exists:users,slug',
             'description' => 'string|nullable',
             'start_date' => 'date',
             'due_date' => 'date|nullable|after:start_date',
@@ -39,7 +40,7 @@ class CreateTaskRequest extends FormRequest
             'assigned_to.*' => 'required|exists:users,slug',
             // Status Slug
             'status' => 'required|string|exists:statuses,slug',
-            // Priority Id
+            // Priority Slug
             'priority' => 'required|string|exists:priorities,slug'
         ];
     }

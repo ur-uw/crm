@@ -46,7 +46,7 @@ class TaskController extends Controller
 
         // Creating new task
         $task = Task::make($info);
-        $task->project()->associate(Project::find($info['project']));
+        $task->project()->associate(Project::firstWhere('slug', $info['project']));
         $task->status()->associate(Status::firstWhere('slug', $info['status']));
         $task->priority()->associate(Priority::firstWhere('slug', $info['priority']));
         $task->save();

@@ -86,11 +86,15 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $user = $request->user();
-
         $team = Team::firstWhere('project_id', $task->project->id);
         if ($user->owns($task) || $user->isAbleTo('task-edit', $team)) {
-            $task->update($request->validated());
-            return TaskResource::make($task->load('status:id,name,color,slug'));
+            $validatedData = $request->validated();
+            if (!empty($validatedData['priority'])) {
+                $priority = Priority::firstWhere('slug', $validatedData['priority']);
+                $task->priority()->associate($priority);
+            }
+            $task->update($validatedData);
+            return TaskResource::make($task->load('status'));
         }
         abort(
             Response::HTTP_FORBIDDEN,

@@ -29,8 +29,8 @@
           v-model:value="model.dueDate"
           :format="'yyyy-MM-dd'"
           :default-value="model.dueDate"
-          type="date"
-          :actions="['confirm']"
+          type="datetime"
+          :actions="['clear', 'now']"
         />
       </n-form-item>
       <n-space justify="end">
@@ -45,8 +45,9 @@
   /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
   import { Task } from '@/interfaces/Task'
-  import { TimeStamp } from '@/utils/Timestamp'
   import { handleApi } from '@/utils/helpers'
+  import moment from 'moment'
+
   import api from '@/utils/api'
   import { ref, defineComponent, PropType } from 'vue'
   export default defineComponent({
@@ -58,30 +59,31 @@
     },
     emits: ['hide-modal'],
     setup(props, { emit }) {
-      const taskDueDate = new TimeStamp(props.task.due_date!)
-      const formRef = ref(null)
+      const formRef = ref<any>(null)
       const modelRef = ref({
         taskTitle: props.task.title,
         taskDescription: props.task.description,
-        dueDate: taskDueDate.getTimeStamp() * 1000.0
+        dueDate: parseInt(moment(props.task.due_date).format('x'))
       })
       const handleSubmit = () => {
-        formRef.value?.validate(async (errors: unknown) => {
-          if (!errors) {
-            // TODO: make api call only when the data of task is changed
-            const promise = api.put(`/api/tasks/update/${props.task.slug}`, {
-              title: modelRef.value.taskTitle,
-              description: modelRef.value.taskDescription,
-              due_date: taskDueDate.getDateFromTimestamp(modelRef.value.dueDate / 1000.0)
-            })
-            const [data, error] = await handleApi(promise)
-            if (error) {
-              // TODO: HANDLE ERROR
-              return
+        if (formRef.value !== null) {
+          formRef.value.validate(async (errors: unknown) => {
+            if (!errors) {
+              // TODO: make api call only when the data of task is changed
+              const promise = api.put(`/api/tasks/update/${props.task.slug}`, {
+                title: modelRef.value.taskTitle,
+                description: modelRef.value.taskDescription,
+                due_date: moment.unix(modelRef.value.dueDate / 1000).format()
+              })
+              const [data, error] = await handleApi(promise)
+              if (error) {
+                // TODO: HANDLE ERROR
+                return
+              }
+              emit('hide-modal', data.data['data'])
             }
-            emit('hide-modal', data.data['data'])
-          }
-        })
+          })
+        }
       }
       const rules = {
         taskTitle: [

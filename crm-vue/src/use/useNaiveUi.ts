@@ -48,7 +48,8 @@ import {
   NUpload,
   NCollapse,
   NCollapseItem,
-  NUploadDragger
+  NUploadDragger,
+  NFormItemGi
 } from 'naive-ui'
 
 export const naive = create({
@@ -70,6 +71,7 @@ export const naive = create({
     NFormItem,
     NInput,
     NDatePicker,
+    NFormItemGi,
     NDialog,
     NAlert,
     NUpload,

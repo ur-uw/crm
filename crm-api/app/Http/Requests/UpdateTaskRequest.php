@@ -25,7 +25,7 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            //Project Id
+            //Project slug
             'project' => 'numeric',
             'description' => 'string|nullable',
             'start_date' => 'date',
@@ -34,7 +34,7 @@ class UpdateTaskRequest extends FormRequest
             'assigned_to.*' => 'exists:users,slug',
             // Status Slug
             'status' => 'string|exists:statuses,slug',
-            // Priority Id
+            // Priority slug
             'priority' => 'string|exists:priorities,slug'
         ];
     }

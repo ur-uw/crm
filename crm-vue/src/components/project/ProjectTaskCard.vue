@@ -16,7 +16,7 @@
           <time :datetime="task.due_date">
             <Icon> <Flag28Regular /></Icon>
           </time>
-          {{ task.due_date }}
+          {{ taskDueDate }}
         </span>
         <span class="d-flex">
           <Icon>
@@ -69,13 +69,14 @@
     Attach20Regular,
     Info28Regular as PriorityIcon
   } from '@vicons/fluent'
-  import { defineComponent, PropType, ref } from 'vue'
+  import { computed, defineComponent, PropType, ref } from 'vue'
   import { NDropdown, useNotification } from 'naive-ui'
   import EditProjectTaskForm from './EditProjectTaskForm.vue'
   import api from '@/utils/api'
   import { handleApi } from '@/utils/helpers'
   import { useStore } from '@/use/useStore'
   import { MutationTypes } from '@/store/modules/project/mutation-types'
+  import moment from 'moment'
   export default defineComponent({
     name: 'ProjectTaskCard',
     components: {
@@ -99,6 +100,9 @@
       // INITIALIZE STORE
       const store = useStore()
       // VARIABLES
+      const taskDueDate = computed(() =>
+        moment(props.taskInfo.due_date).format('MMMM Do YYYY, h:mm a')
+      )
       const showModal = ref(false)
       const task = ref(props.taskInfo)
       const notification = useNotification()
@@ -147,8 +151,9 @@
         handleSelect,
         showModal,
         task,
+        taskDueDate,
         bodyStyle: {
-          width: '600px'
+          width: '50%'
         },
         hideModal
       }

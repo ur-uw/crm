@@ -1,5 +1,5 @@
 <template>
-  <div class="project-column bg-primary px-2 py-4 rounded mb-1">
+  <div class="project-column bg-primary px-3 py-4 rounded mb-1">
     <div class="project-column-heading">
       <h2 class="project-column-heading__title">{{ columnHeading }}</h2>
       <router-link

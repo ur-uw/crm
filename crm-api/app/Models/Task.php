@@ -43,9 +43,11 @@ class Task extends Model implements Ownable
     ];
 
     protected $casts = [
-        'start_date' => 'datetime:Y-m-d',
-        'due_date' => 'datetime:Y-m-d',
+        'start_date' => 'datetime:Y-m-d h:iA',
+        'due_date' => 'datetime:Y-m-d h:iA',
     ];
+
+
 
 
     /**

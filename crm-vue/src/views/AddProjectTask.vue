@@ -150,7 +150,7 @@
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
       const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
       const message = useMessage()
-      const formRef = ref(null)
+      const formRef = ref<any>(null)
       const areUserOptionsLoading = ref(false)
       const userOptions = ref<SelectGroupOption[]>([])
       const statues = ref<Status[]>([])
@@ -206,35 +206,37 @@
       }
       // FUNCTIONS
       const handleSubmit = () => {
-        formRef.value?.validate(async (errors: unknown) => {
-          if (!errors) {
-            if (modelRef.value.taskDates != null) {
-              const task: Task = {
-                title: modelRef.value.taskTitle!,
-                description: modelRef.value.taskDescription!,
-                start_date: modelRef.value.taskDates.start_date,
-                due_date: modelRef.value.taskDates?.due_date
+        if (formRef.value !== null) {
+          formRef.value.validate(async (errors: unknown) => {
+            if (!errors) {
+              if (modelRef.value.taskDates != null) {
+                const task: Task = {
+                  title: modelRef.value.taskTitle!,
+                  description: modelRef.value.taskDescription!,
+                  start_date: modelRef.value.taskDates.start_date,
+                  due_date: modelRef.value.taskDates?.due_date
+                }
+                const promise = api.post('/api/tasks/create', {
+                  ...task,
+                  project: route.params.slug,
+                  status: props.taskStatus ?? modelRef.value.taskStatus,
+                  assigned_to: modelRef.value.assignTo,
+                  created_by: store.getters.getCurrentUser?.slug,
+                  priority: modelRef.value.taskPriority
+                })
+                const [, error] = await handleApi(promise)
+                if (error) {
+                  message.error('Something went wrong, please try agin later', { duration: 3000 })
+                  return
+                }
+                modelRef.value = initializeFormRef()
+                message.success('Task created successfully', {
+                  duration: 3000
+                })
               }
-              const promise = api.post('/api/tasks/create', {
-                ...task,
-                project: route.params.slug,
-                status: props.taskStatus ?? modelRef.value.taskStatus,
-                assigned_to: modelRef.value.assignTo,
-                created_by: store.getters.getCurrentUser?.slug,
-                priority: modelRef.value.taskPriority
-              })
-              const [, error] = await handleApi(promise)
-              if (error) {
-                message.error('Something went wrong, please try agin later', { duration: 3000 })
-                return
-              }
-              modelRef.value = initializeFormRef()
-              message.success('Task created successfully', {
-                duration: 3000
-              })
             }
-          }
-        })
+          })
+        }
       }
       // Fetch project users with their teams
       const fetchProjectUsers = async () => {
@@ -316,5 +318,3 @@
     }
   })
 </script>
-
-<style lang="scss" scoped></style>

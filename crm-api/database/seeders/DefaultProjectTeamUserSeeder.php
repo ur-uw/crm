@@ -20,9 +20,9 @@ class DefaultProjectTeamUserSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::firstWhere('name', 'Mohammed Fadhil');
-        $user2 = User::factory()->create(['name' => 'user 2']);
-        $user3 = User::factory()->create(['name' => 'user 3']);
+        $user = User::firstWhere('email', 'test@test.com');
+        $user2 = User::factory()->create(['first_name' => 'Project', 'last_name' => 'User 1']);
+        $user3 = User::factory()->create(['first_name' => 'Project', 'last_name' => 'User 2']);
         $user2->images()->save(Image::factory()->make([
             'path' => 'https://picsum.photos/id/1005/200/300'
         ]));

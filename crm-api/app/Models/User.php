@@ -23,7 +23,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'slug',
@@ -50,6 +51,16 @@ class User extends Authenticatable
     ];
 
 
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
 
 
     /**
@@ -58,7 +69,7 @@ class User extends Authenticatable
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('name')
+            ->generateSlugsFrom(['first_name', 'last_name'])
             ->saveSlugsTo('slug');
     }
 

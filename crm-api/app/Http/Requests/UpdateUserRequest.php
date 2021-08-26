@@ -25,7 +25,8 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:25',
+            'first_name' => 'string|max:12',
+            'last_name' => 'string|max:12',
             'email' => 'string|unique:users,email',
             'phone' => 'string|unique:users,phone',
             'password' => 'string|min:8|max:255'

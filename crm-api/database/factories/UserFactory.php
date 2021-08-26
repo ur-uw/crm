@@ -23,9 +23,9 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $name =   $this->faker->name();
         return [
-            'name' => $name,
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' =>   $this->faker->unique()->phoneNumber(),
             'email_verified_at' => now(),
@@ -54,7 +54,8 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'name' => "Mohammed Fadhil",
+                'first_name' => "Mohammed",
+                'last_name' => 'Fadhil',
                 'email' => 'test@test.com',
                 'phone' => '+9647800183076'
             ];

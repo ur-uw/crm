@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -26,7 +27,7 @@ class AuthController extends Controller
         $token = $user->createToken($request->device_name)->plainTextToken;
         return response()->json([
             'message' => 'Login Success',
-            'user' => $user->load('images'),
+            'user' => UserResource::make($user->load('images')),
             'token' => $token,
         ]);
     }
@@ -36,7 +37,7 @@ class AuthController extends Controller
         $token = $user->createToken($request->device_name)->plainTextToken;
         return response()->json([
             'message' => 'User created',
-            'user' => $user,
+            'user' => UserResource::make($user),
             'token' => $token,
         ]);
     }

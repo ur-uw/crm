@@ -42,7 +42,8 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
   async [ActionTypes.REGISTER](
     { commit },
     payload: {
-      name: string
+      first_name: string
+      last_name: string
       email: string
       password: string
       password_confirmation: string
@@ -53,8 +54,6 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
       commit(MutationTypes.SET_LOADING, true)
       const promise = api.post('/api/auth/register', {
         ...payload,
-        // TODO: implement slugs and remove this
-        slug: Math.random().toString(),
         device_name: navigator.userAgent
       })
       const [data, error] = await handleApi(promise)

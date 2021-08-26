@@ -4,6 +4,8 @@ import { Image } from './Image'
 export interface User {
   id?: number
   name?: string
+  first_name?: string
+  last_name?: string
   slug?: string
   email?: string
   phone?: string

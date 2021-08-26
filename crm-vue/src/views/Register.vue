@@ -3,32 +3,53 @@
     <n-grid cols="2" :x-gap="20">
       <n-grid-item>
         <div class="h-100 d-flex align-items-center justify-content-start">
-          <img class="h-75 w-75" src="../assets/images/project_lifecycle.svg" alt="work" />
+          <img class="h-75 w-75" src="@/assets/images/project_lifecycle.svg" alt="work" />
         </div>
       </n-grid-item>
       <n-grid-item class="h-100">
         <div class="h-100 d-flex flex-column align-items-center justify-content-center">
           <n-card>
-            <n-form ref="formRef" :rules="formRules" :model="formData" @submit.prevent="register">
+            <n-form ref="formRef" :rules="formRules" :model="model" @submit.prevent="register">
               <n-space vertical size="large" justify="center">
-                <n-form-item label="Name" path="name">
-                  <n-input
-                    v-model:value="formData.name"
-                    size="large"
-                    type="text"
-                    placeholder="Ex: John Doe"
-                    @keydown.enter.prevent
-                  >
-                    <template #suffix>
-                      <n-icon>
-                        <PersonIcon />
-                      </n-icon>
-                    </template>
-                  </n-input>
-                </n-form-item>
+                <n-grid cols="2" :x-gap="15">
+                  <n-grid-item>
+                    <n-form-item path="first_name" label="First Name">
+                      <n-input
+                        v-model:value="model.first_name"
+                        size="large"
+                        type="text"
+                        placeholder="Ex: John"
+                        @keydown.enter.prevent
+                      >
+                        <template #suffix>
+                          <n-icon>
+                            <PersonIcon />
+                          </n-icon>
+                        </template>
+                      </n-input>
+                    </n-form-item>
+                  </n-grid-item>
+                  <n-grid-item>
+                    <n-form-item path="last_name" label="Last Name">
+                      <n-input
+                        v-model:value="model.last_name"
+                        size="large"
+                        type="text"
+                        placeholder="Ex: Doe"
+                        @keydown.enter.prevent
+                      >
+                        <template #suffix>
+                          <n-icon>
+                            <PersonIcon />
+                          </n-icon>
+                        </template>
+                      </n-input>
+                    </n-form-item>
+                  </n-grid-item>
+                </n-grid>
                 <n-form-item label="Email" path="email">
                   <n-input
-                    v-model:value="formData.email"
+                    v-model:value="model.email"
                     size="large"
                     type="email"
                     placeholder="Ex: johdoe@email.com"
@@ -43,7 +64,7 @@
                 </n-form-item>
                 <n-form-item label="Password" path="password">
                   <n-input
-                    v-model:value="formData.password"
+                    v-model:value="model.password"
                     size="large"
                     type="password"
                     show-password-toggle
@@ -53,7 +74,7 @@
                 </n-form-item>
                 <n-form-item label="Confirm Password" path="password_confirmation">
                   <n-input
-                    v-model:value="formData.password_confirmation"
+                    v-model:value="model.password_confirmation"
                     size="large"
                     type="password"
                     show-password-toggle
@@ -63,7 +84,7 @@
                 </n-form-item>
                 <n-form-item label="Phone Number" path="phoneNumber">
                   <n-input
-                    v-model:value="formData.phoneNumber"
+                    v-model:value="model.phoneNumber"
                     size="large"
                     type="text"
                     placeholder="Ex: +311111111"
@@ -120,30 +141,35 @@
       const store = useStore()
       const router = useRouter()
       // variables
-      const formData = ref({
-        name: '',
+      const formModel = ref({
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
         password_confirmation: '',
         phoneNumber: ''
       })
 
-      const formRef = ref(null)
+      const formRef = ref<any>(null)
       // PASSWORD VALIDATORS
       function validatePasswordStartWith(rule: FormItemRule, value: string) {
         return (
-          formData.value.password &&
-          formData.value.password.startsWith(value) &&
-          formData.value.password.length >= value.length
+          formModel.value.password &&
+          formModel.value.password.startsWith(value) &&
+          formModel.value.password.length >= value.length
         )
       }
       function validatePasswordSame(rule: FormItemRule, value: string) {
-        return value === formData.value.password
+        return value === formModel.value.password
       }
       const formRules = {
-        name: {
+        first_name: {
           required: true,
-          message: 'Please enter your name'
+          message: 'Please enter your first name'
+        },
+        last_name: {
+          required: true,
+          message: 'Please enter you last name'
         },
         email: {
           required: true,
@@ -193,21 +219,23 @@
       }
       // ? REGISTER FUNCTION
       const register = () => {
-        formRef.value?.validate(async (errors) => {
-          if (!errors) {
-            const [, error] = await handleActions(
-              store.dispatch(ActionTypes.REGISTER, formData.value)
-            )
-            if (error) {
-              // TODO: handle server errors
-              return
+        if (formRef.value !== null) {
+          formRef.value.validate(async (errors: unknown) => {
+            if (!errors) {
+              const [, error] = await handleActions(
+                store.dispatch(ActionTypes.REGISTER, formModel.value)
+              )
+              if (error) {
+                // TODO: handle server errors
+                return
+              }
+              router.push('/dashboard')
             }
-            router.push('/dashboard')
-          }
-        })
+          })
+        }
       }
       return {
-        formData,
+        model: formModel,
         register,
         formRef,
         formRules

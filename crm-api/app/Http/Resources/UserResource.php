@@ -17,7 +17,9 @@ class UserResource extends JsonResource
     {
         $images = $this->whenLoaded('images');
         return [
-            'name' => $this->name,
+            'name' => $this->full_name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
             'slug' => $this->slug,
             'email' => $this->email,
             'phone' => $this->phone,

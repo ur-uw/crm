@@ -6,9 +6,9 @@
     <n-form ref="formRef" :model="model" :rules="rules" class="mt-5">
       <settings-user-avatar
         :path="
-          user?.images !== undefined
+          user?.images !== undefined && user?.images[0] !== undefined
             ? user?.images[0]?.path
-            : `https://avatars.dicebear.com/api/human/${user?.name}.svg`
+            : `https://avatars.dicebear.com/api/micah/${user?.name}.svg`
         "
         @avatar-changed="handleAvatarChange"
       />
@@ -151,7 +151,9 @@
           </n-collapse>
         </n-form>
       </div>
-      <div v-else><h3 class="text-center text-info">No addresses yet</h3></div>
+      <div v-else>
+        <h6 class="text-center"><n-text type="warning">You don't have any address</n-text></h6>
+      </div>
     </div>
   </div>
 </template>
@@ -185,10 +187,9 @@
       const currentUser = computed<User | null>(() => store.getters.getCurrentUser)
       let userAddresses = ref<Address[] | null>(null)
       const getInitialUserData = () => {
-        const userName = currentUser.value?.name?.split(' ')
         return {
-          firstName: userName != null ? userName[0] : '',
-          lastName: userName != null ? userName[1] : '',
+          firstName: currentUser.value?.first_name,
+          lastName: currentUser.value?.last_name,
           phone: currentUser.value?.phone,
           email: currentUser?.value?.email
         }
@@ -200,8 +201,8 @@
       const counter = ref(1)
       watch(currentUser, (newVal: User | null) => {
         if (newVal !== null) {
-          initialUserInfo.firstName = newVal.name?.split(' ')[0] ?? ''
-          initialUserInfo.lastName = newVal.name?.split(' ')[1] ?? ''
+          initialUserInfo.firstName = newVal.first_name
+          initialUserInfo.lastName = newVal.last_name
           initialUserInfo.email = newVal.email
           initialUserInfo.phone = newVal.phone
         }
@@ -242,7 +243,8 @@
               let newUser = {
                 newUserData: {
                   slug: currentUser.value?.slug,
-                  name: formModel.value.firstName + ' ' + formModel.value.lastName
+                  first_name: formModel.value.firstName,
+                  last_name: formModel.value.lastName
                 } as User,
                 additional: null as null | unknown
               }

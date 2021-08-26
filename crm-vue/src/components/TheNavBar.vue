@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, h, ref } from 'vue'
+  import { computed, defineComponent, watch, h, ref, onMounted } from 'vue'
   import { NIcon, useNotification } from 'naive-ui'
   import {
     ClipboardTaskListLtr24Regular as BoardIcon,
@@ -94,13 +94,29 @@
           key: 'chat.show',
           disabled: true,
           icon: renderIcon(ChatIcon)
-        },
-        {
-          label: 'Settings',
-          key: 'settings.show',
-          icon: renderIcon(SettingsIcon)
         }
       ])
+
+      onMounted(() => {
+        if (isLoggedIn.value) {
+          menuOptions.value.push({
+            label: 'Settings',
+            key: 'settings.show',
+            icon: renderIcon(SettingsIcon)
+          })
+        }
+      })
+      watch(isLoggedIn, (newVal) => {
+        if (newVal) {
+          menuOptions.value.push({
+            label: 'Settings',
+            key: 'settings.show',
+            icon: renderIcon(SettingsIcon)
+          })
+        } else {
+          menuOptions.value = menuOptions.value.filter((el) => el.key !== 'settings.show')
+        }
+      })
       const collapsed = ref(true)
 
       const secondMenuOptions = ref([

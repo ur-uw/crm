@@ -1,6 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
 import Home from '@/views/Home.vue'
-import AccountSettings from '@/views/settings/SettingsAccount.vue'
 /*
  * Authentication Routes
  */
@@ -71,7 +70,7 @@ const userRoutes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'settings.account',
-        component: AccountSettings
+        component: () => import('@/views/settings/SettingsAccount.vue')
       },
       {
         path: 'notifications',

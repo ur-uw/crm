@@ -23,6 +23,7 @@ class AddressFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->company(),
+            'country' => $this->faker->country(),
             'address1' => $this->faker->streetAddress(),
             'address2' => $this->faker->streetAddress(),
             'state' => $this->faker->country(),

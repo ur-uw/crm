@@ -27,7 +27,7 @@
                     type="email"
                     size="large"
                     placeholder="Ex: johdoe@email.com"
-                    @keydown.enter.prevent
+                    @keydown.enter.prevent="login"
                   >
                     <template #suffix>
                       <n-icon>
@@ -43,7 +43,7 @@
                     type="password"
                     show-password-toggle
                     placeholder=""
-                    @keydown.enter.prevent
+                    @keydown.enter.prevent="login"
                   />
                 </n-form-item>
                 <n-checkbox> Remember Me </n-checkbox>
@@ -55,7 +55,7 @@
                     </n-text>
                   </transition>
 
-                  <n-button type="primary" size="large" @click.prevent="login">Sail </n-button>
+                  <n-button type="primary" size="large" @click.prevent="login">Login </n-button>
                 </n-space>
               </n-space>
             </n-form>

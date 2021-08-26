@@ -58,7 +58,22 @@
           size="large"
         ></n-input>
       </n-form-item>
+      <n-space size="large" class="pe-3" justify="end">
+        <n-button :disabled="!isChangeActive" size="large" ghost @click="discardChanges">
+          Discard
+        </n-button>
+
+        <n-button
+          size="large"
+          :disabled="!isChangeActive"
+          type="success"
+          @click.prevent="changeUserInfo"
+        >
+          Save Changes
+        </n-button>
+      </n-space>
     </n-form>
+
     <n-divider />
 
     <!-- ADDRESS INFORMATION -->
@@ -71,7 +86,7 @@
             <n-collapse-item :title="address.name" :name="index">
               <n-grid class="px-3" :x-gap="15" :y-gap="15" cols="2 xs:1 s:1">
                 <n-grid-item>
-                  <n-form-item label="Country">
+                  <n-form-item path="country" label="Country">
                     <n-input
                       v-model:value="address.country"
                       class="input-field"
@@ -138,20 +153,6 @@
       </div>
       <div v-else><h3 class="text-center text-info">No addresses yet</h3></div>
     </div>
-    <n-space size="large" class="pe-3" justify="end">
-      <n-button :disabled="!isChangeActive" size="large" ghost @click="discardChanges">
-        Discard
-      </n-button>
-
-      <n-button
-        size="large"
-        :disabled="!isChangeActive"
-        type="success"
-        @click.prevent="changeUserInfo"
-      >
-        Save Changes
-      </n-button>
-    </n-space>
   </div>
 </template>
 
@@ -241,10 +242,14 @@
               let newUser = {
                 newUserData: {
                   slug: currentUser.value?.slug,
-                  name: formModel.value.firstName + ' ' + formModel.value.lastName,
-                  phone: formModel.value.phone
+                  name: formModel.value.firstName + ' ' + formModel.value.lastName
                 } as User,
                 additional: null as null | unknown
+              }
+              if (currentUser.value?.phone !== formModel.value.phone) {
+                newUser.additional = {
+                  phone: formModel.value.phone
+                }
               }
               const promise = store.dispatch(AllActionTypes.UPDATE_USER_INFO, {
                 newInfo: newUser.newUserData,
@@ -287,11 +292,12 @@
         if (error) {
           return
         }
+        const addresses: Address[] = data.data['data']
         const newUser: User = {
-          addresses: data.data['data']
+          addresses: addresses
         }
         store.commit(AuthMutations.SET_USER, newUser)
-        userAddresses.value = data.data['data']
+        userAddresses.value = addresses
       }
       loadUserAddresses()
 

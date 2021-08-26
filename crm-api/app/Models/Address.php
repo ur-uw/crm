@@ -14,6 +14,7 @@ class Address extends Model
     protected $fillable = [
         'name',
         'state',
+        'country',
         'city',
         'address1',
         'address2',

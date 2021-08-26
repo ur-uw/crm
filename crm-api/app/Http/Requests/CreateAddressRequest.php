@@ -26,6 +26,7 @@ class CreateAddressRequest extends FormRequest
         return [
             'user_id' => 'required|string',
             'name' => "string|required",
+            'country' => 'string|required',
             'address1' => "string|required",
             'address2' => "string",
             'state' => "string|required",

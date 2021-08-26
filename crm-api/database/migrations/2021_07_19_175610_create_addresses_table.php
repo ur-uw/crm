@@ -18,6 +18,7 @@ class CreateAddressesTable extends Migration
             $table->string('name')->default('default_location');
             $table->string('address1');
             $table->string('address2');
+            $table->string('country');
             $table->string('city');
             $table->string('state');
             $table->string('zip');

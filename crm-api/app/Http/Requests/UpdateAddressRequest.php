@@ -25,6 +25,7 @@ class UpdateAddressRequest extends FormRequest
     {
         return [
             'name' => "string",
+            'country' => 'string',
             'address1' => "string",
             'address2' => "string",
             'state' => "string",

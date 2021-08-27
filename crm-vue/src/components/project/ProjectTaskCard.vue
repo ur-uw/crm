@@ -77,6 +77,7 @@
   import { useStore } from '@/use/useStore'
   import { MutationTypes } from '@/store/modules/project/mutation-types'
   import moment from 'moment'
+  import { useBreakPoints } from '@/use/useBreakpoints'
   export default defineComponent({
     name: 'ProjectTaskCard',
     components: {
@@ -146,15 +147,22 @@
             break
         }
       }
+      const { type } = useBreakPoints()
       return {
         options,
         handleSelect,
         showModal,
         task,
         taskDueDate,
-        bodyStyle: {
-          width: '50%'
-        },
+        bodyStyle: ref(
+          type.value === 'xs'
+            ? {
+                width: '100%'
+              }
+            : {
+                width: '50%'
+              }
+        ),
         hideModal
       }
     }

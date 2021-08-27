@@ -3,61 +3,63 @@
     <h3 class="fw-bold mb-5">Account Settings</h3>
     <n-divider />
     <h5 class="fw-bold mt-5">Personal Information</h5>
-    <n-form ref="formRef" :model="model" :rules="rules" class="mt-5">
-      <settings-user-avatar
-        :path="
-          user?.images !== undefined && user?.images[0] !== undefined
-            ? user?.images[0]?.path
-            : `https://avatars.dicebear.com/api/micah/${user?.name}.svg`
-        "
-        @avatar-changed="handleAvatarChange"
-      />
+    <div class="container">
+      <n-form ref="formRef" :model="model" :rules="rules" class="mt-5">
+        <settings-user-avatar
+          :path="
+            user?.images !== undefined && user?.images[0] !== undefined
+              ? user?.images[0]?.path
+              : `https://avatars.dicebear.com/api/micah/${user?.name}.svg`
+          "
+          @avatar-changed="handleAvatarChange"
+        />
 
-      <n-grid class="px-3" :x-gap="15" :y-gap="15" cols="2 xs:1 s:1">
-        <n-grid-item>
-          <n-form-item path="firstName" label="First Name">
-            <n-input
-              v-model:value="model.firstName"
-              class="input-field"
-              placeholder=""
-              size="large"
-            ></n-input>
-          </n-form-item>
-        </n-grid-item>
-        <n-grid-item>
-          <n-form-item path="lastName" label="Last Name">
-            <n-input
-              v-model:value="model.lastName"
-              class="input-field"
-              placeholder=""
-              size="large"
-            ></n-input>
-          </n-form-item>
-        </n-grid-item>
-      </n-grid>
-      <n-form-item path="email" class="px-3" label="Email Address">
-        <n-input
-          v-model:value="model.email"
-          disabled
-          class="input-field"
-          placeholder="johndoe@email.com"
-          size="large"
-        >
-          <template #suffix>
-            <n-icon><MailIcon /></n-icon>
-          </template>
-        </n-input>
-      </n-form-item>
+        <n-grid class="px-3" :x-gap="15" :y-gap="15" cols="2 xs:1 s:1">
+          <n-grid-item>
+            <n-form-item path="firstName" label="First Name">
+              <n-input
+                v-model:value="model.firstName"
+                class="input-field"
+                placeholder=""
+                size="large"
+              ></n-input>
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="lastName" label="Last Name">
+              <n-input
+                v-model:value="model.lastName"
+                class="input-field"
+                placeholder=""
+                size="large"
+              ></n-input>
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
+        <n-form-item path="email" class="px-3" label="Email Address">
+          <n-input
+            v-model:value="model.email"
+            disabled
+            class="input-field"
+            placeholder="johndoe@email.com"
+            size="large"
+          >
+            <template #suffix>
+              <n-icon><MailIcon /></n-icon>
+            </template>
+          </n-input>
+        </n-form-item>
 
-      <n-form-item class="px-3" path="phone" label="Phone Number">
-        <n-input
-          v-model:value="model.phone"
-          class="input-field"
-          placeholder=""
-          maxlength="15"
-          size="large"
-        ></n-input>
-      </n-form-item>
+        <n-form-item class="px-3" path="phone" label="Phone Number">
+          <n-input
+            v-model:value="model.phone"
+            class="input-field"
+            placeholder=""
+            maxlength="15"
+            size="large"
+          ></n-input>
+        </n-form-item>
+      </n-form>
       <n-space size="large" class="pe-3" justify="end">
         <n-button :disabled="!isChangeActive" size="large" ghost @click="discardChanges">
           Discard
@@ -72,13 +74,13 @@
           Save Changes
         </n-button>
       </n-space>
-    </n-form>
+    </div>
 
     <n-divider />
 
     <!-- ADDRESS INFORMATION -->
 
-    <h5 class="fw-bold mt-5">Address Information</h5>
+    <h5 class="fw-bold mt-5">Addresses Information</h5>
     <div v-if="user?.addresses != null" class="user-addresses">
       <div v-if="user?.addresses.length > 0">
         <n-form v-for="(address, index) in user.addresses" :key="index" class="mt-4">

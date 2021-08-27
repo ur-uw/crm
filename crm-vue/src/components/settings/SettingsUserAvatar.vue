@@ -1,14 +1,14 @@
 <template>
-  <div class="avatar-wrapper mb-3 px-3 d-flex align-items-center justify-content-start">
-    <n-form-item>
-      <n-avatar class="avatar" round :size="200" :src="newImagePath ?? path" />
-    </n-form-item>
-    <n-space class="ms-5" vertical>
+  <div class="avatar-wrapper mb-3 d-flex flex-column align-items-center justify-content-start">
+    <n-space>
       <n-button class="mb-3" size="large" type="primary" @click="showModal = !showModal">
         Change picture
       </n-button>
       <n-button ghost size="large">Delete picture </n-button>
     </n-space>
+    <n-form-item>
+      <n-avatar class="avatar" round :size="200" :src="newImagePath ?? path" />
+    </n-form-item>
   </div>
   <n-modal
     v-model:show="showModal"

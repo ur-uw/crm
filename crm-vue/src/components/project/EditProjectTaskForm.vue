@@ -19,7 +19,7 @@
           @keydown.enter.prevent
         />
       </n-form-item>
-      <n-grid cols="2">
+      <n-grid :x-gap="15" cols="2 xs:1 s:1" responsive="screen">
         <n-grid-item>
           <!-- TASK DATES -->
           <n-form-item path="taskDates" label="Start Date - Due Date">
@@ -39,6 +39,7 @@
             <n-radio-group
               v-if="priorities"
               v-model:value="model.taskPriority"
+              size="large"
               name="task-priority-group"
             >
               <n-radio-button

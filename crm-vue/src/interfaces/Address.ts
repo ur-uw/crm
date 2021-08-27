@@ -1,6 +1,6 @@
 export interface Address {
+  id?: number
   name: string
-  slug?: string
   country?: string
   address1?: string
   address2?: string

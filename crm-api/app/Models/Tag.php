@@ -10,6 +10,11 @@ use Spatie\Sluggable\SlugOptions;
 class Tag extends Model
 {
     use HasFactory, HasSlug;
+    protected $fillable = [
+        'name',
+        'color',
+        'slug'
+    ];
     /**
      * Get all of the posts that are assigned this tag.
      */

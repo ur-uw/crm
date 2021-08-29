@@ -11,10 +11,12 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Priority;
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\Tag;
 use App\Models\Team;
 use App\Models\User;
 use Auth;
 use Date;
+use Illuminate\Support\Collection;
 use Str;
 
 class TaskController extends Controller
@@ -50,6 +52,13 @@ class TaskController extends Controller
         $task->status()->associate(Status::firstWhere('slug', $info['status']));
         $task->priority()->associate(Priority::firstWhere('slug', $info['priority']));
         $task->save();
+        if (!empty($info['tags'])) {
+            $tags = new Collection();
+            foreach ($info['tags'] as $tag_info) {
+                $tags->add(Tag::firstOrCreate($tag_info));
+            }
+            $task->tags()->sync($tags->pluck('id')->toArray());
+        }
         // Assign task to authenticated user
         $request->user()->tasks()->sync($task);
         // Assign task to assigned user
@@ -92,6 +101,13 @@ class TaskController extends Controller
             if (!empty($validatedData['priority'])) {
                 $priority = Priority::firstWhere('slug', $validatedData['priority']);
                 $task->priority()->associate($priority);
+            }
+            if (!empty($validatedData['tags'])) {
+                $tags = new Collection();
+                foreach ($validatedData['tags'] as  $tag_info) {
+                    $tags->add(Tag::firstOrCreate($tag_info));
+                }
+                $task->tags()->sync($tags->pluck('id')->toArray());
             }
             $task->update($validatedData);
             return TaskResource::make($task->load('status'));

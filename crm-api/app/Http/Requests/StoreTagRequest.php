@@ -27,7 +27,7 @@ class StoreTagRequest extends FormRequest
         return [
             'tags' => 'required|array',
             'tags.*.name' => 'required|string|unique:tags,name',
-            'tags.*.color' => 'string',
+            'tags.*.color' => 'nullable|string',
         ];
     }
 }

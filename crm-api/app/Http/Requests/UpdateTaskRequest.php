@@ -35,7 +35,10 @@ class UpdateTaskRequest extends FormRequest
             // Status Slug
             'status' => 'string|exists:statuses,slug',
             // Priority slug
-            'priority' => 'string|exists:priorities,slug'
+            'priority' => 'string|exists:priorities,slug',
+            'tags' => 'sometimes|array',
+            'tags.*.name' => 'string',
+            'tags.*.color' => 'string|starts_with:#|nullable',
         ];
     }
 }

@@ -162,7 +162,7 @@ class Task extends Model implements Ownable
      */
     public function tags()
     {
-        return $this->morphToMany(Tag::class, 'taggable');
+        return $this->morphToMany(Tag::class, 'taggable')->withTimestamps();
     }
 
     /**

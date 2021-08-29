@@ -20,7 +20,7 @@ class Tag extends Model
      */
     public function tasks()
     {
-        return $this->morphedByMany(Task::class, 'taggable');
+        return $this->morphedByMany(Task::class, 'taggable')->withTimestamps();
     }
 
     /**

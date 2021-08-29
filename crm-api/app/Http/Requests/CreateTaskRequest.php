@@ -27,6 +27,7 @@ class CreateTaskRequest extends FormRequest
      */
     public function rules()
     {
+        $has_tags = $this->input('tags') !== null;
         return [
             'title' => 'required|string',
             //Project Slug
@@ -41,7 +42,11 @@ class CreateTaskRequest extends FormRequest
             // Status Slug
             'status' => 'required|string|exists:statuses,slug',
             // Priority Slug
-            'priority' => 'required|string|exists:priorities,slug'
+            'priority' => 'required|string|exists:priorities,slug',
+            // Tags array
+            'tags' => 'sometimes|array',
+            'tags.*.name' => 'required_with:tags|string',
+            'tags.*.color' => 'string|starts_with:#|nullable',
         ];
     }
 }

@@ -158,6 +158,14 @@ class Task extends Model implements Ownable
     }
 
     /**
+     * Get all of the tags for the post.
+     */
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    /**
      * Get the priority that owns the Task
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -20,6 +20,7 @@ class TaskResource extends JsonResource
             "slug" => $this->slug,
             "description" => $this->description,
             "status" => StatusResource::make($this->whenLoaded('status')),
+            "tags" => TagResource::collection($this->tags),
             "created_by" => $this->created_by,
             "start_date" => Carbon::parse($this->start_date)->toDateTimeString(),
             "due_date" => Carbon::parse($this->due_date)->toDateTimeString(),

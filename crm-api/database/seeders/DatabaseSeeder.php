@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             AddressSeeder::class,
             StatusSeeder::class,
             PrioritySeeder::class,
+            TagSeeder::class,
             ProjectUserSeeder::class,
             ProjectTeamsSeeder::class,
             TeamsUsersSeeder::class,

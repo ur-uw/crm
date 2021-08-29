@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\Tag;
 use App\Models\Task;
 use Illuminate\Database\Seeder;
 
@@ -17,7 +18,8 @@ class ProjectTasksSeeder extends Seeder
     public function run()
     {
         $statuses_count = Status::count();
-        Project::all()->each(function (Project $project) use ($statuses_count) {
+        $tags = Tag::all();
+        Project::all()->each(function (Project $project) use ($statuses_count, $tags) {
             $project->tasks()->saveMany(
                 Task::factory(rand(1, 6))->make(
                     [
@@ -27,6 +29,9 @@ class ProjectTasksSeeder extends Seeder
                     ]
                 )
             );
+            $project->tasks->each(function (Task $task) use ($tags) {
+                $task->tags()->saveMany($tags->random(rand(2, 3)));
+            });
         });
     }
 }

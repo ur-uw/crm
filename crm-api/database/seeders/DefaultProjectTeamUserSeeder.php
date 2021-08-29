@@ -6,6 +6,7 @@ use App\Models\Image;
 use App\Models\Permission;
 use App\Models\Project;
 use App\Models\Role;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\Team;
 use App\Models\User;
@@ -45,6 +46,10 @@ class DefaultProjectTeamUserSeeder extends Seeder
             'status_id' => rand(1, 4),
             'priority_id' => rand(1, 3),
         ]);
+        $tags = Tag::all();
+        $tasks->each(function (Task $task) use ($tags) {
+            $task->tags()->saveMany($tags->random(rand(1, 3)));
+        });
         $user->tasks()->sync($tasks);
 
         $team_name = "Mohammed Team";

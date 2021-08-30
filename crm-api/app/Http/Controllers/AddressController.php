@@ -6,6 +6,7 @@ use App\Http\Requests\CreateAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
 use App\Http\Resources\AddressResource;
 use App\Models\Address;
+use Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,6 +33,7 @@ class AddressController extends Controller
     public function store(CreateAddressRequest $request)
     {
         $address = Address::create($request->validated());
+        Auth::user()->addresses()->save($address);
         return  AddressResource::make($address);
     }
 

@@ -81,15 +81,16 @@
     <!-- ADDRESS INFORMATION -->
 
     <h5 class="fw-bold mt-5">Addresses Information</h5>
-    <div v-if="user?.addresses != null" class="user-addresses">
-      <div v-if="user?.addresses.length > 0">
+    <div v-if="user?.addresses != null" class="user-addresses container">
+      <transition-group v-if="user?.addresses.length > 0" name="fade" tag="div">
         <user-address-form
           v-for="address in user.addresses"
           :key="address.name"
           :address="address"
           @address-changed="changeAddressInfo"
+          @delete-address="onAddressDeleted"
         />
-      </div>
+      </transition-group>
       <div v-else>
         <h6 class="text-center"><n-text type="warning">You don't have any address</n-text></h6>
       </div>
@@ -98,7 +99,6 @@
 </template>
 
 <script lang="ts">
-  // TODO: IMPLEMENT DELETING ADDRESS FUNCTIONALITY
   // TODO: MAKE SEPARATE COMPONENTS FOR THE FORMS OF ACCOUNT SETTINGS
   import { Mail28Regular as MailIcon } from '@vicons/fluent'
   import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue'
@@ -106,7 +106,7 @@
   import { User } from '@/interfaces/User'
   import { FormItemRule, useMessage } from 'naive-ui'
   import { handleActions, handleApi, validEmail } from '@/utils/helpers'
-  import { AllActionTypes } from '@/store/action-types'
+  import { ActionTypes as AuthActions } from '@/store/modules/auth/action-types'
   import { MutationTypes as AuthMutations } from '@/store/modules/auth/mutation-types'
   import api from '@/utils/api'
   import { Address } from '@/interfaces/Address'
@@ -194,7 +194,7 @@
                   phone: formModel.value.phone
                 }
               }
-              const promise = store.dispatch(AllActionTypes.UPDATE_USER_INFO, {
+              const promise = store.dispatch(AuthActions.UPDATE_USER_INFO, {
                 newInfo: newUser.newUserData,
                 additional: newUser.additional
               })
@@ -213,11 +213,25 @@
         }
       }
 
+      // Delete user address
+      const onAddressDeleted = async (id: number) => {
+        const promise = api.delete(`/api/addresses/delete/${id}`)
+        const [, error] = await handleApi(promise)
+        const newInfo = {
+          addresses: currentUser.value?.addresses.filter((addr) => addr.id !== id)
+        } as User
+        store.commit(AuthMutations.SET_USER, newInfo)
+        if (error) {
+          // TODO: HANDLE ERROR
+          return
+        }
+      }
+
       // Change address info
       // TODO: update this address in user addresses that are in vuex
       const changeAddressInfo = async (newInfo: Address) => {
         const promise = api.put(`/api/addresses/update/${newInfo.id}`, newInfo)
-        const [error] = await handleApi(promise)
+        const [, error] = await handleApi(promise)
         if (error) {
           // TODO: HANDLE ERROR
           message.error('Something went wrong', { duration: 2000 })
@@ -275,7 +289,8 @@
         handleAvatarChange,
         isChangeActive: computed(
           () => JSON.stringify(getInitialUserData()) !== JSON.stringify(formModel.value)
-        )
+        ),
+        onAddressDeleted
       }
     }
   })

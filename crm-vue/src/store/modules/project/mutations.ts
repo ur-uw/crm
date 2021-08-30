@@ -7,7 +7,6 @@ import {
 } from '@/store/store_interfaces/project_store_interface'
 import { sortByUpdatedAt } from '@/utils/helpers'
 import { Task } from '@/interfaces/Task'
-import task from '../task'
 export const mutations: MutationTree<ProjectStateTypes> & ProjectMutationsTypes = {
   [MutationTypes.SET_PROJECTS](state: ProjectStateTypes, data: Project[]): void {
     state.projects = data

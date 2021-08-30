@@ -18,6 +18,7 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'slug' => $this->slug,
+            'tags_progress' =>   $this->project_tags_progress,
             'owner' => UserResource::make($this->whenLoaded('user')),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),

@@ -120,7 +120,6 @@
         if (formRef.value !== null) {
           formRef.value.validate(async (errors: unknown) => {
             if (!errors) {
-              // TODO: make api call only when the data of task is changed
               const promise = api.put(`/api/tasks/update/${props.task.slug}`, {
                 title: modelRef.value.taskTitle,
                 description: modelRef.value.taskDescription,

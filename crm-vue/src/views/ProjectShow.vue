@@ -72,27 +72,16 @@
             </n-badge>
           </div>
         </div>
-
-        <div class="tag-progress p-3 d-flex align-items-center">
-          <div class="tag-progress">
-            <n-progress type="circle" color="pink" :percentage="20">
-              <span class="text-center">20%</span>
+        <!-- TODO: change percentage automatically when task status is changed -->
+        <div
+          v-if="project?.tags_progress !== undefined"
+          class="tag-progresses p-3 d-flex align-items-center"
+        >
+          <div v-for="progress in project.tags_progress" :key="progress.tag_name" class="ms-2">
+            <n-progress type="circle" :color="progress.color" :percentage="progress.percentage">
+              <span class="text-center">{{ Math.round(progress.percentage) }}%</span>
             </n-progress>
-            <div class="text-center mt-2">Copywriting</div>
-          </div>
-          <div class="tag-progress ms-3">
-            <div class="tag-progress">
-              <n-progress type="circle" color="orange" :percentage="50">
-                <span class="text-center">50% </span>
-              </n-progress>
-              <div class="text-center mt-2">Illustration</div>
-            </div>
-          </div>
-          <div class="tag-progress ms-3">
-            <n-progress type="circle" :percentage="75">
-              <span class="text-center">75%</span>
-            </n-progress>
-            <div class="text-center mt-2">UI Design</div>
+            <div class="text-center mt-2">{{ progress.tag_name }}</div>
           </div>
         </div>
         <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
@@ -196,14 +185,18 @@
       const isLoading = computed(() => store.getters.isProjectsLoading)
       const tasks = computed<SelectedProjectTasksTypes>(() => store.getters.getSelectedProjectTasks)
       const taskTypesLength: number = Object.keys(tasks).length
-      onMounted(async () => {
+      const fetchProject = async () => {
         const [data, error] = await handleActions(
           store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.slug.toString())
         )
         if (error) {
+          // TODO: HANDLE ERROR
           return
         }
         project.value = data.data['data']
+      }
+      onMounted(() => {
+        fetchProject()
       })
       return { project, tasks, isLoading, taskTypesLength }
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\ProjectResource;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 /*
     ! NOTE: if you are on windows change the  slash: "/" to back-slash: "\" in routes paths*
@@ -35,6 +37,7 @@ Route::prefix('tags')->group(__DIR__ . '/api_routes/v1/tag_routes.php');
 Route::prefix('teams')->group(__DIR__ . '/api_routes/v1/team_routes.php');
 
 /* Testing routes */
-Route::post('/upload', function () {
-    return 'testing-route';
+Route::get('/test', function () {
+    $project = Project::firstWhere('slug', 'mohammed-project');
+    return response()->json($project->getProjectTagsProgressAttribute());
 });

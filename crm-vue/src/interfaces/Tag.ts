@@ -5,3 +5,9 @@ export default interface Tag {
   color?: string
   tasks?: Task[]
 }
+
+export type TagProgress = {
+  tag_name: string
+  percentage: number
+  color: string
+}

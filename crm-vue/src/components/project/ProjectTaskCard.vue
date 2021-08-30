@@ -1,7 +1,17 @@
 <template>
   <div class="task bg-custom-dark-blue">
     <div class="task__tags">
-      <span class="task__tag task__tag--copyright">Copywriting</span>
+      <div v-if="taskInfo.tags !== undefined">
+        <span
+          v-for="tag in taskInfo.tags"
+          :key="tag.slug"
+          :style="`background-color:${tag.color};`"
+          class="task__tag text-capitalize rounded p-1 ms-1 text-capitalize"
+          :class="tag.color === '#ffffff' ? 'text-dark' : ''"
+        >
+          {{ tag.name }}
+        </span>
+      </div>
 
       <n-dropdown trigger="click" :options="options" @select="handleSelect">
         <button class="task__options">
@@ -170,14 +180,6 @@
 </script>
 <style scoped lang="scss">
   $light-grey: #c4cad3;
-  $tag-1: #ceecfd;
-  $tag-1-text: #2e87ba;
-  $tag-2: #d6ede2;
-  $tag-2-text: #13854e;
-  $tag-3: #ceecfd;
-  $tag-3-text: #2d86ba;
-  $tag-4: #f2dcf5;
-  $tag-4-text: #a734ba;
   $purple: #7784ee;
 
   @mixin display {
@@ -205,22 +207,7 @@
       margin: 1.2rem 0;
     }
     &__tag {
-      border-radius: 100px;
-      padding: 2px 13px;
-      font-size: 12px;
-
-      &--copyright {
-        color: $tag-4-text;
-        background-color: $tag-4;
-      }
-      &--design {
-        color: $tag-3-text;
-        background-color: $tag-3;
-      }
-      &--illustration {
-        color: $tag-2-text;
-        background-color: $tag-2;
-      }
+      font-size: 10px;
     }
     &__tags {
       width: 100%;

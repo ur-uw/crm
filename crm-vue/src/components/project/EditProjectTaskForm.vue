@@ -53,6 +53,10 @@
           </n-form-item>
         </n-grid-item>
       </n-grid>
+      <!-- TASK TAGS -->
+      <n-form-item path="tags" label="Tags">
+        <n-dynamic-tags v-model:value="model.tags" :max="4" />
+      </n-form-item>
       <n-form-item path="taskDescription" label="Task Description">
         <n-input
           v-model:value="model.taskDescription"
@@ -64,7 +68,9 @@
 
       <n-space justify="end">
         <n-button @click="$emit('hide-modal')">Cancel</n-button>
-        <n-button type="primary" @click.prevent="handleSubmit">Confirm</n-button>
+        <n-button :disabled="isConfirmDisabled" type="primary" @click.prevent="handleSubmit">
+          Confirm
+        </n-button>
       </n-space>
     </n-space>
   </n-form>
@@ -80,6 +86,7 @@
   import api from '@/utils/api'
   import { ref, defineComponent, PropType, onMounted, computed } from 'vue'
   import { Priority } from '@/interfaces/Priority'
+  import Tag from '@/interfaces/Tag'
   export default defineComponent({
     props: {
       task: {
@@ -91,15 +98,22 @@
     setup(props, { emit }) {
       const formRef = ref<any>(null)
       const priorities = ref<Priority[] | null>(null)
-      const modelRef = ref({
-        taskTitle: props.task.title,
-        taskDescription: props.task.description,
-        taskPriority: props.task.priority?.slug,
-        taskDates: {
-          start_date: props.task.start_date,
-          due_date: props.task.due_date
+      const initFormData = () => {
+        return {
+          taskTitle: props.task.title,
+          taskDescription: props.task.description,
+          taskPriority: props.task.priority?.slug,
+          tags:
+            props.task.tags !== undefined && props.task.tags?.length > 0
+              ? props.task.tags?.map((tag) => tag.name)
+              : [],
+          taskDates: {
+            start_date: props.task.start_date,
+            due_date: props.task.due_date
+          }
         }
-      })
+      }
+      const modelRef = ref(initFormData())
 
       // Submit edit request to the server
       const handleSubmit = () => {
@@ -110,6 +124,11 @@
               const promise = api.put(`/api/tasks/update/${props.task.slug}`, {
                 title: modelRef.value.taskTitle,
                 description: modelRef.value.taskDescription,
+                tags: modelRef.value.tags.map((tagName) => {
+                  return {
+                    name: tagName
+                  } as Tag
+                }),
                 priority: modelRef.value.taskPriority,
                 start_date: modelRef.value.taskDates.start_date,
                 due_date: modelRef.value.taskDates.due_date
@@ -124,6 +143,11 @@
           })
         }
       }
+
+      // Determine whether confirm button is disabled
+      const isConfirmDisabled = computed(
+        () => JSON.stringify(initFormData()) === JSON.stringify(modelRef.value)
+      )
       // Form rules
       const rules = {
         taskTitle: [
@@ -175,7 +199,7 @@
         handleSubmit,
         priorities,
         onTaskDatesChanged,
-
+        isConfirmDisabled,
         dates: computed(() => [
           parseInt(moment(modelRef.value.taskDates.start_date).format('x')),
           parseInt(moment(modelRef.value.taskDates.due_date).format('x'))

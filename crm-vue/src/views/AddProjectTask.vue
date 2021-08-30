@@ -129,6 +129,7 @@
   import moment from 'moment'
   import TheBack from '@/components/TheBack.vue'
   import { Priority } from '@/interfaces/Priority'
+  import Tag from '@/interfaces/Tag'
 
   // import { PersonAdd28Regular } from '@vicons/fluent'
   export default defineComponent({
@@ -155,7 +156,7 @@
       const userOptions = ref<SelectGroupOption[]>([])
       const statues = ref<Status[]>([])
       const priorities = ref<Priority>()
-      const initializeFormRef = () => {
+      const initFormRef = () => {
         return {
           taskTitle: null,
           taskDescription: null,
@@ -167,7 +168,7 @@
         }
       }
 
-      const modelRef = ref(initializeFormRef())
+      const modelRef = ref(initFormRef())
       const formRules = {
         taskTitle: [
           {
@@ -213,11 +214,15 @@
                 const task: Task = {
                   title: modelRef.value.taskTitle!,
                   description: modelRef.value.taskDescription!,
+                  tags: modelRef.value.tags.map((tagName: string) => {
+                    return { name: tagName } as Tag
+                  }),
                   start_date: modelRef.value.taskDates.start_date,
                   due_date: modelRef.value.taskDates?.due_date
                 }
                 const promise = api.post('/api/tasks/create', {
                   ...task,
+
                   project: route.params.slug,
                   status: props.taskStatus ?? modelRef.value.taskStatus,
                   assigned_to: modelRef.value.assignTo,
@@ -229,7 +234,7 @@
                   message.error('Something went wrong, please try agin later', { duration: 3000 })
                   return
                 }
-                modelRef.value = initializeFormRef()
+                modelRef.value = initFormRef()
                 message.success('Task created successfully', {
                   duration: 3000
                 })

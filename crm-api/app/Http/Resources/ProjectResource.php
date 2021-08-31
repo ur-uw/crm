@@ -15,7 +15,7 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
-        $tags_progress = Utility::getProjectTagsProgressAttribute($this->whenLoaded('tasks'));
+        $tags_progress = Utility::get_project_tags_progress($this->whenLoaded('tasks'));
         return [
             'name' => $this->name,
             'description' => $this->description,
@@ -24,7 +24,7 @@ class ProjectResource extends JsonResource
             'users' => UserResource::collection($this->whenLoaded('users')),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),
             'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
-            'tags_progress' => $tags_progress,
+            'tags_progress' => $this->whenLoaded('tasks', $tags_progress),
         ];
     }
 }

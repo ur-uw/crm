@@ -10,8 +10,6 @@ use App\Models\User;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
-use Storage;
-use Str;
 
 class UserController extends Controller
 {
@@ -89,7 +87,7 @@ class UserController extends Controller
     /**
      * Upload user avatar image.
      *
-     * @param  User  $user
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
     public function change_avatar(Request $request)

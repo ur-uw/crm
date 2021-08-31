@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Models\User;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,6 +12,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\AddProjectUserRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectController extends Controller
@@ -122,5 +124,38 @@ class ProjectController extends Controller
             );
         }
         return UserResource::collection($project->users);
+    }
+
+    /**
+     * Add user to a project.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function add_project_user(AddProjectUserRequest $request, Project $project)
+    {
+        $data = $request->validated();
+        $user = User::firstWhere('slug', $data['user']);
+        $team = Team::firstWhere('name', $data['team']);
+        if (!$team) {
+            $team = Team::make([
+                'display_name' => $data['team'],
+            ]);
+            $project->teams()->save($team);
+        }
+        if ($team->users->contains($user)) {
+            return response()->json(
+                [
+                    'message' => 'This team already has this user',
+                ],
+                Response::HTTP_IM_USED
+            );
+        }
+        $team->users()->save($user);
+        $user->attachPermissions($data['permissions'], $team);
+        return response()->json([
+            'message' => 'User added',
+            'user' => UserResource::make($user),
+        ], Response::HTTP_ACCEPTED);
     }
 }

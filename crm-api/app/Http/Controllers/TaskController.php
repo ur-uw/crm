@@ -31,7 +31,7 @@ class TaskController extends Controller
 
         return TaskResource::collection(
             $request->user()->tasks()
-                ->with('status:id,name,color,slug')
+                ->with(['status', 'tags'])
                 ->orderBy('created_at', 'desc')
                 ->get()
         );

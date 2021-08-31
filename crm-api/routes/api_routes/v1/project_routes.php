@@ -15,7 +15,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::put('/update/{project}', [ProjectController::class, 'update']);
     // Delete project
     Route::delete('/delete/{project}', [ProjectController::class, 'destroy']);
-    Route::get('/{project}/users', [ProjectController::class, 'getUsers']);
+
+    // Get project users
+    Route::get('/{project}/users', [ProjectController::class, 'get_users']);
+
+    // Add user to the project
+    Route::post('/{project}/add_user', [ProjectController::class, 'add_project_user']);
+
     // Search project users
     Route::post('/{project}/users/search', [SearchController::class, 'searchProjectUsers']);
 });

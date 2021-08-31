@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\Utility;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProjectResource extends JsonResource
@@ -14,15 +15,16 @@ class ProjectResource extends JsonResource
      */
     public function toArray($request)
     {
+        $tags_progress = Utility::getProjectTagsProgressAttribute($this->whenLoaded('tasks'));
         return [
             'name' => $this->name,
             'description' => $this->description,
             'slug' => $this->slug,
-            'tags_progress' =>   $this->project_tags_progress,
             'owner' => UserResource::make($this->whenLoaded('user')),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'teams' => TeamResource::collection($this->whenLoaded('teams')),
-            'tasks' => TaskResource::collection($this->whenLoaded('tasks'))
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
+            'tags_progress' => $tags_progress,
         ];
     }
 }

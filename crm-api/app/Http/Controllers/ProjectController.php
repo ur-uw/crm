@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
-use App\Http\Resources\ProjectResource;
+use App\Models\Team;
+use App\Models\Project;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
-use App\Models\Project;
-use App\Models\Team;
-use Illuminate\Http\Request;
+use App\Http\Resources\ProjectResource;
+use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectController extends Controller
@@ -53,13 +54,12 @@ class ProjectController extends Controller
                 'user.images',
                 'teams',
                 'tasks.status',
+                'tasks.tags',
                 'tasks.priority'
             ]
         );
 
-        return ProjectResource::make(
-            $project
-        );
+        return ProjectResource::make($project);
     }
 
     /**
@@ -111,7 +111,7 @@ class ProjectController extends Controller
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function getUsers(Request $request, Project $project)
+    public function get_users(Request $request, Project $project)
     {
         $withTeams = $request->withTeams;
         if ($withTeams) {

@@ -32,7 +32,7 @@ class AddressController extends Controller
      */
     public function store(CreateAddressRequest $request)
     {
-        $address = Address::create($request->validated());
+        $address = Address::make($request->validated());
         Auth::user()->addresses()->save($address);
         return  AddressResource::make($address);
     }

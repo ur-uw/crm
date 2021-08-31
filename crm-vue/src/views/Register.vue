@@ -121,6 +121,7 @@
   import { ActionTypes } from '@/store/modules/auth/action-types'
   import { useStore } from '@/use/useStore'
   import { handleActions } from '@/utils/helpers'
+  import { phoneRegex } from '@/utils/regex'
   import { FormItemRule } from 'naive-ui'
   import { defineComponent, ref } from 'vue'
   import { useRouter } from 'vue-router'
@@ -207,10 +208,7 @@
           required: false,
           validator: (rule: FormItemRule, val: string) => {
             if (val.length !== 0) {
-              const reg = new RegExp(
-                '/^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$/gm'
-              )
-              if (!reg.test(val)) {
+              if (!phoneRegex.test(val)) {
                 return Error('Please enter  valid phone number')
               }
             }

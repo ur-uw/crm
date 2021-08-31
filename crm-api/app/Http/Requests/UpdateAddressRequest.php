@@ -27,7 +27,7 @@ class UpdateAddressRequest extends FormRequest
             'name' => "string",
             'country' => 'string',
             'address1' => "string",
-            'address2' => "string",
+            'address2' => "string|nullable",
             'state' => "string",
             'city' => "string",
             'zip' => "string|numeric",

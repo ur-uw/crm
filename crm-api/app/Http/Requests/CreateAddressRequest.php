@@ -24,11 +24,10 @@ class CreateAddressRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|string',
             'name' => "string|required",
             'country' => 'string|required',
             'address1' => "string|required",
-            'address2' => "string",
+            'address2' => "string|nullable",
             'state' => "string|required",
             'city' => "string|required",
             'zip' => "string|numeric",

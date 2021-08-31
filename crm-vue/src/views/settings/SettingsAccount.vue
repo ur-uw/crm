@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isUserLoading" class="ps-5 py-5">
+  <div v-if="!isUserLoading" class="px-5 py-5">
     <h3 class="fw-bold mb-5">Account Settings</h3>
     <n-divider />
     <h5 class="fw-bold mt-5">Personal Information</h5>
@@ -80,27 +80,42 @@
 
     <!-- ADDRESS INFORMATION -->
 
-    <h5 class="fw-bold mt-5">Addresses Information</h5>
+    <n-space justify="space-between">
+      <h5 class="fw-bold mt-5">Addresses Information</h5>
+      <n-button class="mt-5" @click="showAddAddress = !showAddAddress">
+        <n-icon>
+          <add-icon v-if="!showAddAddress" />
+          <close-icon v-else />
+        </n-icon>
+      </n-button>
+    </n-space>
+    <transition name="fade">
+      <add-address-form v-if="showAddAddress" @add-address="onAddressAdded" />
+    </transition>
     <div v-if="user?.addresses != null" class="user-addresses container">
       <transition-group v-if="user?.addresses.length > 0" name="fade" tag="div">
         <user-address-form
           v-for="address in user.addresses"
-          :key="address.name"
+          :key="address.id"
           :address="address"
           @address-changed="changeAddressInfo"
           @delete-address="onAddressDeleted"
         />
       </transition-group>
-      <div v-else>
+      <transition v-else name="fade">
         <h6 class="text-center"><n-text type="warning">You don't have any address</n-text></h6>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
   // TODO: MAKE SEPARATE COMPONENTS FOR THE FORMS OF ACCOUNT SETTINGS
-  import { Mail28Regular as MailIcon } from '@vicons/fluent'
+  import {
+    Mail28Regular as MailIcon,
+    Add28Filled as AddIcon,
+    Dismiss28Filled as CloseIcon
+  } from '@vicons/fluent'
   import { computed, defineComponent, onBeforeMount, ref, watch } from 'vue'
   import { useStore } from '@/use/useStore'
   import { User } from '@/interfaces/User'
@@ -113,20 +128,21 @@
   import SettingsUserAvatar from '@/components/settings/SettingsUserAvatar.vue'
   import UserAddressForm from '@/components/settings/UserAddressForm.vue'
   import { Image } from '@/interfaces/Image'
+  import AddAddressForm from '@/components/settings/AddAddressForm.vue'
   export default defineComponent({
     name: 'AccountSettings',
     components: {
       MailIcon,
+      AddIcon,
+      CloseIcon,
       SettingsUserAvatar,
-      UserAddressForm
+      UserAddressForm,
+      AddAddressForm
     },
     setup() {
       // INITIALIZE STORE
       const store = useStore()
-      // VARIABLES
-      const message = useMessage()
-      const currentUser = computed<User | null>(() => store.getters.getCurrentUser)
-      let userAddresses = ref<Address[] | null>(null)
+      // INITIALIZE FORM DATA
       const getInitialUserData = () => {
         return {
           firstName: currentUser.value?.first_name,
@@ -135,20 +151,15 @@
           email: currentUser?.value?.email
         }
       }
+      // VARIABLES
+      const message = useMessage()
+      const currentUser = computed<User | null>(() => store.getters.getCurrentUser)
+      let userAddresses = ref<Address[] | null>(null)
+      const showAddAddress = ref(false)
       const initialUserInfo = getInitialUserData()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const formRef = ref<any>(null)
       const formModel = ref(initialUserInfo)
-      const counter = ref(1)
-      watch(currentUser, (newVal: User | null) => {
-        if (newVal !== null) {
-          initialUserInfo.firstName = newVal.first_name
-          initialUserInfo.lastName = newVal.last_name
-          initialUserInfo.email = newVal.email
-          initialUserInfo.phone = newVal.phone
-        }
-      })
-
+      const msg = useMessage()
       // Form Rules
       const formRules = {
         email: {
@@ -174,6 +185,14 @@
           trigger: ['blur']
         }
       }
+      watch(currentUser, (newVal: User | null) => {
+        if (newVal !== null) {
+          initialUserInfo.firstName = newVal.first_name
+          initialUserInfo.lastName = newVal.last_name
+          initialUserInfo.email = newVal.email
+          initialUserInfo.phone = newVal.phone
+        }
+      })
 
       // Change user info
       const changeUserInfo = () => {
@@ -200,7 +219,7 @@
               })
               const [, error] = await handleActions(promise)
               if (error) {
-                message.error('Some thing went wrong please try again latter', {
+                message.error('Something went wrong please try again latter', {
                   duration: 3000
                 })
                 return
@@ -217,14 +236,14 @@
       const onAddressDeleted = async (id: number) => {
         const promise = api.delete(`/api/addresses/delete/${id}`)
         const [, error] = await handleApi(promise)
-        const newInfo = {
-          addresses: currentUser.value?.addresses.filter((addr) => addr.id !== id)
-        } as User
-        store.commit(AuthMutations.SET_USER, newInfo)
         if (error) {
           // TODO: HANDLE ERROR
           return
         }
+        const newInfo = {
+          addresses: currentUser.value?.addresses.filter((addr) => addr.id !== id)
+        } as User
+        store.commit(AuthMutations.SET_USER, newInfo)
       }
 
       // Change address info
@@ -241,6 +260,26 @@
         message.success('Address updated', {
           duration: 2000
         })
+      }
+
+      // Add address
+      const onAddressAdded = async (addressInfo: Address) => {
+        const promise = api.post('/api/addresses/create', addressInfo)
+        const [data, error] = await handleApi(promise)
+        if (error) {
+          // TODO: HANDLE ERROR
+          msg.error('Something went wrong!', { duration: 2000 })
+          return
+        }
+        const userAddress: Address[] = currentUser.value?.addresses ?? []
+
+        const newInfo = {
+          addresses: [data.data['data'] as Address, ...userAddress]
+        } as User
+
+        store.commit(AuthMutations.SET_USER, newInfo)
+        msg.success('Address Added', { duration: 2000 })
+        showAddAddress.value = false
       }
 
       // Adding new user image to vuex when user avatar is changed
@@ -282,15 +321,17 @@
         rules: formRules,
         discardChanges,
         changeUserInfo,
-        isUserLoading: computed(() => store.getters.isAuthLoading),
         userAddresses,
         changeAddressInfo,
-        counter,
+
         handleAvatarChange,
+        onAddressDeleted,
+        showAddAddress,
+        onAddressAdded,
+        isUserLoading: computed(() => store.getters.isAuthLoading),
         isChangeActive: computed(
           () => JSON.stringify(getInitialUserData()) !== JSON.stringify(formModel.value)
-        ),
-        onAddressDeleted
+        )
       }
     }
   })

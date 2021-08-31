@@ -85,7 +85,7 @@
 <style lang="scss">
   .fade-enter-active,
   .fade-leave-active {
-    transition: opacity 0.5s ease;
+    transition: opacity 0.45s ease;
   }
 
   .fade-enter-from,

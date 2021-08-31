@@ -1,5 +1,11 @@
 <template>
-  <n-form ref="formRef" :model="model" class="mt-4 px-3" @keydown.enter.prevent="onSavePressed">
+  <n-form
+    ref="formRef"
+    :rules="rules"
+    :model="model"
+    class="mt-4 px-3"
+    @keydown.enter.prevent="onSavePressed"
+  >
     <n-collapse>
       <n-collapse-item :title="model.name" :name="model.id">
         <template #arrow>
@@ -25,7 +31,7 @@
             </n-form-item>
           </n-grid-item>
           <n-grid-item>
-            <n-form-item label="City">
+            <n-form-item path="city" label="City">
               <n-input
                 v-model:value="model.city"
                 class="input-field"
@@ -35,7 +41,7 @@
             </n-form-item>
           </n-grid-item>
         </n-grid>
-        <n-form-item label="Address1">
+        <n-form-item path="address1" label="Address1">
           <n-input
             v-model:value="model.address1"
             class="input-field"
@@ -44,7 +50,7 @@
           >
           </n-input>
         </n-form-item>
-        <n-form-item label="Address2">
+        <n-form-item path="address2" label="Address2">
           <n-input
             v-model:value="model.address2"
             class="input-field"
@@ -55,7 +61,7 @@
         </n-form-item>
         <n-grid :x-gap="15" :y-gap="15" cols="2 xs:1 s:1">
           <n-grid-item>
-            <n-form-item label="State">
+            <n-form-item path="state" label="State">
               <n-input
                 v-model:value="model.state"
                 class="input-field"
@@ -65,7 +71,7 @@
             </n-form-item>
           </n-grid-item>
           <n-grid-item>
-            <n-form-item label="Zip">
+            <n-form-item path="zip" label="Zip">
               <n-input
                 v-model:value="model.zip"
                 class="input-field"
@@ -98,7 +104,8 @@
   import { computed, defineComponent, PropType, ref } from 'vue'
   import { Address } from '@/interfaces/Address'
   import { Location28Filled as LocationIcon, Delete28Filled as DeleteIcon } from '@vicons/fluent'
-  import { useDialog } from 'naive-ui'
+  import { FormItemRule, useDialog } from 'naive-ui'
+  import { numbersRegex } from '@/utils/regex'
   export default defineComponent({
     name: 'UserAddressForm',
     components: {
@@ -156,7 +163,16 @@
         },
         zip: {
           required: true,
-          message: 'State is required',
+          message: 'Zip is required',
+          validator: (rule: FormItemRule, val: string) => {
+            if (val.length !== 0) {
+              return Error('Zip is required')
+            }
+            if (!numbersRegex.test(val)) {
+              return Error('Zip code can contain numbers only [0-9]')
+            }
+            return true
+          },
           trigger: ['blur']
         }
       }

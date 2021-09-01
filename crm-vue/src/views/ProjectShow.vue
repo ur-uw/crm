@@ -84,15 +84,11 @@
             <div class="text-center mt-2">{{ progress.tag_name }}</div>
           </div>
         </div>
-        <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
-          <div class="project-tasks">
-            <project-column
-              v-for="(tasksValue, taskName) in tasks"
-              :key="taskName"
-              :column-heading="taskName"
-              :list-type="taskName"
-              :tasks-list="tasksValue"
-            />
+        <div class="project p-2 p-lg-4 p-md-3 p-sm-2 w-100">
+          <div class="project-tasks w-100">
+            <div v-for="(tasksValue, taskName) in tasks" :key="taskName">
+              <project-column :list-type="taskName" :tasks-list="tasksValue" />
+            </div>
           </div>
         </div>
 

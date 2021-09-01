@@ -1,5 +1,5 @@
 <template>
-  <div class="task bg-custom-dark-blue">
+  <div class="task bg-primary2">
     <!-- Task options -->
     <div class="d-flex justify-content-between align-items-center">
       <span class="d-flex align-items-center task__due-date">

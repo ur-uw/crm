@@ -1,13 +1,13 @@
 <template>
   <div class="project-column bg-primary px-3 py-4 rounded mb-1">
     <div class="project-column-heading">
-      <h2 class="project-column-heading__title">{{ columnHeading }}</h2>
+      <h2 class="project-column-heading__title">{{ listType }}</h2>
       <router-link
         class="project-column-heading__options"
         :to="{ name: 'project.task.add', params: { taskStatus: listType } }"
       >
         <Icon>
-          <Add28Filled />
+          <add-icon />
         </Icon>
       </router-link>
     </div>
@@ -35,7 +35,7 @@
   import { defineComponent, PropType } from 'vue'
   import ProjectTaskCard from './ProjectTaskCard.vue'
   import { Icon } from '@vicons/utils'
-  import { Add28Filled } from '@vicons/fluent'
+  import { AddCircle32Filled as AddIcon } from '@vicons/fluent'
   import { useStore } from '@/use/useStore'
   import { handleActions } from '@/utils/helpers'
   import { ActionTypes } from '@/store/modules/project/action-types'
@@ -46,14 +46,10 @@
     components: {
       ProjectTaskCard,
       Icon,
-      Add28Filled,
+      AddIcon,
       draggable
     },
     props: {
-      columnHeading: {
-        type: String,
-        required: true
-      },
       tasksList: {
         type: Object as PropType<Task[]>,
         required: true

@@ -1,6 +1,8 @@
 import { Priority } from './Priority'
 import { Status } from './Status'
 import Tag from './Tag'
+import { Team } from './Team'
+import { User } from './User'
 export interface Task {
   id?: number
   title?: string
@@ -10,6 +12,8 @@ export interface Task {
   priority?: Priority
   description?: string
   tags?: Tag[]
+  users?: User[]
+  teams?: Team[]
   start_date?: Date | string | number
   due_date?: Date | string | number
   created_at?: Date | string

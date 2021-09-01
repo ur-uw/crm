@@ -24,13 +24,13 @@
                     <n-tooltip placement="bottom" trigger="hover">
                       <template #trigger>
                         <n-avatar
-                          v-if="user.images !== undefined && user?.images[0] !== null"
+                          v-if="user.profile_image !== undefined"
                           class="
                             text-center
                             project-participants__member
                             border border-custom-purple
                           "
-                          :src="user?.images[0].path"
+                          :src="user?.profile_image.path"
                           circle
                         >
                         </n-avatar>
@@ -60,10 +60,10 @@
 
             <n-badge value="Owner" class="me-3">
               <n-avatar
-                v-if="project.owner?.images != null && project.owner?.images[0] != null"
+                v-if="project.owner?.profile_image != null"
                 :size="50"
                 class="text-center project-participants__owner border border-custom-purple"
-                :src="project.owner?.images[0].path"
+                :src="project.owner?.profile_image.path"
               >
               </n-avatar>
               <n-avatar v-else :size="50" class="text-center project-participants__owner">
@@ -230,7 +230,7 @@
       &__add {
         position: relative;
         background: $purple;
-        margin: 0 -0.2rem;
+        margin: 0 -0.15rem;
         z-index: 0;
       }
       &__add {

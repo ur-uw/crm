@@ -23,7 +23,8 @@ class UserResource extends JsonResource
             'slug' => $this->slug,
             'email' => $this->email,
             'phone' => $this->phone,
-            'images' => ImageResource::collection($images),
+            'images' => ImageResource::collection($this->whenLoaded('images')),
+            'profile_image' => ImageResource::make($this->profile_image),
             'addresses' => $this->whenLoaded('addresses'),
         ];
     }

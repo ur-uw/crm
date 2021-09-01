@@ -52,11 +52,11 @@ class ProjectController extends Controller
     {
         $project = $project->load(
             [
-                'users.images',
                 'user.images',
                 'teams',
                 'tasks.status',
                 'tasks.tags',
+                'tasks.users',
                 'tasks.priority'
             ]
         );

@@ -81,7 +81,7 @@ class UserController extends Controller
     public function get_info()
     {
         $user = Auth::user();
-        return UserResource::make($user->load('images'));
+        return UserResource::make($user);
     }
 
     /**

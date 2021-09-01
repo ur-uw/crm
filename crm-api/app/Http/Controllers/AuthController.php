@@ -27,7 +27,7 @@ class AuthController extends Controller
         $token = $user->createToken($request->device_name)->plainTextToken;
         return response()->json([
             'message' => 'Login Success',
-            'user' => UserResource::make($user->load('images')),
+            'user' => UserResource::make($user),
             'token' => $token,
         ]);
     }

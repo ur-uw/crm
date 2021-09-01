@@ -122,6 +122,17 @@ class User extends Authenticatable
     {
         return $this->morphMany(Image::class, 'imageable')->latest();
     }
+
+
+    /**
+     * Get user profile image.
+     */
+    public function getProfileImageAttribute()
+    {
+        if (count($this->images) == 0)
+            return;
+        return $this->images[0];
+    }
     /**
      * Get the route key for the model.
      *

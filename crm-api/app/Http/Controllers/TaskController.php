@@ -60,12 +60,12 @@ class TaskController extends Controller
             $task->tags()->sync($tags->pluck('id')->toArray());
         }
         // Assign task to authenticated user
-        $request->user()->tasks()->sync($task);
+        $request->user()->tasks()->syncWithoutDetaching($task);
         // Assign task to assigned user
         $users = User::whereIn('slug', $info['assigned_to'])
             ->get();
         $users->each(function (User $user) use ($task) {
-            $user->tasks()->sync($task);
+            $user->tasks()->syncWithoutDetaching($task);
         });
         return TaskResource::make(
             $task->load('status:id,name,color,slug')

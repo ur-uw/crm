@@ -10,7 +10,7 @@ export interface User {
   email?: string
   phone?: string
   email_verified_at?: Date
-  profile_image: Image
+  profile_image?: Image
   images?: Image[]
   addresses: Address[]
   created_at?: Date

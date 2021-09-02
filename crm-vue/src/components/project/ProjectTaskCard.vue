@@ -69,7 +69,6 @@
           </div>
         </n-grid-item>
         <!-- TASK MEMBERS -->
-        <!-- FIXME: Fix users of tasks disappear of change after new task is added -->
         <n-grid-item>
           <div v-if="taskInfo.users !== undefined && taskInfo.users.length > 0" class="w-100">
             <n-space v-if="taskInfo.users.length <= 3" align="center" justify="end">

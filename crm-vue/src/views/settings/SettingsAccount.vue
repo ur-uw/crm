@@ -7,8 +7,8 @@
       <n-form ref="formRef" :model="model" :rules="rules" class="mt-5">
         <settings-user-avatar
           :path="
-            user?.images !== undefined && user?.images[0] !== undefined
-              ? user?.images[0]?.path
+            user?.profile_image !== undefined
+              ? user?.profile_image.path
               : `https://avatars.dicebear.com/api/micah/${user?.name}.svg`
           "
           @avatar-changed="handleAvatarChange"

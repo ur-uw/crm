@@ -39,7 +39,6 @@
                   clearable
                   placeholder="Select Users"
                   filterable
-                  :on-focus="onFocus"
                   :options="options"
                   :loading="areUserOptionsLoading"
                 />
@@ -298,6 +297,7 @@
         }
       }
       onMounted(() => {
+        fetchProjectUsers()
         fetchPriorities()
         if (!props.taskStatus) {
           fetchTasStatues()
@@ -312,7 +312,6 @@
         areUserOptionsLoading,
         options: userOptions,
         statues,
-        onFocus: fetchProjectUsers,
         priorities,
         onTaskDatesChanged,
 

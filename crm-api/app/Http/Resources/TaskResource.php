@@ -22,6 +22,8 @@ class TaskResource extends JsonResource
             "status" => StatusResource::make($this->whenLoaded('status')),
             "tags" => TagResource::collection($this->whenLoaded('tags')),
             'priority' => PriorityResource::make($this->whenLoaded('priority')),
+            'teams' => TeamResource::collection($this->whenLoaded('teams')),
+            'users' => UserResource::collection($this->whenLoaded('users')),
             "created_by" => $this->created_by,
             "start_date" => Carbon::parse($this->start_date)->toDateTimeString(),
             "due_date" => Carbon::parse($this->due_date)->toDateTimeString(),

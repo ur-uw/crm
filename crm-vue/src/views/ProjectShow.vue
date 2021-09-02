@@ -24,13 +24,13 @@
                     <n-tooltip placement="bottom" trigger="hover">
                       <template #trigger>
                         <n-avatar
-                          v-if="user.images !== undefined && user?.images[0] !== null"
+                          v-if="user.profile_image !== undefined"
                           class="
                             text-center
                             project-participants__member
                             border border-custom-purple
                           "
-                          :src="user?.images[0].path"
+                          :src="user?.profile_image.path"
                           circle
                         >
                         </n-avatar>
@@ -60,10 +60,10 @@
 
             <n-badge value="Owner" class="me-3">
               <n-avatar
-                v-if="project.owner?.images != null && project.owner?.images[0] != null"
+                v-if="project.owner?.profile_image != null"
                 :size="50"
                 class="text-center project-participants__owner border border-custom-purple"
-                :src="project.owner?.images[0].path"
+                :src="project.owner?.profile_image.path"
               >
               </n-avatar>
               <n-avatar v-else :size="50" class="text-center project-participants__owner">
@@ -84,19 +84,15 @@
             <div class="text-center mt-2">{{ progress.tag_name }}</div>
           </div>
         </div>
-        <div class="project p-2 p-lg-4 p-md-3 p-sm-2">
-          <div class="project-tasks">
-            <project-column
-              v-for="(tasksValue, taskName) in tasks"
-              :key="taskName"
-              :column-heading="taskName"
-              :list-type="taskName"
-              :tasks-list="tasksValue"
-            />
+        <div class="project p-2 p-lg-4 p-md-3 p-sm-2 w-100">
+          <div class="project-tasks w-100">
+            <div v-for="(tasksValue, taskName) in tasks" :key="taskName">
+              <project-column :list-type="taskName" :tasks-list="tasksValue" />
+            </div>
           </div>
         </div>
-
-        <div class="task-details">
+        <!-- TASKs ACTIVITY -->
+        <div class="task-activity-container">
           <div class="task-activity my-3 p-md-3">
             <h2>Recent Activity</h2>
             <n-timeline class="p-2" size="large">
@@ -230,8 +226,7 @@
       &__add {
         position: relative;
         background: $purple;
-        margin: 0 -0.2rem;
-        z-index: 0;
+        margin: 0 -0.15rem;
       }
       &__add {
         position: relative;
@@ -240,7 +235,6 @@
         display: inline-block;
         border-radius: 100rem;
         border: 1px solid $primary2;
-        z-index: 10000;
         background-color: transparent;
         border: 1px dashed rgb(150, 150, 150);
         font-size: 0;
@@ -289,7 +283,7 @@
       grid-template-columns: 1fr;
     }
 
-    .task-details {
+    .task-activity-container {
       padding: 1rem;
       border: none;
       flex-wrap: wrap;

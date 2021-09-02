@@ -1,57 +1,118 @@
 <template>
-  <div class="task bg-custom-dark-blue">
-    <div class="task__tags">
-      <div v-if="taskInfo.tags !== undefined">
-        <span
-          v-for="tag in taskInfo.tags"
-          :key="tag.slug"
-          :style="`background-color:${tag.color};`"
-          class="task__tag text-capitalize rounded p-1 ms-1 text-capitalize"
-          :class="tag.color === '#ffffff' ? 'text-dark' : ''"
-        >
-          {{ tag.name }}
-        </span>
-      </div>
-
+  <div class="task bg-primary2">
+    <!-- Task options -->
+    <div class="d-flex justify-content-between align-items-center">
+      <span class="d-flex align-items-center task__due-date">
+        <Icon size="15"> <clock-icon /></Icon>
+        <span class="ms-1">{{ taskDueDate }}</span>
+      </span>
       <n-dropdown trigger="click" :options="options" @select="handleSelect">
         <button class="task__options">
           <Icon> <MoreHorizontal28Regular /> </Icon>
         </button>
       </n-dropdown>
     </div>
-    <p>{{ task.title }}</p>
-    <div class="task__stats">
-      <n-space>
-        <span class="d-flex">
-          <time :datetime="task.due_date">
-            <Icon> <Flag28Regular /></Icon>
-          </time>
-          {{ taskDueDate }}
-        </span>
-        <span class="d-flex">
-          <Icon>
-            <CommentMultiple24Regular />
-          </Icon>
+    <!-- Task Title -->
+    <h6
+      tag="h6"
+      class="w-100 mt-1 task__title text-white text-decoration-none"
+      @click="$emit('show-details', taskInfo)"
+    >
+      {{ task.title }}
+    </h6>
+    <!-- Task Tags -->
+    <div v-if="taskInfo.tags !== undefined" class="task__tags d-flex align-items-center my-4 w-100">
+      <span
+        v-for="tag in taskInfo.tags"
+        :key="tag.slug"
+        :style="`background-color:${tag.color};`"
+        class="task__tag text-capitalize rounded p-1 ms-1 text-capitalize"
+        :class="tag.color === '#ffffff' ? 'text-dark' : ''"
+      >
+        {{ tag.name }}
+      </span>
+    </div>
+    <!-- Task Priority -->
+    <n-space justify="end">
+      <span class="task__priority">
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <n-icon :color="task.priority?.color">
+              <priority-icon></priority-icon>
+            </n-icon>
+          </template>
+          {{ task.priority?.name }} Priority
+        </n-tooltip>
+      </span>
+    </n-space>
 
-          {{ Math.floor(Math.random() * 100) }}
-        </span>
-        <span class="d-flex">
-          <Icon>
-            <Attach20Regular />
-          </Icon>
-          {{ Math.floor(Math.random() * 100) }}
-        </span>
-        <span class="task__priority">
-          <n-tooltip trigger="hover">
-            <template #trigger>
-              <n-icon :color="task.priority?.color">
-                <priority-icon></priority-icon>
-              </n-icon>
-            </template>
-            {{ task.priority?.name }} Priority
-          </n-tooltip>
-        </span>
-      </n-space>
+    <n-divider></n-divider>
+    <!-- Task Stats -->
+    <div class="task__stats">
+      <n-grid cols="2">
+        <!-- COMMENTS AND ATTACHMENTS NUMBERS -->
+        <n-grid-item class="d-flex flex-column justify-content-center">
+          <div class="d-flex align-items-center">
+            <span class="d-flex">
+              <Icon>
+                <attach-icon />
+              </Icon>
+              {{ Math.floor(Math.random() * 100) }}
+            </span>
+            <span class="d-flex">
+              <Icon>
+                <comments-icon />
+              </Icon>
+
+              {{ Math.floor(Math.random() * 100) }}
+            </span>
+          </div>
+        </n-grid-item>
+        <!-- TASK MEMBERS -->
+        <!-- FIXME: Fix users of tasks disappear of change after new task is added -->
+        <n-grid-item>
+          <div v-if="taskInfo.users !== undefined && taskInfo.users.length > 0" class="w-100">
+            <n-space v-if="taskInfo.users.length <= 3" align="center" justify="end">
+              <span v-for="(user, index) in taskInfo.users" :key="user.slug">
+                <n-tooltip trigger="hover" placement="bottom">
+                  <template #trigger>
+                    <n-avatar
+                      v-if="user.profile_image !== undefined"
+                      class="shadow text-center"
+                      :class="index !== 0 ? 'stack' : ''"
+                      :src="user.profile_image.path"
+                      :size="25"
+                      circle
+                    />
+                    <n-avatar v-else class="stack shadow text-center" circle> </n-avatar>
+                  </template>
+                  {{ user.name }}
+                </n-tooltip>
+              </span>
+            </n-space>
+            <n-space v-else justify="end" align="center">
+              <span class="me-2"> +{{ taskInfo.users.length - 3 }}</span>
+              <div class="d-flex align-items-center avatars_container">
+                <span v-for="user in taskInfo.users.slice(0, 3)" :key="user.slug">
+                  <n-tooltip trigger="hover" placement="bottom">
+                    <template #trigger>
+                      <n-avatar
+                        v-if="user.profile_image !== undefined"
+                        class="shadow text-center stack"
+                        :src="user.profile_image.path"
+                        :size="25"
+                        circle
+                      />
+                      <n-avatar v-else class="stack shadow text-center" circle> </n-avatar>
+                    </template>
+                    {{ user.name }}
+                  </n-tooltip>
+                </span>
+              </div>
+            </n-space>
+          </div>
+        </n-grid-item>
+      </n-grid>
     </div>
     <n-modal
       v-model:show="showModal"
@@ -74,10 +135,10 @@
   import { Icon } from '@vicons/utils'
   import {
     MoreHorizontal28Regular,
-    CommentMultiple24Regular,
-    Flag28Regular,
-    Attach20Regular,
-    Info28Regular as PriorityIcon
+    CommentMultiple24Filled as CommentsIcon,
+    Clock28Filled as ClockIcon,
+    Attach24Filled as AttachIcon,
+    Info28Filled as PriorityIcon
   } from '@vicons/fluent'
   import { computed, defineComponent, PropType, ref } from 'vue'
   import { NDropdown, useNotification } from 'naive-ui'
@@ -93,10 +154,10 @@
     components: {
       NDropdown,
       Icon,
-      Attach20Regular,
+      AttachIcon,
       MoreHorizontal28Regular,
-      CommentMultiple24Regular,
-      Flag28Regular,
+      CommentsIcon,
+      ClockIcon,
       EditProjectTaskForm,
       PriorityIcon
     },
@@ -106,14 +167,12 @@
         required: true
       }
     },
-    emits: ['task-delete'],
+    emits: ['task-delete', 'show-details'],
     setup(props, { emit }) {
       // INITIALIZE STORE
       const store = useStore()
       // VARIABLES
-      const taskDueDate = computed(() =>
-        moment(props.taskInfo.due_date).format('MMMM Do YYYY, h:mm a')
-      )
+      const taskDueDate = computed(() => moment(props.taskInfo.due_date).format('MMMM D'))
       const showModal = ref(false)
       const task = ref(props.taskInfo)
       const notification = useNotification()
@@ -186,6 +245,7 @@
     display: flex;
     align-items: center;
   }
+
   .task {
     cursor: move;
     background-color: white;
@@ -202,23 +262,30 @@
       border-color: rgba(162, 179, 207, 0.2) !important;
     }
 
+    .stack {
+      position: relative;
+      margin: 0 -0.9rem;
+      cursor: pointer;
+      z-index: 0;
+    }
+
     p {
       font-size: 15px;
       margin: 1.2rem 0;
     }
+    &__title {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    &__due-date {
+      font-size: 0.7rem;
+    }
     &__tag {
       font-size: 10px;
     }
-    &__tags {
-      width: 100%;
-      @include display;
-      justify-content: space-between;
-    }
+
     &__priority {
-      display: inline-block;
-      position: absolute;
-      bottom: -5px;
-      right: -10px;
       &:hover {
         cursor: pointer;
       }

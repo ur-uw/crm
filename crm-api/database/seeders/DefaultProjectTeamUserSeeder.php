@@ -50,7 +50,7 @@ class DefaultProjectTeamUserSeeder extends Seeder
         $tasks->each(function (Task $task) use ($tags) {
             $task->tags()->saveMany($tags->random(rand(1, 3)));
         });
-        $user->tasks()->sync($tasks);
+        $user->tasks()->saveMany($tasks);
 
         $team_name = "Mohammed Team";
         $mohammedTeam = Team::factory()->create([

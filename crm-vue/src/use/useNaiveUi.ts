@@ -14,6 +14,7 @@ import {
   NResult,
   NSkeleton,
   NSpace,
+  NEllipsis,
   NSpin,
   NSwitch,
   NDialog,
@@ -49,7 +50,8 @@ import {
   NCollapse,
   NCollapseItem,
   NUploadDragger,
-  NFormItemGi
+  NFormItemGi,
+  NThing
 } from 'naive-ui'
 
 export const naive = create({
@@ -57,6 +59,8 @@ export const naive = create({
     NButton,
     NGrid,
     NGridItem,
+    NThing,
+    NEllipsis,
     NResult,
     NInputGroup,
     NSpace,

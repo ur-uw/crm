@@ -13,9 +13,13 @@
       </n-dropdown>
     </div>
     <!-- Task Title -->
-    <router-link to="#" tag="h6" class="w-100 mt-2 task__title text-white text-decoration-none">{{
-      task.title
-    }}</router-link>
+    <h6
+      tag="h6"
+      class="w-100 mt-1 task__title text-white text-decoration-none"
+      @click="$emit('show-details', taskInfo)"
+    >
+      {{ task.title }}
+    </h6>
     <!-- Task Tags -->
     <div v-if="taskInfo.tags !== undefined" class="task__tags d-flex align-items-center my-4 w-100">
       <span
@@ -28,10 +32,6 @@
         {{ tag.name }}
       </span>
     </div>
-    <!-- Task Description
-    <n-ellipsis expand-trigger="click" line-clamp="2" :tooltip="false">
-      {{ taskInfo.description }}
-    </n-ellipsis> -->
     <!-- Task Priority -->
     <n-space justify="end">
       <span class="task__priority">
@@ -68,7 +68,8 @@
             </span>
           </div>
         </n-grid-item>
-        <!-- TASK USERS -->
+        <!-- TASK MEMBERS -->
+        <!-- FIXME: Fix users of tasks disappear of change after new task is added -->
         <n-grid-item>
           <div v-if="taskInfo.users !== undefined && taskInfo.users.length > 0" class="w-100">
             <n-space v-if="taskInfo.users.length <= 3" align="center" justify="end">
@@ -166,7 +167,7 @@
         required: true
       }
     },
-    emits: ['task-delete'],
+    emits: ['task-delete', 'show-details'],
     setup(props, { emit }) {
       // INITIALIZE STORE
       const store = useStore()
@@ -271,6 +272,11 @@
     p {
       font-size: 15px;
       margin: 1.2rem 0;
+    }
+    &__title {
+      &:hover {
+        cursor: pointer;
+      }
     }
     &__due-date {
       font-size: 0.7rem;

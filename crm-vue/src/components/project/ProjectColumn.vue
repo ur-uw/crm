@@ -2,14 +2,19 @@
   <div class="project-column bg-primary px-3 py-4 rounded mb-1">
     <div class="project-column-heading">
       <h2 class="project-column-heading__title">{{ listType }}</h2>
-      <router-link
-        class="project-column-heading__options"
-        :to="{ name: 'project.task.add', params: { taskStatus: listType } }"
-      >
-        <Icon>
-          <add-icon />
-        </Icon>
-      </router-link>
+      <n-tooltip trigger="hover">
+        <template #trigger>
+          <router-link
+            class="project-column-heading__options"
+            :to="{ name: 'project.task.add', params: { taskStatus: listType } }"
+          >
+            <n-icon>
+              <add-icon />
+            </n-icon>
+          </router-link>
+        </template>
+        Add Task
+      </n-tooltip>
     </div>
     <draggable
       class="draggable-list"
@@ -25,29 +30,59 @@
       @add="changeTaskStatus($event, listType)"
     >
       <template #item="{ element }">
-        <project-task-card :task-info="element" :data-id="element.slug" @task-delete="deleteTask" />
+        <project-task-card
+          :task-info="element"
+          :data-id="element.slug"
+          @show-details="showTaskDetails"
+          @task-delete="deleteTask"
+        />
       </template>
     </draggable>
   </div>
+  <!-- TASKS DETAILS -->
+  <n-modal
+    v-model:show="showModal"
+    closeable
+    class="bg-primary2"
+    preset="card"
+    :mask-closable="false"
+    style="width: 38%; position: fixed; right: 10px; bottom: 10px"
+    :bordered="false"
+    size="huge"
+    :segmented="{
+      content: 'soft',
+      footer: 'soft'
+    }"
+  >
+    <template #header>
+      <task-details-header></task-details-header>
+    </template>
+    <task-details :task="selectedTask" />
+    <template #footer> <task-details-footer /> </template>
+  </n-modal>
 </template>
 <script lang="ts">
   import { Task } from '@/interfaces/Task'
-  import { defineComponent, PropType } from 'vue'
+  import { defineComponent, PropType, ref } from 'vue'
   import ProjectTaskCard from './ProjectTaskCard.vue'
-  import { Icon } from '@vicons/utils'
   import { AddCircle32Filled as AddIcon } from '@vicons/fluent'
   import { useStore } from '@/use/useStore'
   import { handleActions } from '@/utils/helpers'
   import { ActionTypes } from '@/store/modules/project/action-types'
   import draggable from 'vuedraggable'
   import { MutationTypes } from '@/store/modules/project/mutation-types'
+  import TaskDetails from './TaskDetails.vue'
+  import TaskDetailsHeader from './TaskDetailsHeader.vue'
+  import TaskDetailsFooter from './TaskDetailsFooter.vue'
   export default defineComponent({
     name: 'ProjectColumn',
     components: {
       ProjectTaskCard,
-      Icon,
       AddIcon,
-      draggable
+      draggable,
+      TaskDetails,
+      TaskDetailsHeader,
+      TaskDetailsFooter
     },
     props: {
       tasksList: {
@@ -63,7 +98,8 @@
       // INITIALIZE STORE
       const store = useStore()
       // VARIABLES
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const selectedTask = ref<null | Task>(null)
+      const showModal = ref(false)
       const changeTaskStatus = async (event: any, status: string) => {
         // Get task slug from the data-id attributes in li element
         const taskSlug = event.item.getAttribute('data-id')
@@ -81,7 +117,19 @@
       const deleteTask = (task: Task) => {
         store.commit(MutationTypes.DELETE_PROJECT_TASK, task)
       }
-      return { changeTaskStatus, deleteTask }
+
+      // Show modal with task details
+      const showTaskDetails = (task: Task) => {
+        selectedTask.value = task
+        showModal.value = true
+      }
+      return {
+        changeTaskStatus,
+        deleteTask,
+        showTaskDetails,
+        selectedTask,
+        showModal
+      }
     }
   })
 </script>

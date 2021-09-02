@@ -91,8 +91,8 @@
             </div>
           </div>
         </div>
-
-        <div class="task-details">
+        <!-- TASKs ACTIVITY -->
+        <div class="task-activity-container">
           <div class="task-activity my-3 p-md-3">
             <h2>Recent Activity</h2>
             <n-timeline class="p-2" size="large">
@@ -227,7 +227,6 @@
         position: relative;
         background: $purple;
         margin: 0 -0.15rem;
-        z-index: 0;
       }
       &__add {
         position: relative;
@@ -236,7 +235,6 @@
         display: inline-block;
         border-radius: 100rem;
         border: 1px solid $primary2;
-        z-index: 10000;
         background-color: transparent;
         border: 1px dashed rgb(150, 150, 150);
         font-size: 0;
@@ -285,7 +283,7 @@
       grid-template-columns: 1fr;
     }
 
-    .task-details {
+    .task-activity-container {
       padding: 1rem;
       border: none;
       flex-wrap: wrap;

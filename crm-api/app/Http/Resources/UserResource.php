@@ -15,7 +15,12 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $images = $this->whenLoaded('images');
+        $user_contacts = $this->whenLoaded('contacts');
+        if (!($user_contacts instanceof \Illuminate\Http\Resources\MissingValue)) {
+            $user_contacts =  $user_contacts->pluck('user_id')->toArray();
+        } else {
+            $user_contacts = null;
+        }
         return [
             'name' => $this->full_name,
             'first_name' => $this->first_name,
@@ -26,6 +31,10 @@ class UserResource extends JsonResource
             'images' => ImageResource::collection($this->whenLoaded('images')),
             'profile_image' => ImageResource::make($this->profile_image),
             'addresses' => $this->whenLoaded('addresses'),
+            'contacts' => $this->when(
+                $user_contacts !== null,
+                UserResource::collection(User::findMany($user_contacts))
+            ),
         ];
     }
 }

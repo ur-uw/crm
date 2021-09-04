@@ -142,4 +142,14 @@ class User extends Authenticatable
     {
         return 'slug';
     }
+
+    /**
+     * Get all of the contacts for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contacts(): HasMany
+    {
+        return $this->hasMany(Contact::class, 'parent_id');
+    }
 }

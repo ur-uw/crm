@@ -1,6 +1,6 @@
 <template>
-  <n-layout style="height: 100%; width: 100%" position="relative">
-    <div id="task__details">
+  <n-layout bordered>
+    <n-layout-content id="task__details" :native-scrollbar="false">
       <!-- Task Title -->
       <div class="task__title">
         <n-space size="small" align="baseline">
@@ -96,7 +96,7 @@
       <n-divider></n-divider>
       <!-- Task Comments -->
       <comment />
-    </div>
+    </n-layout-content>
   </n-layout>
 </template>
 

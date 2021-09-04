@@ -12,7 +12,15 @@
             v-if="project !== null"
             class="project-participants p-3 d-flex justify-content-center align-items-center"
           >
-            <div class="d-inline-block project-project-participants__members me-3">
+            <div
+              class="
+                d-inline-block
+                project-project-participants__members
+                d-flex
+                align-items-baseline
+                me-3
+              "
+            >
               <div v-if="project.users != null" class="d-inline-block">
                 <n-badge
                   v-for="user in project.users"
@@ -50,7 +58,11 @@
 
               <n-tooltip trigger="hover">
                 <template #trigger>
-                  <button class="project-participants__add ms-2">Add Member</button>
+                  <n-button size="large" class="ms-2" circle dashed>
+                    <template #icon>
+                      <n-icon><add-icon /></n-icon>
+                    </template>
+                  </n-button>
                 </template>
                 Add Member
               </n-tooltip>
@@ -165,12 +177,13 @@
   import { useStore } from '@/use/useStore'
   import { ActionTypes as ProjectActions } from '@/store/modules/project/action-types'
   import ProjectColumn from '@/components/project/ProjectColumn.vue'
-  import { ArrowUp48Filled as ArrowIcon } from '@vicons/fluent'
+  import { ArrowUp48Filled as ArrowIcon, Add28Regular as AddIcon } from '@vicons/fluent'
   export default defineComponent({
     name: 'Project',
     components: {
       ProjectColumn,
-      ArrowIcon
+      ArrowIcon,
+      AddIcon
     },
     setup() {
       // INITIALIZE ROUTES and STORE
@@ -224,28 +237,10 @@
 
       &__member,
       &__add {
-        position: relative;
-        background: $purple;
         margin: 0 -0.15rem;
-      }
-      &__add {
         position: relative;
-        width: 35px;
-        height: 35px;
         display: inline-block;
-        border-radius: 100rem;
-        border: 1px solid $primary2;
         background-color: transparent;
-        border: 1px dashed rgb(150, 150, 150);
-        font-size: 0;
-        cursor: pointer;
-        position: relative;
-
-        &:after {
-          content: '+';
-          font-size: 15px;
-          color: rgb(150, 150, 150);
-        }
       }
     }
 

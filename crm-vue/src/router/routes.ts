@@ -59,6 +59,15 @@ const projectRoutes: Array<RouteRecordRaw> = [
  */
 const userRoutes: Array<RouteRecordRaw> = [
   {
+    path: '/:slug/contacts',
+    name: 'contacts.show',
+    component: () => import('@/views/Contacts.vue'),
+    meta: {
+      title: 'Contacts',
+      auth: true
+    }
+  },
+  {
     path: '/user/:slug/settings',
     name: 'settings.show',
     component: () => import('@/views/settings/Settings.vue'),

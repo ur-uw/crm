@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Http\Requests\Contact\StoreContactRequest;
 use App\Http\Requests\Contact\UpdateContactRequest;
 use App\Http\Resources\ContactResource;
@@ -21,7 +22,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Auth()->user()->contacts;
+        $contacts = Auth::user()->contacts;
         return ContactResource::collection($contacts);
     }
 

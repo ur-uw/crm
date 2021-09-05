@@ -1,4 +1,5 @@
 import { Address } from './Address'
+import Contact from './Contact'
 import { Image } from './Image'
 
 export interface User {
@@ -13,6 +14,7 @@ export interface User {
   profile_image?: Image
   images?: Image[]
   addresses: Address[]
+  contacts: Contact[]
   created_at?: Date
   updated_at?: Date
 }

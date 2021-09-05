@@ -1,5 +1,5 @@
 <template>
-  <n-layout has-sider>
+  <n-layout v-if="currentUser !== null" has-sider>
     <n-layout-sider
       bordered
       collapse-mode="width"
@@ -14,16 +14,9 @@
         class="first-nav-menu"
         :collapsed="collapsed"
         :collapsed-width="64"
-        :on-update:value="onMenuItemClicked"
         :options="menuOptions"
       />
-      <n-menu
-        v-if="isLoggedIn"
-        :collapsed="collapsed"
-        :collapsed-width="64"
-        :on-update:value="onSecondMenuClicked"
-        :options="secondMenuOptions"
-      />
+      <n-menu :collapsed="collapsed" :collapsed-width="64" :options="secondMenuOptions" />
     </n-layout-sider>
 
     <n-layout-content>
@@ -35,7 +28,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, watch, h, ref, onMounted } from 'vue'
+  import { computed, defineComponent, watch, h, ref } from 'vue'
   import { NIcon, useNotification } from 'naive-ui'
   import {
     ClipboardTaskListLtr24Regular as BoardIcon,
@@ -45,12 +38,12 @@
     ChatMultiple24Regular as ChatIcon,
     Settings28Regular as SettingsIcon,
     SignOut24Regular as SignOutIcon
-    // ArrowRight28Regular as SignoutIcon
   } from '@vicons/fluent'
-  import { useRouter } from 'vue-router'
+  import { RouterLink, useRouter } from 'vue-router'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from '@/store/modules/auth/action-types'
   import { handleActions } from '@/utils/helpers'
+  import { MenuGroupOption, MenuOption } from 'naive-ui/lib/menu/src/interface'
   export default defineComponent({
     setup() {
       // INITIALIZE ROUTER AND STORE
@@ -63,24 +56,66 @@
         return () => h(NIcon, null, { default: () => h(icon) })
       }
       // VARIABLES
-      const isLoggedIn = computed(() => store.getters.isUserLoggedIn)
+      const currentUser = computed(() => store.getters.getCurrentUser)
       const activeMenuItemKey = ref(null)
-      const menuOptions = ref([
+      const settingsPath = {
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: 'settings.show',
+                params: { slug: store.getters.getCurrentUser?.slug }
+              }
+            },
+            () => 'Settings'
+          ),
+        key: 'settings.show',
+        icon: renderIcon(SettingsIcon)
+      }
+      const menuOptions = ref<Array<MenuOption | MenuGroupOption>>([
         {
-          label: 'Home',
+          label: () =>
+            h(
+              RouterLink,
+              {
+                to: {
+                  name: 'home'
+                }
+              },
+              () => 'Home'
+            ),
           key: 'home',
           icon: renderIcon(HomeIcon)
         },
 
         {
-          label: 'Dashboard',
+          label: () =>
+            h(
+              RouterLink,
+              {
+                to: {
+                  name: 'dashboard.show'
+                }
+              },
+              () => 'Dashboard'
+            ),
           key: 'dashboard.show',
           icon: renderIcon(BoardIcon)
         },
         {
-          label: 'Contacts',
-          key: 'contacts',
-          disabled: true,
+          label: () =>
+            h(
+              RouterLink,
+              {
+                to: {
+                  name: 'contacts.show',
+                  params: { slug: store.getters.getCurrentUser?.slug }
+                }
+              },
+              () => 'Contacts'
+            ),
+          key: 'contacts.show',
           icon: renderIcon(ContactsIcon)
         },
         {
@@ -97,23 +132,10 @@
         }
       ])
 
-      onMounted(() => {
-        if (isLoggedIn.value) {
-          menuOptions.value.push({
-            label: 'Settings',
-            key: 'settings.show',
-            icon: renderIcon(SettingsIcon)
-          })
-        }
-      })
-      watch(isLoggedIn, (newVal) => {
-        if (newVal) {
-          menuOptions.value.push({
-            label: 'Settings',
-            key: 'settings.show',
-            icon: renderIcon(SettingsIcon)
-          })
-        } else {
+      watch(currentUser, (newVal) => {
+        if (newVal !== null && !menuOptions.value.includes(settingsPath)) {
+          menuOptions.value.push(settingsPath)
+        } else if (newVal === null) {
           menuOptions.value = menuOptions.value.filter((el) => el.key !== 'settings.show')
         }
       })
@@ -162,7 +184,7 @@
         menuOptions,
         activeKey: activeMenuItemKey,
         collapsed,
-        isLoggedIn,
+        currentUser,
         onMenuItemClicked,
         onSecondMenuClicked,
         secondMenuOptions

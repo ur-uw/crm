@@ -10,7 +10,7 @@ use Illuminate\Routing\Controller;
 use App\Http\Resources\TeamResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\ProjectResource;
-use App\Http\Requests\CreateProjectRequest;
+use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Requests\AddProjectUserRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,10 +32,10 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreProjectRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateProjectRequest $request)
+    public function store(StoreProjectRequest $request)
     {
         $project = Project::make($request->validated());
         $request->user()->projects()->save($project);

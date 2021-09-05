@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateTeamRequest;
+use App\Http\Requests\StoreTeamRequest;
 use App\Http\Requests\UpdateTeamRequest;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;
@@ -24,10 +24,10 @@ class TeamController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\CreateTeamRequest  $request
+     * @param  \Illuminate\Http\StoreTeamRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateTeamRequest $request)
+    public function store(StoreTeamRequest $request)
     {
         $data = $request->validated();
         $team = Team::create($data);

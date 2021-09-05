@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateAddressRequest;
+use App\Http\Requests\StoreAddressRequest;
 use App\Http\Requests\UpdateAddressRequest;
 use App\Http\Resources\AddressResource;
 use App\Models\Address;
@@ -30,7 +30,7 @@ class AddressController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateAddressRequest $request)
+    public function store(StoreAddressRequest $request)
     {
         $address = Address::make($request->validated());
         Auth::user()->addresses()->save($address);

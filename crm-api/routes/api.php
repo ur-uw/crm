@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Models\Contact;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 /*
     ! NOTE: if you are on windows change the  slash: "/" to back-slash: "\" in routes paths*
@@ -35,5 +37,12 @@ Route::prefix('tags')->group(__DIR__ . '/api_routes/v1/tag_routes.php');
 //** Teams *//
 Route::prefix('teams')->group(__DIR__ . '/api_routes/v1/team_routes.php');
 
+
+//** Contacts *//
+Route::prefix('contacts')->group(__DIR__ . '/api_routes/v1/contact_routes.php');
+
 /* Testing routes */
-Route::get('/test/{project}', [ProjectController::class, 'add_project_user']);
+Route::get('/test', function ($request) {
+    $user = User::first();
+    return $user;
+});

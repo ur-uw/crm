@@ -1,6 +1,7 @@
 <template>
-  <n-layout v-if="currentUser !== null" has-sider>
+  <n-layout v-if="!$store.getters['isAuthLoading']" has-sider>
     <n-layout-sider
+      v-if="$route.name !== 'home' && currentUser !== null"
       bordered
       collapse-mode="width"
       :collapsed-width="64"
@@ -11,6 +12,7 @@
       @expand="collapsed = false"
     >
       <n-menu
+        v-model:value="activeKey"
         class="first-nav-menu"
         :collapsed="collapsed"
         :collapsed-width="64"
@@ -39,7 +41,7 @@
     Settings28Regular as SettingsIcon,
     SignOut24Regular as SignOutIcon
   } from '@vicons/fluent'
-  import { RouterLink, useRouter } from 'vue-router'
+  import { RouterLink, useRoute, useRouter } from 'vue-router'
   import { useStore } from '@/use/useStore'
   import { ActionTypes } from '@/store/modules/auth/action-types'
   import { handleActions } from '@/utils/helpers'
@@ -48,6 +50,7 @@
     setup() {
       // INITIALIZE ROUTER AND STORE
       const router = useRouter()
+      const route = useRoute()
       const store = useStore()
       // Function to render icons
       const notification = useNotification()
@@ -57,7 +60,7 @@
       }
       // VARIABLES
       const currentUser = computed(() => store.getters.getCurrentUser)
-      const activeMenuItemKey = ref(null)
+
       const settingsPath = {
         label: () =>
           h(
@@ -70,7 +73,7 @@
             },
             () => 'Settings'
           ),
-        key: 'settings.show',
+        key: 'settings',
         icon: renderIcon(SettingsIcon)
       }
       const menuOptions = ref<Array<MenuOption | MenuGroupOption>>([
@@ -100,7 +103,7 @@
               },
               () => 'Dashboard'
             ),
-          key: 'dashboard.show',
+          key: 'dashboard',
           icon: renderIcon(BoardIcon)
         },
         {
@@ -115,18 +118,18 @@
               },
               () => 'Contacts'
             ),
-          key: 'contacts.show',
+          key: 'contacts',
           icon: renderIcon(ContactsIcon)
         },
         {
           label: 'Calendar',
-          key: 'calendar.show',
+          key: 'calendar',
           disabled: true,
           icon: renderIcon(CalendarIcon)
         },
         {
           label: 'Chat',
-          key: 'chat.show',
+          key: 'chat',
           disabled: true,
           icon: renderIcon(ChatIcon)
         }
@@ -139,6 +142,13 @@
           menuOptions.value = menuOptions.value.filter((el) => el.key !== 'settings.show')
         }
       })
+
+      const activeMenuItem = ref()
+      watch(route, (newRoute) => {
+        if (newRoute.name !== null) {
+          activeMenuItem.value = newRoute.name?.toString().split('.')[0]
+        }
+      })
       const collapsed = ref(true)
 
       const secondMenuOptions = ref([
@@ -148,22 +158,6 @@
           icon: renderIcon(SignOutIcon)
         }
       ])
-      // NAVIGATE TO CORRESPONDING PAGE USING VUE-ROUTER
-      /*
-        ? Note: the menu key should be the same as router link name
-       */
-      const onMenuItemClicked = (key: string) => {
-        let params = {}
-        if (key === 'settings.show') {
-          params = {
-            ...params,
-            slug: store.getters.getCurrentUser?.slug
-          }
-          router.push({ name: 'settings.account', params })
-          return
-        }
-        router.push({ name: key, params })
-      }
 
       // DOWN ITEMS OF THE SIDE BAR
       const onSecondMenuClicked = async (key: string) => {
@@ -180,12 +174,12 @@
           router.replace({ name: 'login.show' })
         }
       }
+
       return {
         menuOptions,
-        activeKey: activeMenuItemKey,
+        activeKey: activeMenuItem,
         collapsed,
         currentUser,
-        onMenuItemClicked,
         onSecondMenuClicked,
         secondMenuOptions
       }

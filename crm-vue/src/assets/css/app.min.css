@@ -22874,6 +22874,10 @@ main {
   text-decoration: line-through;
   color: #121432;
 }
+a {
+  text-decoration: none;
+  color: white;
+}
 .custom-checkbox {
   cursor: pointer;
   display: -webkit-box;

@@ -41,11 +41,10 @@
   </div>
   <div class="contacts-table__container mx-3 my-4">
     <n-data-table
-      v-if="userContacts !== null"
       ref="table"
+      :loading="userContacts === null"
       :columns="columns"
-      :data="userContacts"
-      :pagination="userContacts.length > 10 ? 'pagination' : false"
+      :data="userContacts ?? []"
       :bordered="false"
       :row-key="(rowData) => rowData.contact_info.email"
       @update:checked-row-keys="handleCheck"
@@ -131,7 +130,7 @@
     },
     setup() {
       const tableRef = ref(null)
-      const userContacts = ref<any>(null)
+      const userContacts = ref<null | Contact[]>(null)
       // Fetch user contacts
       const fetchUserContacts = async () => {
         const promise = api.get(`/api/contacts/get`)

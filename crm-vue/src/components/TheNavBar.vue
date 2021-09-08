@@ -64,7 +64,7 @@
             RouterLink,
             {
               to: {
-                name: 'settings.show',
+                name: 'settings.account',
                 params: { slug: store.getters.getCurrentUser?.slug }
               }
             },

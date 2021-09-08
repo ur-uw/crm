@@ -46,6 +46,16 @@ export const sortByUpdatedAt = (a: any, b: any): number => {
   }
   return 0
 }
+
+export const sortByProperty = (a: any, b: any): number => {
+  if (a < b) {
+    return 1
+  }
+  if (a > b) {
+    return -1
+  }
+  return 0
+}
 export const today = (): string => {
   const currentDate = new Date()
   let dd: number | string = currentDate.getDate()

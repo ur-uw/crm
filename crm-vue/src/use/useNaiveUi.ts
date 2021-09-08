@@ -51,7 +51,8 @@ import {
   NCollapseItem,
   NUploadDragger,
   NFormItemGi,
-  NThing
+  NThing,
+  NDataTable
 } from 'naive-ui'
 
 export const naive = create({
@@ -105,6 +106,7 @@ export const naive = create({
     NText,
     NH1,
     NH6,
+    NDataTable,
     NCollapse,
     NCollapseItem,
     NTooltip,

@@ -33,7 +33,7 @@ class Contact extends Model
      */
     public function getContactInfoAttribute(): User|null
     {
-        return User::with('images')
+        return User::with(['images', 'addresses'])
             ->firstWhere('id', $this->user_id);
     }
 }

@@ -15,7 +15,6 @@ class ContactResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id ' => $this->id,
             'contact_info' => UserResource::make($this->contact_info),
             'type' => $this->type,
             'is_blocked' => $this->is_blocked

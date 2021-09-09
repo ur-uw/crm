@@ -18,7 +18,7 @@ class ContactSeeder extends Seeder
         $users = User::all();
         $users->each(function (User $user) use ($users) {
             $contacts = $users->filter(fn (User $usr) => $usr->id != $user->id);
-            $filtered_contacts = $contacts->random(rand(2, 4));
+            $filtered_contacts = $contacts->random(rand(20, 25));
             $filtered_contacts->each(fn (User $contact) =>
             Contact::create([
                 'parent_id' => $user->id,

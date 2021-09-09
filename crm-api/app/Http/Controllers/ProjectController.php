@@ -12,7 +12,9 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-use App\Http\Requests\AddProjectUserRequest;
+use App\Http\Requests\AddProjectUsersRequest;
+use App\Models\Permission;
+use Barryvdh\Reflection\DocBlock\Type\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectController extends Controller
@@ -120,7 +122,7 @@ class ProjectController extends Controller
         if ($withTeams) {
             return TeamResource::collection(
                 $project->teams()
-                    ->with('users')
+                    ->with('users.images')
                     ->get()
             );
         }
@@ -130,13 +132,12 @@ class ProjectController extends Controller
     /**
      * Add user to a project.
      *
-     * @param  Request  $request
+     * @param  \App\Http\Requests\AddProjectUsersRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function add_project_user(AddProjectUserRequest $request, Project $project)
+    public function add_project_users(AddProjectUsersRequest $request, Project $project)
     {
         $data = $request->validated();
-        $user = User::firstWhere('slug', $data['user']);
         $team = Team::firstWhere('name', $data['team']);
         if (!$team) {
             $team = Team::make([
@@ -144,19 +145,15 @@ class ProjectController extends Controller
             ]);
             $project->teams()->save($team);
         }
-        if ($team->users->contains($user)) {
-            return response()->json(
-                [
-                    'message' => 'This team already has this user',
-                ],
-                Response::HTTP_IM_USED
-            );
+        foreach ($data['users_permissions'] as $user_permissions) {
+            $user = User::firstWhere('slug', $user_permissions['user']);
+            $team->users()->save($user);
+            // Attaching permissions
+            // FIXME: FIX N+1 QUERY
+            $user->attachPermissions($user_permissions['permissions'], $team);
         }
-        $team->users()->save($user);
-        $user->attachPermissions($data['permissions'], $team);
         return response()->json([
-            'message' => 'User added',
-            'user' => UserResource::make($user),
+            'message' => 'Users added',
         ], Response::HTTP_ACCEPTED);
     }
 }

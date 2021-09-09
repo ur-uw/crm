@@ -20,7 +20,7 @@ class Utility
         } else if ($percentage <= 65) {
             return '#894fc6';
         } else {
-            return '#07e642';
+            return '#15d4a1';
         }
     }
     /**

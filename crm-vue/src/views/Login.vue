@@ -41,7 +41,7 @@
                     v-model:value="formData.password"
                     size="large"
                     type="password"
-                    show-password-toggle
+                    show-password-on="click"
                     placeholder=""
                     @keydown.enter.prevent="login"
                   />
@@ -107,7 +107,7 @@
             }
             return true
           },
-          trigger: ['input', 'blur']
+          trigger: ['blur']
         },
         password: {
           required: true,
@@ -134,7 +134,7 @@
               }
               return
             }
-            router.push('/dashboard')
+            router.replace('/dashboard')
           }
         })
       }

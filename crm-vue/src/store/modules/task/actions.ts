@@ -7,6 +7,7 @@ import { MutationTypes } from './mutation-types'
 import { IRootState } from '@/store/register'
 import api from '@/utils/api'
 import { TaskActionsTypes, TaskStateTypes } from '@/store/store_interfaces/task_store_interface'
+import { store } from '@/store'
 
 export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes = {
   // FETCH TASKS
@@ -26,18 +27,21 @@ export const actions: ActionTree<TaskStateTypes, IRootState> & TaskActionsTypes 
   },
   // FETCH RECENT TASKS
   async [ActionTypes.FETCH_RECENT_TASKS]({ commit }) {
-    return new Promise(async (resolve, reject) => {
-      commit(MutationTypes.SET_LOADING, true)
-      const res = api.get('/api/tasks/recently/3')
-      const [data, error] = await handleApi(res)
-      if (error) {
-        reject(error)
-        return
-      }
-      commit(MutationTypes.SET_LOADING, false)
-      commit(MutationTypes.SET_RECENT_TASKS, data.data['data'])
-      resolve(data)
-    })
+    // BUG: when logout a call to the server will happen without bellow line and this happen on some pages with calls to the api from the actions
+    if (store.getters.isUserLoggedIn) {
+      return new Promise(async (resolve, reject) => {
+        commit(MutationTypes.SET_LOADING, true)
+        const res = api.get('/api/tasks/recently/3')
+        const [data, error] = await handleApi(res)
+        if (error) {
+          reject(error)
+          return
+        }
+        commit(MutationTypes.SET_LOADING, false)
+        commit(MutationTypes.SET_RECENT_TASKS, data.data['data'])
+        resolve(data)
+      })
+    }
   },
   // FETCH TASKS BASED ON A DATE
   async [ActionTypes.FETCH_TASKS_FOR_DATE]({ commit }, payload: string) {

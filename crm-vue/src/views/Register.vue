@@ -67,7 +67,7 @@
                     v-model:value="model.password"
                     size="large"
                     type="password"
-                    show-password-toggle
+                    show-password-on="click"
                     placeholder=""
                     @keydown.enter.prevent
                   />
@@ -77,7 +77,7 @@
                     v-model:value="model.password_confirmation"
                     size="large"
                     type="password"
-                    show-password-toggle
+                    show-password-on="click"
                     placeholder=""
                     @keydown.enter.prevent
                   />

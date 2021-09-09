@@ -28,11 +28,11 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
         }
         const token = data.data['token']
         localStorage.setItem('token', token)
-        commit(MutationTypes.SET_LOADING, false)
         commit(MutationTypes.SET_USER, data.data['user'])
         commit(MutationTypes.SET_TOKEN, token)
         commit(MutationTypes.SET_LOGIN_STATE, true)
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+        commit(MutationTypes.SET_LOADING, false)
         resolve(data)
       } else {
         reject('Credentials are required')
@@ -85,12 +85,11 @@ export const actions: ActionTree<AuthStateTypes, IRootState> & AuthActionsTypes 
         reject(error)
         return
       }
-
-      localStorage.removeItem('token')
-      commit(MutationTypes.SET_LOADING, false)
+      commit(MutationTypes.SET_LOGIN_STATE, false)
       commit(MutationTypes.SET_USER, null)
       commit(MutationTypes.SET_TOKEN, null)
-      commit(MutationTypes.SET_LOGIN_STATE, false)
+      localStorage.removeItem('token')
+      commit(MutationTypes.SET_LOADING, false)
       resolve(data)
     })
   },

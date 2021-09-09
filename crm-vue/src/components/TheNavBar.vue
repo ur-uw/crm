@@ -18,7 +18,12 @@
         :collapsed-width="64"
         :options="menuOptions"
       />
-      <n-menu :collapsed="collapsed" :collapsed-width="64" :options="secondMenuOptions" />
+      <n-menu
+        :collapsed="collapsed"
+        :on-update:value="onSecondMenuClicked"
+        :collapsed-width="64"
+        :options="secondMenuOptions"
+      />
     </n-layout-sider>
 
     <n-layout-content>
@@ -138,7 +143,7 @@
       watch(currentUser, (newVal) => {
         if (newVal !== null && !menuOptions.value.includes(settingsPath)) {
           menuOptions.value.push(settingsPath)
-        } else if (newVal === null) {
+        } else if (newVal === undefined) {
           menuOptions.value = menuOptions.value.filter((el) => el.key !== 'settings.show')
         }
       })

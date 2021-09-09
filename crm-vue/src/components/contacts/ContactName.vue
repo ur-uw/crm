@@ -1,7 +1,10 @@
 <template>
   <n-space align="center">
     <n-avatar circle :src="contact.contact_info.profile_image?.path"> </n-avatar>
-    <b>{{ contact.contact_info.name }}</b>
+    <div>
+      <b>{{ contact.contact_info.name }}</b>
+      <p v-if="showEmail">{{ contact.contact_info.email }}</p>
+    </div>
   </n-space>
 </template>
 
@@ -12,7 +15,11 @@
   export default defineComponent({
     name: 'ContactName',
     props: {
-      contact: { type: Object as PropType<Contact>, required: true }
+      contact: { type: Object as PropType<Contact>, required: true },
+      showEmail: {
+        type: Boolean,
+        default: false
+      }
     }
   })
 </script>

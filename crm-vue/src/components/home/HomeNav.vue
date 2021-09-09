@@ -8,7 +8,7 @@
           <router-link to="#" class="mx-4"><n-button text>Home</n-button></router-link>
           <router-link to="#" class="mx-4"><n-button text>Features</n-button></router-link>
           <router-link to="#" class="mx-4"><n-button text>Pricing</n-button></router-link>
-          <router-link to="#" class="mx-4"><n-button text>About</n-button></router-link>
+          <router-link to="#" class="mx-4"><n-button text>Contact</n-button></router-link>
         </div>
       </nav>
       <n-divider vertical />

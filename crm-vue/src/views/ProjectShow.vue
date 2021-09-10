@@ -1,89 +1,14 @@
 <template>
-  <div v-if="!isLoading">
+  <div v-if="!isLoading && project !== null">
     <n-layout>
       <n-layout-content>
-        <div class="project-info">
-          <div class="project-name p-3">
-            <h2>{{ project?.name }}</h2>
-            <h6 v-if="project?.description" class="text-normal">{{ project.description }}</h6>
-          </div>
-
-          <div
-            v-if="project !== null"
-            class="project-participants p-3 d-flex justify-content-center align-items-center"
-          >
-            <div
-              class="
-                d-inline-block
-                project-project-participants__members
-                d-flex
-                align-items-baseline
-                me-3
-              "
-            >
-              <div v-if="project.users != null" class="d-inline-block">
-                <n-badge
-                  v-for="user in project.users"
-                  :key="user?.slug"
-                  :dot="user?.slug !== project?.owner?.slug"
-                  type="success"
-                >
-                  <div v-if="user.slug !== project?.owner?.slug" class="inline-block">
-                    <n-tooltip placement="bottom" trigger="hover">
-                      <template #trigger>
-                        <n-avatar
-                          v-if="user.profile_image !== undefined"
-                          class="
-                            text-center
-                            project-participants__member
-                            border border-custom-purple
-                          "
-                          :src="user?.profile_image.path"
-                          circle
-                        >
-                        </n-avatar>
-                        <n-avatar
-                          v-else
-                          circle
-                          class="text-center project-participants__member text-center"
-                        >
-                          {{ user.name?.substring(0, 1).toUpperCase() }}
-                        </n-avatar>
-                      </template>
-                      {{ user.name }}
-                    </n-tooltip>
-                  </div>
-                </n-badge>
-              </div>
-
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <n-button size="large" class="ms-2" circle dashed>
-                    <template #icon>
-                      <n-icon><add-icon /></n-icon>
-                    </template>
-                  </n-button>
-                </template>
-                Add Member
-              </n-tooltip>
-            </div>
-
-            <!-- PROJECT OWNER -->
-
-            <n-badge value="Owner" class="me-3">
-              <n-avatar
-                v-if="project.owner?.profile_image != null"
-                :size="50"
-                class="text-center project-participants__owner border border-custom-purple"
-                :src="project.owner?.profile_image.path"
-              >
-              </n-avatar>
-              <n-avatar v-else :size="50" class="text-center project-participants__owner">
-                {{ project?.owner?.name?.substring(0, 1) }}
-              </n-avatar>
-            </n-badge>
-          </div>
-        </div>
+        <project-header
+          :users="project?.users"
+          :description="project?.description"
+          :name="project?.name"
+          :owner="project?.owner"
+          @show-add-members="showAddModal = true"
+        />
         <!-- TODO: change percentage automatically when task status is changed -->
         <div
           v-if="project?.tags_progress !== undefined"
@@ -167,6 +92,10 @@
       <h4 class="mt-2">Getting Project Info</h4>
     </div>
   </div>
+  <!-- ADD MEMBERS MODAL -->
+  <n-modal v-model:show="showAddModal">
+    <add-member @hide-modal="showAddModal = false" />
+  </n-modal>
 </template>
 
 <script lang="ts">
@@ -177,13 +106,16 @@
   import { useStore } from '@/use/useStore'
   import { ActionTypes as ProjectActions } from '@/store/modules/project/action-types'
   import ProjectColumn from '@/components/project/ProjectColumn.vue'
-  import { ArrowUp48Filled as ArrowIcon, Add28Regular as AddIcon } from '@vicons/fluent'
+  import { ArrowUp48Filled as ArrowIcon } from '@vicons/fluent'
+  import ProjectHeader from '@/components/project/ProjectHeader.vue'
+  import AddMember from '@/components/project/AddMember.vue'
   export default defineComponent({
     name: 'Project',
     components: {
       ProjectColumn,
       ArrowIcon,
-      AddIcon
+      ProjectHeader,
+      AddMember
     },
     setup() {
       // INITIALIZE ROUTES and STORE
@@ -194,6 +126,7 @@
       const isLoading = computed(() => store.getters.isProjectsLoading)
       const tasks = computed<SelectedProjectTasksTypes>(() => store.getters.getSelectedProjectTasks)
       const taskTypesLength: number = Object.keys(tasks).length
+      const showAddModal = ref(false)
       const fetchProject = async () => {
         const [data, error] = await handleActions(
           store.dispatch(ProjectActions.FETCH_SINGLE_PROJECT, route.params.slug.toString())
@@ -207,7 +140,13 @@
       onMounted(() => {
         fetchProject()
       })
-      return { project, tasks, isLoading, taskTypesLength }
+      return {
+        project,
+        tasks,
+        isLoading,
+        taskTypesLength,
+        showAddModal
+      }
     }
   })
 </script>
@@ -231,17 +170,6 @@
       width: 100%;
       justify-content: space-between;
       align-items: center;
-    }
-    &-participants {
-      @include display;
-
-      &__member,
-      &__add {
-        margin: 0 -0.15rem;
-        position: relative;
-        display: inline-block;
-        background-color: transparent;
-      }
     }
 
     &-tasks {

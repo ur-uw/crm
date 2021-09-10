@@ -1,5 +1,5 @@
 <template>
-  <div class="add-member__container w-50 bg-primary">
+  <div class="add-member__container w-50 bg-primary2">
     <div class="add-member__header d-flex flex-column align-items-center justify-content-center">
       <n-icon :size="60" color="#15d4a1"><mail-send-icon /></n-icon>
       <div
@@ -15,7 +15,12 @@
         <p class="small-text">Invite existing team members or add new ones.</p>
       </div>
       <div class="m-4 add-member__team-search w-100 d-flex justify-content-center">
-        <n-input size="large" placeholder="Search by name or email..." class="w-100 mx-5">
+        <n-input
+          :on-update:value="filterContacts"
+          size="large"
+          placeholder="Search by name or email..."
+          class="w-100 mx-5"
+        >
           <template #prefix>
             <n-icon><search-icon /></n-icon>
           </template>
@@ -24,12 +29,13 @@
       <!-- User contacts table -->
       <div class="m-4 add-member__user-contacts w-100 d-flex justify-content-center">
         <n-data-table
-          class="mx-1"
+          ref="ref"
+          class="mx-2"
           :loading="userContacts === null"
           :columns="columns"
           :data="userContacts ?? []"
           :bordered="false"
-          :row-key="(rowData) => rowData.contact_info.email"
+          :row-key="(rowData) => rowData.email"
           @update:checked-row-keys="handleCheck"
         >
         </n-data-table>
@@ -80,8 +86,6 @@
   import { DataTableColumn, SelectOption } from 'naive-ui'
   import ContactName from '../contacts/ContactName.vue'
   import AddMemberActionDropDown from './AddMemberActionDropDown.vue'
-  import { User } from '@/interfaces/User'
-
   export default defineComponent({
     name: 'AddMember',
     components: {
@@ -93,10 +97,14 @@
     setup() {
       const store = useStore()
       const currentUser = computed(() => store.getters.getCurrentUser)
-      const userContacts = ref<null | Contact[]>(null)
+      const userContacts = ref<
+        | null
+        | { type?: string; email?: string; name?: string; slug?: string; profileImage?: string }[]
+      >(null)
       const permissions = ref<null | Permission[]>(null)
+      const tableRef = ref<any>(null)
       const usersToAddPermissionArray: {
-        user: User
+        user_slug: string
         permissions: string[]
       }[] = []
       const usersToAdd = ref<Array<string | number>>([])
@@ -109,7 +117,15 @@
           return
         }
         const contacts: Contact[] = data.data['data']
-        userContacts.value = contacts
+        userContacts.value = contacts.map((contact) => {
+          return {
+            type: contact.type,
+            email: contact.contact_info.email,
+            name: contact.contact_info.name,
+            profileImage: contact.contact_info.profile_image?.path,
+            slug: contact.contact_info.slug
+          }
+        })
       }
       // Fetch Permissions
       const fetchPermissions = async () => {
@@ -121,6 +137,10 @@
         }
         const perms: Permission[] = data.data
         permissions.value = perms
+      }
+      // Filter user contacts by name or email
+      const filterContacts = (value: string | [string, string]) => {
+        tableRef.value.filter({ user: [value] })
       }
       onMounted(() => {
         fetchPermissions()
@@ -138,10 +158,17 @@
         {
           title: 'USER',
           key: 'user',
-          sorter: (row1: any, row2: any) =>
-            sortByProperty(row1.contact_info.name, row2.contact_info.name),
+          sorter: (row1: any, row2: any) => sortByProperty(row1.name, row2.name),
           render(data: any) {
-            return h(ContactName, { contact: data, showEmail: true })
+            return h(ContactName, {
+              name: data.name,
+              email: data.email,
+              profileImage: data.profileImage,
+              showEmail: true
+            })
+          },
+          filter(value: any, row: any): any {
+            return ~row.name.indexOf(value) || ~row.email.indexOf(value)
           }
         },
         {
@@ -160,12 +187,12 @@
                   : [],
               onUpdate: (value: any) => {
                 usersToAddPermissionArray[index] = {
-                  user: data.contact_info,
+                  user_slug: data.slug,
                   permissions: value
                 }
               },
               placeHolder: 'Select Permissions',
-              disabled: !usersToAdd.value.includes(data.contact_info.email)
+              disabled: !usersToAdd.value.includes(data.email)
             })
           }
         }
@@ -176,6 +203,8 @@
         handleCheck: (keys: Array<string | number>) => {
           usersToAdd.value = keys
         },
+        filterContacts,
+        ref: tableRef,
         inviteDisabled: computed(() => usersToAdd.value.length == 0)
       }
     }

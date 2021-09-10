@@ -76,7 +76,10 @@
       sorter: (row1: any, row2: any) =>
         sortByProperty(row1.contact_info.name, row2.contact_info.name),
       render(data: any) {
-        return h(ContactName, { contact: data })
+        return h(ContactName, {
+          name: data.contact_info.name,
+          profileImage: data.contact_info.profile_image.path
+        })
       }
     },
     {

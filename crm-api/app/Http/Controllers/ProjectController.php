@@ -150,8 +150,12 @@ class ProjectController extends Controller
             $users->add($user);
             $team->users()->save($user);
             // Attaching permissions
-            // FIXME: FIX N+1 QUERY
-            $user->attachPermissions($user_permissions['permissions'], $team);
+            if (count($user_permissions['permissions']) > 0) {
+                // FIXME: FIX N+1 QUERY
+                $user->attachPermissions($user_permissions['permissions'], $team);
+            } else {
+                $user->attachPermission('task-read', $team);
+            }
         }
         return response()->json([
             'message' => 'Users added',

@@ -16,34 +16,47 @@
       </div>
       <!-- SELECT TEAM -->
       <div class="m-4 add-member__team-search w-50 d-flex flex-column justify-content-center">
-        <n-select
-          :on-update:value="onTeamUpdate"
-          size="large"
-          placeholder="Select a team to add users to"
-          :options="projectTeams"
-        >
-          <template #prefix>
-            <n-icon><search-icon /></n-icon>
-          </template>
-        </n-select>
-        <!-- TODO: implement add team -->
-        <n-p class="ms-auto" depth="3">
-          Team does not exists?
-          <router-link to="#"><n-button text type="primary">Add team</n-button> </router-link>
-        </n-p>
+        <n-form ref="teamFormRef" :rules="rules" :model="model">
+          <n-form-item path="team" label="Select a team to add users to">
+            <n-select
+              v-model:value="model.team"
+              :on-update:value="onTeamUpdate"
+              size="large"
+              placeholder="Select a team..."
+              :options="projectTeams"
+            >
+            </n-select>
+          </n-form-item>
+          <n-p depth="3">
+            Team does not exists?
+            <n-button text type="primary" @click.prevent="showAddTeam = !showAddTeam"
+              >Add team
+            </n-button>
+          </n-p>
+          <transition name="fade">
+            <n-form-item v-if="showAddTeam" label="Enter team name" path="team">
+              <n-input
+                v-model:value="model.team"
+                :on-update:value="onTeamUpdate"
+                placeholder="Team name"
+              />
+            </n-form-item>
+          </transition>
+        </n-form>
       </div>
       <!-- USERS SEARCH -->
       <div class="m-4 add-member__team-search w-100 d-flex justify-content-center">
-        <n-input
-          :on-update:value="filterContacts"
-          size="large"
-          placeholder="Search by name or email..."
-          class="w-100 mx-5"
-        >
-          <template #prefix>
-            <n-icon><search-icon /></n-icon>
-          </template>
-        </n-input>
+        <n-form-item label="Find users" class="w-100 mx-5">
+          <n-input
+            :on-update:value="filterContacts"
+            size="large"
+            placeholder="Search by name or email..."
+          >
+            <template #prefix>
+              <n-icon><search-icon /></n-icon>
+            </template>
+          </n-input>
+        </n-form-item>
       </div>
       <!-- User contacts table -->
       <!--
@@ -106,15 +119,16 @@
     Mail28Regular as MailIcon
   } from '@vicons/fluent'
   import { useStore } from '@/use/useStore'
-  import Contact from '@/interfaces/Contact'
-  import Permission from '@/interfaces/Permission'
   import { handleApi, sortByProperty } from '@/utils/helpers'
-  import api from '@/utils/api'
   import { DataTableColumn, SelectOption, useMessage } from 'naive-ui'
-  import ContactName from '../contacts/ContactName.vue'
-  import AddMemberActionDropDown from './AddMemberActionDropDown.vue'
   import { useRoute } from 'vue-router'
   import { Project } from '@/interfaces/Project'
+  import Contact from '@/interfaces/Contact'
+  import Permission from '@/interfaces/Permission'
+  import api from '@/utils/api'
+  import ContactName from '../contacts/ContactName.vue'
+  import AddMemberActionDropDown from './AddMemberActionDropDown.vue'
+
   export default defineComponent({
     name: 'AddMembers',
     components: {
@@ -131,6 +145,7 @@
     emits: ['hide-modal'],
     setup(props) {
       const store = useStore()
+      const route = useRoute()
       const message = useMessage()
       const currentUser = computed(() => store.getters.getCurrentUser)
       const userContacts = ref<
@@ -139,13 +154,12 @@
       >(null)
       const permissions = ref<null | Permission[]>(null)
       const tableRef = ref<any>(null)
-      let team: null | string = null
       let usersToAddPermissionArray: Array<{
         user: string
         permissions: string[]
       }> = []
       const usersToAdd = ref<Array<string | number>>([])
-      const route = useRoute()
+      const teamFormRef = ref<any>(null)
       const columns: DataTableColumn[] = [
         {
           type: 'selection'
@@ -180,7 +194,8 @@
                       } as SelectOption
                     })
                   : [],
-              onUpdate: (value: any) => {
+              'onPermissions-updated': (value: any) => {
+                console.log(value)
                 const userPermissions = {
                   user: data.slug,
                   permissions: value
@@ -199,6 +214,14 @@
           }
         }
       ]
+      const formModel = ref({ team: null as null | string })
+      const rules = {
+        team: {
+          required: true,
+          message: 'Please select a team',
+          trigger: ['blur']
+        }
+      }
       // GET USER CONTACTS
       const fetchUserContacts = async () => {
         const promise = api.get(`/api/contacts/get`)
@@ -238,26 +261,30 @@
         tableRef.value.filter({ user: [value] })
       }
       // invite users function
-      const inviteUsers = async () => {
-        const promise = api.post(`/api/projects/${route.params.slug}/add_user`, {
-          users_permissions: usersToAddPermissionArray.filter((obj) =>
-            usersToAdd.value.includes(obj.user)
-          ),
-          team: team
+      const inviteUsers = () => {
+        teamFormRef.value.validate(async (errors: any) => {
+          if (!errors) {
+            const promise = api.post(`/api/projects/${route.params.slug}/add_user`, {
+              users_permissions: usersToAddPermissionArray.filter((obj) =>
+                usersToAdd.value.includes(obj.user)
+              ),
+              team: formModel.value.team
+            })
+            const [data, error] = await handleApi(promise)
+            if (error) {
+              // TODO: handle error
+              message.error(error.message, { duration: 2500 })
+              return
+            }
+            message.success(data.data.message, { duration: 2500 })
+            usersToAddPermissionArray = []
+            userContacts.value = userContacts.value?.filter(
+              (obj) => !usersToAdd.value?.includes(obj.slug!)
+            ) as []
+            usersToAdd.value = []
+            // TODO: ADD users to project users without refreshing
+          }
         })
-        const [data, error] = await handleApi(promise)
-        if (error) {
-          // TODO: handle error
-          message.error(error.message, { duration: 2500 })
-          return
-        }
-        message.success(data.data.message, { duration: 2500 })
-        usersToAddPermissionArray = []
-        userContacts.value = userContacts.value?.filter(
-          (obj) => !usersToAdd.value?.includes(obj.slug!)
-        ) as []
-        usersToAdd.value = []
-        // TODO: ADD users to project users without refreshing
       }
       onMounted(() => {
         fetchPermissions()
@@ -274,6 +301,10 @@
         filterContacts,
         ref: tableRef,
         inviteUsers,
+        teamFormRef,
+        rules,
+        model: formModel,
+        showAddTeam: ref(false),
         handleCheck: (keys: Array<string | number>) => {
           usersToAdd.value = keys
         },
@@ -285,12 +316,13 @@
           }
         }),
         onTeamUpdate: (value: string | null) => {
-          team = value
+          formModel.value.team = value
         }
       }
     }
   })
 </script>
+
 <style lang="scss" scoped>
   .add-member {
     &__header {

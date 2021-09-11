@@ -94,7 +94,7 @@
   </div>
   <!-- ADD MEMBERS MODAL -->
   <n-modal v-model:show="showAddModal">
-    <add-member @hide-modal="showAddModal = false" />
+    <add-members :project="project" @hide-modal="showAddModal = false" />
   </n-modal>
 </template>
 
@@ -108,14 +108,14 @@
   import ProjectColumn from '@/components/project/ProjectColumn.vue'
   import { ArrowUp48Filled as ArrowIcon } from '@vicons/fluent'
   import ProjectHeader from '@/components/project/ProjectHeader.vue'
-  import AddMember from '@/components/project/AddMember.vue'
+  import AddMembers from '@/components/project/AddMembers.vue'
   export default defineComponent({
     name: 'Project',
     components: {
       ProjectColumn,
       ArrowIcon,
       ProjectHeader,
-      AddMember
+      AddMembers
     },
     setup() {
       // INITIALIZE ROUTES and STORE

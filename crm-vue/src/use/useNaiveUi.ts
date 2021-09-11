@@ -52,7 +52,8 @@ import {
   NUploadDragger,
   NFormItemGi,
   NThing,
-  NDataTable
+  NDataTable,
+  NP
 } from 'naive-ui'
 
 export const naive = create({
@@ -106,6 +107,7 @@ export const naive = create({
     NText,
     NH1,
     NH6,
+    NP,
     NDataTable,
     NCollapse,
     NCollapseItem,

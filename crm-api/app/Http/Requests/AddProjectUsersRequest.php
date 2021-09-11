@@ -29,7 +29,7 @@ class AddProjectUsersRequest extends FormRequest
             'users_permissions.*.user' => 'string|exists:users,slug',
             'users_permissions.*.permissions' => 'array',
             'users_permissions.*.permissions.*' => 'exists:permissions,name',
-            'team' => 'string',
+            'team' => 'string|required',
         ];
     }
 }

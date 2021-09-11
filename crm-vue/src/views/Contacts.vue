@@ -3,7 +3,7 @@
     <h2 class="fw-bold">Contacts</h2>
     <div class="d-flex align-items-center justify-content-between w-100">
       <n-space size="large" class="general-actions__search-filter">
-        <n-input placeholder="Search">
+        <n-input :on-update:value="filterContacts" placeholder="Search">
           <template #prefix>
             <n-icon>
               <search-icon />
@@ -76,7 +76,13 @@
       sorter: (row1: any, row2: any) =>
         sortByProperty(row1.contact_info.name, row2.contact_info.name),
       render(data: any) {
-        return h(ContactName, { contact: data })
+        return h(ContactName, {
+          name: data.contact_info.name,
+          profileImage: data.contact_info.profile_image.path
+        })
+      },
+      filter(value: any, row: any): any {
+        return ~row.contact_info.name.indexOf(value) || ~row.contact_info.email.indexOf(value)
       }
     },
     {
@@ -129,7 +135,7 @@
       PersonAddIcon
     },
     setup() {
-      const tableRef = ref(null)
+      const tableRef = ref<any>(null)
       const userContacts = ref<null | Contact[]>(null)
       // Fetch user contacts
       const fetchUserContacts = async () => {
@@ -148,10 +154,15 @@
       return {
         columns,
         userContacts,
-        checkedRowKeys: ref([]),
         table: tableRef,
+        checkedRowKeys: ref([]),
         handleCheck(rowKeys: any) {
           console.log(rowKeys)
+        },
+        filterContacts: (value: any) => {
+          tableRef.value.filter({
+            name: [value]
+          })
         }
       }
     }

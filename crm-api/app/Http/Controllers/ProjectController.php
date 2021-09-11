@@ -13,8 +13,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Requests\AddProjectUsersRequest;
-use App\Models\Permission;
-use Barryvdh\Reflection\DocBlock\Type\Collection;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProjectController extends Controller
@@ -139,6 +138,7 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
         $team = Team::firstWhere('name', $data['team']);
+        $users = new Collection();
         if (!$team) {
             $team = Team::make([
                 'display_name' => $data['team'],
@@ -146,14 +146,20 @@ class ProjectController extends Controller
             $project->teams()->save($team);
         }
         foreach ($data['users_permissions'] as $user_permissions) {
-            $user = User::firstWhere('slug', $user_permissions['user']);
+            $user = User::with('images')->firstWhere('slug', $user_permissions['user']);
+            $users->add($user);
             $team->users()->save($user);
             // Attaching permissions
-            // FIXME: FIX N+1 QUERY
-            $user->attachPermissions($user_permissions['permissions'], $team);
+            if (count($user_permissions['permissions']) > 0) {
+                // FIXME: FIX N+1 QUERY
+                $user->attachPermissions($user_permissions['permissions'], $team);
+            } else {
+                $user->attachPermission('task-read', $team);
+            }
         }
         return response()->json([
             'message' => 'Users added',
+            'users' => UserResource::collection($users)
         ], Response::HTTP_ACCEPTED);
     }
 }

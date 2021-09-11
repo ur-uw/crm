@@ -1,10 +1,11 @@
 <template>
   <n-select
+    :default-value="['task-read']"
     clearable
     multiple
     :disabled="disabled"
     :options="options"
-    :on-update:value="onUpdate"
+    :on-update:value="onPermissionsSelected"
     :placeholder="placeHolder"
     filterable
   />
@@ -21,10 +22,6 @@
         type: Array as PropType<SelectOption[]>,
         required: true
       },
-      onUpdate: {
-        type: Function,
-        required: true
-      },
       placeHolder: {
         type: String,
         default: null
@@ -33,6 +30,13 @@
         type: Boolean,
         default: true
       }
+    },
+    emits: ['permissions-updated'],
+    setup(props, { emit }) {
+      const onPermissionsSelected = (value: Array<string> | string) => {
+        emit('permissions-updated', value)
+      }
+      return { onPermissionsSelected }
     }
   })
 </script>
